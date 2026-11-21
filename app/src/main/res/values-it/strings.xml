@@ -37,7 +37,7 @@
     <string name="cd_scale">Scala di temperatura da %1$s a %2$s</string>
     <string name="coming_later">Disponibile in una versione successiva</string>
     <string name="badge_emissivity">ε %1$s</string>
-    <string name="facade_warning">La termocamera è specificata per 0–35 °C. Le misure all\'aperto con il gelo non sono affidabili.</string>
+    <string name="facade_warning">La termocamera è specificata per 0–35 °C. Le misure all\'aperto con il gelo non sono affidabili.</string>
     <string name="disconnected_title">Collega la termocamera HT-102</string>
     <string name="disconnected_body">Inserisci il modulo nella porta USB-C del telefono o del tablet.</string>
     <string name="disconnected_help_title">Se la termocamera non compare</string>
@@ -101,7 +101,7 @@
     <string name="settings_section_camera">Fotocamera</string>
     <string name="settings_orientation">Orientamento del modulo</string>
     <string name="settings_mirror">Specchia immagine</string>
-    <string name="settings_mirror_summary">Quando il modulo è rivolto verso di te</string>
+    <string name="settings_mirror_summary">Di solito attivo: l\'obiettivo è rivolto lontano da te, come la fotocamera posteriore</string>
     <string name="settings_alignment">Allineamento della sovrapposizione</string>
     <string name="settings_alignment_summary">Allineare la fotocamera del modulo all\'immagine termica</string>
     <string name="settings_photo_camera">Fotocamera per foto e anteprima</string>
@@ -166,13 +166,13 @@
     <string name="cal_current">Correzione: offset %1$s · guadagno %2$s</string>
     <string name="cal_reset">Rimuovi correzione</string>
     <string name="cal_no_data">Nessun dato dalla termocamera.</string>
-    <string name="cal_too_close">I due riferimenti devono differire di più di 0,5 °C.</string>
+    <string name="cal_too_close">I due riferimenti devono differire di più di 0,5 °C.</string>
     <string name="cal_section_bridge">Ponte termico</string>
     <string name="bridge_inside">Aria interna θi</string>
     <string name="bridge_outside">Aria esterna θe</string>
     <string name="bridge_limit">Limite fRsi</string>
     <string name="bridge_isotherm">Evidenzia i punti sotto il limite</string>
-    <string name="bridge_small_difference">La differenza tra interno ed esterno è inferiore a 10 °C: troppo piccola per individuare i ponti termici in modo affidabile.</string>
+    <string name="bridge_small_difference">La differenza tra interno ed esterno è inferiore a 10 °C: troppo piccola per individuare i ponti termici in modo affidabile.</string>
     <string name="bridge_warning">Possibile ponte termico</string>
     <string name="bridge_note">L\'app è un aiuto indicativo, non una perizia.</string>
     <string name="cal_section_profiles">Profili</string>
@@ -223,4 +223,9 @@
     <string name="settings_section_updates">Aggiornamenti</string>
     <string name="settings_check_updates">Controlla gli aggiornamenti all\'avvio</string>
     <string name="settings_updates_wifi_only">Scarica solo tramite Wi-Fi</string>
+    <string name="temp_fahrenheit">%1$s °F</string>
+    <string name="settings_units">Unità di temperatura</string>
+    <string name="settings_smoothing">Leviga l\'immagine nel tempo</string>
+    <string name="settings_pixelated">Mostra i pixel del sensore (senza interpolazione)</string>
+    <string name="settings_section_display">Visualizzazione</string>
 </resources>

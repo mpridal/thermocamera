@@ -77,6 +77,9 @@ class SettingsViewModel @Inject constructor(private val repo: SettingsRepository
     fun setAutoAlign(v: Boolean) = viewModelScope.launch { repo.setAutoAlign(v) }
     fun setVideoFps(v: Int) = viewModelScope.launch { repo.setVideoFps(v) }
     fun setSaveToGallery(v: Boolean) = viewModelScope.launch { repo.setSaveToGallery(v) }
+    fun setFahrenheit(v: Boolean) = viewModelScope.launch { repo.setFahrenheit(v) }
+    fun setSmoothing(v: Boolean) = viewModelScope.launch { repo.setSmoothing(v) }
+    fun setPixelated(v: Boolean) = viewModelScope.launch { repo.setPixelated(v) }
     fun setCheckUpdates(v: Boolean) = viewModelScope.launch { repo.setCheckUpdates(v) }
     fun setUpdatesWifiOnly(v: Boolean) = viewModelScope.launch { repo.setUpdatesWifiOnly(v) }
     fun setVideoResolution(v: io.github.mpridal.thermocamera.data.VideoResolution) = viewModelScope.launch { repo.setVideoResolution(v) }
@@ -121,6 +124,12 @@ fun SettingsScreen(
                     s.reduceTransparency,
                     vm::setReduceTransparency,
                 )
+            }
+            Section(stringResource(R.string.settings_section_display)) {
+                Text(stringResource(R.string.settings_units), color = c.text, fontSize = 15.sp)
+                SegmentedControl(options = listOf(false to "°C", true to "°F"), selected = s.fahrenheit, onSelect = vm::setFahrenheit)
+                SwitchRow(stringResource(R.string.settings_smoothing), "", s.smoothing, vm::setSmoothing)
+                SwitchRow(stringResource(R.string.settings_pixelated), "", s.pixelated, vm::setPixelated)
             }
             Section(stringResource(R.string.settings_section_camera)) {
                 Text(stringResource(R.string.settings_orientation), color = c.text, fontSize = 15.sp)

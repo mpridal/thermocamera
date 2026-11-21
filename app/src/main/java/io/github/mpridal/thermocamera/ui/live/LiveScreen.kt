@@ -296,7 +296,7 @@ private fun Badges(settings: Settings, fmt: NumberFormatter, photoBadge: String?
                 Icon(Icons.Filled.Lock, stringResource(R.string.cd_range_locked), tint = c.imgLabelText, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
             }
-            val txt = rangePresetName(settings.rangePreset) + (r?.let { " " + fmt.zero(it.min) + "–" + fmt.zero(it.max) + " °C" } ?: "")
+            val txt = rangePresetName(settings.rangePreset) + (r?.let { " " + fmt.t0(it.min) + "–" + fmt.t0(it.max) + " " + fmt.unit } ?: "")
             Text(txt, color = c.imgLabelText, fontSize = 12.sp)
         }
         Box(Modifier.glass(RoundedCornerShape(10.dp), GlassLevel.IMAGE_LABEL).padding(horizontal = 8.dp, vertical = 4.dp)) {
@@ -322,9 +322,9 @@ private fun Controls(
     val c = ThermoTheme.colors
     val m = frame.measurements
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        ValueTile(stringResource(R.string.label_min), m?.let { fmt.one(it.min.celsius) } ?: "–", "▼", c.coldText, Modifier.weight(1f))
-        ValueTile(stringResource(R.string.label_center), m?.let { fmt.one(it.center) } ?: "–", "+", c.text, Modifier.weight(1f))
-        ValueTile(stringResource(R.string.label_max), m?.let { fmt.one(it.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
+        ValueTile(stringResource(R.string.label_min), m?.let { fmt.t1(it.min.celsius) } ?: "–", "▼", c.coldText, Modifier.weight(1f))
+        ValueTile(stringResource(R.string.label_center), m?.let { fmt.t1(it.center) } ?: "–", "+", c.text, Modifier.weight(1f))
+        ValueTile(stringResource(R.string.label_max), m?.let { fmt.t1(it.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
     }
     ThermalBridgeBar(frame.fRsi, settings.fRsiLimit, fmt)
     if (settings.rangePreset == RangePreset.FACADE) {
@@ -419,7 +419,7 @@ private fun DisconnectedContent(onStartTest: () -> Unit, onUseSimulator: () -> U
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Box(
-                Modifier.heightIn(min = 44.dp)
+                Modifier.heightIn(min = 48.dp)
                     .clip(RoundedCornerShape(22.dp))
                     .background(c.accent)
                     .clickable(onClick = onStartTest)
@@ -493,9 +493,9 @@ private fun CompactValues(frame: LiveFrameUi, fmt: NumberFormatter) {
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text("▼ " + (m?.let { fmt.one(it.min.celsius) } ?: "–"), color = c.coldText, style = NumberStyle, fontSize = 14.sp)
-        Text("+ " + (m?.let { fmt.one(it.center) } ?: "–"), color = c.text, style = NumberStyle, fontSize = 14.sp)
-        Text("▲ " + (m?.let { fmt.one(it.max.celsius) } ?: "–"), color = c.hotText, style = NumberStyle, fontSize = 14.sp)
+        Text("▼ " + (m?.let { fmt.t1(it.min.celsius) } ?: "–"), color = c.coldText, style = NumberStyle, fontSize = 14.sp)
+        Text("+ " + (m?.let { fmt.t1(it.center) } ?: "–"), color = c.text, style = NumberStyle, fontSize = 14.sp)
+        Text("▲ " + (m?.let { fmt.t1(it.max.celsius) } ?: "–"), color = c.hotText, style = NumberStyle, fontSize = 14.sp)
     }
 }
 
@@ -546,7 +546,7 @@ private fun VerticalModes(selected: ViewMode, onSelect: (ViewMode) -> Unit) {
         modeOptions().forEach { (mode, label) ->
             val sel = mode == selected
             Box(
-                Modifier.fillMaxWidth().heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp))
+                Modifier.fillMaxWidth().heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp))
                     .then(if (sel) Modifier.background(c.accent) else Modifier)
                     .clickable { onSelect(mode) }
                     .padding(horizontal = 6.dp, vertical = 4.dp),
@@ -642,12 +642,12 @@ private fun TabletPanelContent(
     Text(stringResource(R.string.panel_measurement).uppercase(androidx.compose.ui.platform.LocalConfiguration.current.locales[0]),
         style = MaterialTheme.typography.labelMedium, color = c.textMuted)
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        ValueTile(stringResource(R.string.label_min), m?.let { fmt.one(it.min.celsius) } ?: "–", "▼", c.coldText, Modifier.weight(1f))
-        ValueTile(stringResource(R.string.label_center), m?.let { fmt.one(it.center) } ?: "–", "+", c.text, Modifier.weight(1f))
-        ValueTile(stringResource(R.string.label_max), m?.let { fmt.one(it.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
+        ValueTile(stringResource(R.string.label_min), m?.let { fmt.t1(it.min.celsius) } ?: "–", "▼", c.coldText, Modifier.weight(1f))
+        ValueTile(stringResource(R.string.label_center), m?.let { fmt.t1(it.center) } ?: "–", "+", c.text, Modifier.weight(1f))
+        ValueTile(stringResource(R.string.label_max), m?.let { fmt.t1(it.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
     }
     m?.points?.forEachIndexed { i, sp ->
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().heightIn(min = 40.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
             Text("○ P${i + 1}", color = c.text, fontSize = 14.sp)
             Spacer(Modifier.weight(1f))
             Text(celsius(fmt, sp.celsius), color = c.text, style = NumberStyle, fontSize = 14.sp)
@@ -679,7 +679,7 @@ private fun TabletPanelContent(
         RangePreset.entries.filter { it != RangePreset.CUSTOM }.forEach { p ->
             val sel = p == settings.rangePreset
             Box(
-                Modifier.heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp))
+                Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp))
                     .then(if (sel) Modifier.background(c.accent) else Modifier.glass(RoundedCornerShape(20.dp)))
                     .clickable { vm.setRangePreset(p) }.padding(horizontal = 12.dp, vertical = 8.dp),
                 contentAlignment = Alignment.Center,

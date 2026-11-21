@@ -167,7 +167,7 @@ fun GalleryScreen(vm: GalleryViewModel, onBack: () -> Unit, onOpen: (Long) -> Un
                         s.title.ifBlank { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale).format(Date(s.createdAt)) },
                         color = c.text, fontSize = 13.sp, maxLines = 1, modifier = Modifier.padding(top = 4.dp),
                     )
-                    Text("▼ ${fmt.one(s.minC)}  ▲ ${fmt.one(s.maxC)}", color = c.textMuted, style = NumberStyleSmall)
+                    Text("▼ ${fmt.t1(s.minC)}  ▲ ${fmt.t1(s.maxC)}", color = c.textMuted, style = NumberStyleSmall)
                 }
             }
         }
@@ -243,8 +243,8 @@ fun SnapshotDetailScreen(vm: SnapshotDetailViewModel, onBack: () -> Unit) {
             }
             val r = rendered?.second
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ValueTile(stringResource(R.string.label_min), r?.let { fmt.one(it.measurements.min.celsius) } ?: "–", "▼", c.coldText, Modifier.weight(1f))
-                ValueTile(stringResource(R.string.label_max), r?.let { fmt.one(it.measurements.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
+                ValueTile(stringResource(R.string.label_min), r?.let { fmt.t1(it.measurements.min.celsius) } ?: "–", "▼", c.coldText, Modifier.weight(1f))
+                ValueTile(stringResource(R.string.label_max), r?.let { fmt.t1(it.measurements.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
                 ValueTile("fRsi", r?.fRsi?.let { fmt.two(it) } ?: "–", "◇", if ((r?.fRsi ?: 1f) < snap.fRsiLimit) c.warnTitle else c.text, Modifier.weight(1f))
                 ValueTile("ε", fmt.two(opt?.emissivity ?: snap.emissivity), "", c.text, Modifier.weight(1f))
             }
@@ -266,7 +266,7 @@ fun SnapshotDetailScreen(vm: SnapshotDetailViewModel, onBack: () -> Unit) {
                     Palette.entries.forEach { p ->
                         val sel = p == o.palette
                         Box(
-                            Modifier.heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp))
+                            Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp))
                                 .then(if (sel) Modifier.background(c.accent) else Modifier.glass(RoundedCornerShape(20.dp)))
                                 .clickable(role = Role.RadioButton) { vm.setOptions(o.copy(palette = p)) }.padding(horizontal = 12.dp, vertical = 8.dp),
                             contentAlignment = Alignment.Center,
@@ -274,7 +274,7 @@ fun SnapshotDetailScreen(vm: SnapshotDetailViewModel, onBack: () -> Unit) {
                     }
                     val auto = o.range == null
                     Box(
-                        Modifier.heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp))
+                        Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp))
                             .then(if (auto) Modifier.background(c.accent) else Modifier.glass(RoundedCornerShape(20.dp)))
                             .clickable(role = Role.Switch) {
                                 vm.setOptions(o.copy(range = if (auto) io.github.mpridal.thermocamera.core.TempRange(snap.rangeMin, maxOf(snap.rangeMax, snap.rangeMin + 0.5f)) else null))

@@ -76,6 +76,24 @@ adb shell run-as io.github.mpridal.thermocamera ls files/diagnostics
 | 6 | Dlouhý stisk, výběr více snímků, Sdílet › PDF | jeden PDF protokol, strana na snímek |
 | 7 | Smazat | potvrzení, snímek zmizí (kopie v galerii telefonu zůstane) |
 
+## Fáze 5 – aktualizace (po nahrání klíče do GitHub Secrets)
+
+| # | Krok | Očekávání |
+|---|---|---|
+| 1 | Vydat `v1.0.0`, odinstalovat debug verzi, nainstalovat APK z Releases | aplikace běží, verze 1.0.0 v O aplikaci |
+| 2 | Vydat `v1.0.1`, spustit aplikaci se sítí | po chvíli banner „Stažena verze 1.0.1“, Nainstalovat → povolit instalaci → nová verze |
+| 3 | Režim letadlo, spustit | start bez zdržení, žádná hláška |
+
+## Fáze 6 – jazyky a doladění
+
+| # | Krok | Očekávání |
+|---|---|---|
+| 1 | Nastavení › Jazyk aplikace – projít všech 6 | texty se přepnou hned, nic se neořízne, desetinná čárka/tečka podle jazyka |
+| 2 | Systémové zvětšení písma 130 % | rozložení drží, popisky se zalamují |
+| 3 | °F | hodnoty, stupnice, štítky i uložený snímek v °F |
+| 4 | Tablet JENBIZZ: plynulost, případně „Omezit průhlednost“ | obraz plynulý |
+| 5 | TalkBack na hlavní obrazovce | ikony a hodnoty se čtou smysluplně |
+
 ## Výsledky
 
 | Datum | Zařízení (model, Android) | Kroky OK | Poznámky |

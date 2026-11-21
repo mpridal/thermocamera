@@ -225,7 +225,7 @@ fun CalibrationContent(vm: CalibrationViewModel, liveVm: LiveViewModel) {
         }
     }
     error?.let { Note(stringResource(it), warn = true) }
-    val offText = (if (s.calOffset >= 0) "+" else "") + celsius(fmt, s.calOffset)
+    val offText = (if (s.calOffset >= 0) "+" else "") + fmt.one(s.calOffset) + "\u00a0°C"
     Text(stringResource(R.string.cal_current, offText, String.format(locale, "%.3f", s.calGain)), color = c.text, fontSize = 14.sp)
     if (s.calOffset != 0f || s.calGain != 1f) GlassChip(stringResource(R.string.cal_reset), { vm.setCalibration(0f, 1f) })
 
@@ -257,7 +257,7 @@ fun CalibrationContent(vm: CalibrationViewModel, liveVm: LiveViewModel) {
     var name by remember { mutableStateOf("") }
     Text(stringResource(R.string.profile_name), color = c.textMuted, fontSize = 13.sp)
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Box(Modifier.weight(1f).heightIn(min = 44.dp).glass(RoundedCornerShape(12.dp), GlassLevel.HI).padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart) {
+        Box(Modifier.weight(1f).heightIn(min = 48.dp).glass(RoundedCornerShape(12.dp), GlassLevel.HI).padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart) {
             BasicTextField(
                 value = name, onValueChange = { name = it.take(40) }, singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(color = c.text, fontSize = 15.sp),
@@ -290,7 +290,7 @@ private fun Note(text: String, warn: Boolean = false) {
 private fun SelectChip(text: String, selected: Boolean, onClick: () -> Unit) {
     val c = ThermoTheme.colors
     Box(
-        Modifier.heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp))
+        Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp))
             .then(if (selected) Modifier.background(c.accent) else Modifier.glass(RoundedCornerShape(20.dp)))
             .clickable(role = Role.RadioButton, onClick = onClick).padding(horizontal = 12.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center,
@@ -301,7 +301,7 @@ private fun SelectChip(text: String, selected: Boolean, onClick: () -> Unit) {
 private fun AccentButton(text: String, onClick: () -> Unit) {
     val c = ThermoTheme.colors
     Box(
-        Modifier.heightIn(min = 44.dp).clip(RoundedCornerShape(22.dp)).background(c.accent)
+        Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(22.dp)).background(c.accent)
             .clickable(role = Role.Button, onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center,
     ) { Text(text, color = c.onAccent, fontSize = 14.sp) }

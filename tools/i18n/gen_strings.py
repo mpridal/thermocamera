@@ -104,7 +104,7 @@ S = {
  "settings_section_camera": ("Camera", "Kamera", "Cámara", "Fotocamera", "Caméra", "Kamera"),
  "settings_orientation": ("Module orientation", "Orientace modulu", "Orientación del módulo", "Orientamento del modulo", "Orientation du module", "Ausrichtung des Moduls"),
  "settings_mirror": ("Mirror image", "Zrcadlit obraz", "Reflejar imagen", "Specchia immagine", "Image miroir", "Bild spiegeln"),
- "settings_mirror_summary": ("When the module faces you", "Když modul míří na tebe", "Cuando el módulo apunta hacia ti", "Quando il modulo è rivolto verso di te", "Quand le module est tourné vers toi", "Wenn das Modul zu dir zeigt"),
+ "settings_mirror_summary": ("Usually on – lens facing away from you, like the rear camera", "Obvykle zapnuto – čočka míří od tebe jako zadní kamera", "Normalmente activado: la lente apunta lejos de ti, como la cámara trasera", "Di solito attivo: l'obiettivo è rivolto lontano da te, come la fotocamera posteriore", "Généralement activé : l'objectif est tourné vers l'extérieur, comme la caméra arrière", "Meist an – Objektiv zeigt von dir weg wie die Rückkamera"),
  "settings_alignment": ("Overlay alignment", "Zarovnání překryvu", "Alineación de la superposición", "Allineamento della sovrapposizione", "Alignement de la superposition", "Ausrichtung der Überlagerung"),
  "settings_alignment_summary": ("Match the module camera to the thermal image", "Srovnat kameru modulu s termo obrazem", "Ajustar la cámara del módulo a la imagen térmica", "Allineare la fotocamera del modulo all'immagine termica", "Caler la caméra du module sur l'image thermique", "Kamera des Moduls am Wärmebild ausrichten"),
  "settings_photo_camera": ("Camera for photos and preview", "Kamera pro fotografie a náhled", "Cámara para fotos y vista previa", "Fotocamera per foto e anteprima", "Caméra pour photos et aperçu", "Kamera für Fotos und Vorschau"),
@@ -226,6 +226,11 @@ S = {
  "settings_section_updates": ("Updates", "Aktualizace", "Actualizaciones", "Aggiornamenti", "Mises à jour", "Updates"),
  "settings_check_updates": ("Check for updates at start", "Kontrolovat aktualizace při startu", "Buscar actualizaciones al iniciar", "Controlla gli aggiornamenti all'avvio", "Rechercher des mises à jour au démarrage", "Beim Start nach Updates suchen"),
  "settings_updates_wifi_only": ("Download only over Wi-Fi", "Stahovat jen přes Wi-Fi", "Descargar solo con Wi-Fi", "Scarica solo tramite Wi-Fi", "Télécharger uniquement en Wi-Fi", "Nur über WLAN herunterladen"),
+ "temp_fahrenheit": ("%1$s °F", "%1$s °F", "%1$s °F", "%1$s °F", "%1$s °F", "%1$s °F"),
+ "settings_units": ("Temperature unit", "Jednotky teploty", "Unidad de temperatura", "Unità di temperatura", "Unité de température", "Temperatureinheit"),
+ "settings_smoothing": ("Smooth the image over time", "Časově vyhlazovat obraz", "Suavizar la imagen en el tiempo", "Leviga l'immagine nel tempo", "Lisser l'image dans le temps", "Bild zeitlich glätten"),
+ "settings_pixelated": ("Show sensor pixels (no interpolation)", "Zobrazit body senzoru (bez interpolace)", "Mostrar píxeles del sensor (sin interpolación)", "Mostra i pixel del sensore (senza interpolazione)", "Afficher les pixels du capteur (sans interpolation)", "Sensorpixel zeigen (ohne Interpolation)"),
+ "settings_section_display": ("Display", "Zobrazení", "Visualización", "Visualizzazione", "Affichage", "Anzeige"),
 }
 
 NONTRANSLATABLE = {
@@ -237,6 +242,9 @@ NONTRANSLATABLE = {
 LANGS = ["", "cs", "es", "it", "fr", "de"]
 
 def esc(v):
+    # Number and unit never wrap apart (zadání F10): "10 °C" → non-breaking space.
+    import re
+    v = re.sub(r'(\d) (°[CF]|%|Hz|MP|Mpx)', '\\1\u00a0\\2', v)
     v = escape(v).replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n")
     if v.startswith("@") or v.startswith("?"):
         v = "\\" + v

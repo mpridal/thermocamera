@@ -58,9 +58,9 @@ data class RenderResult(val bitmap: Bitmap, val measurements: Measurements, val 
  * Draws a measurement snapshot (zadání F4/F5): the image exactly as in the app (mode, blend,
  * palette, markers, scale) plus a strip with values. Works on any thread.
  */
-class SnapshotRenderer(private val context: Context, private val locale: Locale) {
+class SnapshotRenderer(private val context: Context, private val locale: Locale, fahrenheit: Boolean = false) {
 
-    private val fmt = NumberFormatter(locale)
+    private val fmt = NumberFormatter(locale, fahrenheit)
 
     fun corrected(input: RenderInput): FloatArray =
         FloatArray(input.raw.size).also { input.correction.applyTo(input.raw, it) }
@@ -130,7 +130,7 @@ class SnapshotRenderer(private val context: Context, private val locale: Locale)
         }
         val s = size.toFloat()
         drawCrosshair(canvas, s)
-        label(canvas, fmt.one(m.center) + " °C", s / 2 + s * 0.05f, s / 2 - s * 0.03f, Color.WHITE)
+        label(canvas, fmt.temp(m.center), s / 2 + s * 0.05f, s / 2 - s * 0.03f, Color.WHITE)
         if (mode != ViewMode.PHOTO) {
             val gw = input.width.toFloat(); val gh = input.height.toFloat()
             marker(canvas, (m.min.x + 0.5f) / gw * s, (m.min.y + 0.5f) / gh * s, true, MIN_COLOR)
@@ -182,8 +182,8 @@ class SnapshotRenderer(private val context: Context, private val locale: Locale)
         val positions = palette.stops.map { 1f - it.position }.reversed().toFloatArray()
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { shader = LinearGradient(0f, top, 0f, bottom, colors, positions, Shader.TileMode.CLAMP) }
         canvas.drawRoundRect(RectF(x, top, x + 24f, bottom), 12f, 12f, paint)
-        label(canvas, fmt.zero(range.max), x - 20f, top - 12f, Color.WHITE)
-        label(canvas, fmt.zero(range.min), x - 20f, bottom + 44f, Color.WHITE)
+        label(canvas, fmt.t0(range.max), x - 20f, top - 12f, Color.WHITE)
+        label(canvas, fmt.t0(range.min), x - 20f, bottom + 44f, Color.WHITE)
     }
 
     private fun drawStrip(canvas: Canvas, top: Float, width: Float, height: Float, input: RenderInput, m: Measurements, fRsi: Float?) {
@@ -192,7 +192,7 @@ class SnapshotRenderer(private val context: Context, private val locale: Locale)
         val small = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = height * 0.11f; color = Color.rgb(185, 192, 204) }
         val pad = 36f
         var y = top + height * 0.24f
-        val c = { v: Float -> fmt.one(v) + " °C" }
+        val c = { v: Float -> fmt.temp(v) }
         val values = "▼ ${c(m.min.celsius)}   + ${c(m.center)}   ▲ ${c(m.max.celsius)}"
         // Shrink to fit the strip width.
         val w = big.measureText(values)

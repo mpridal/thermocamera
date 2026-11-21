@@ -8,14 +8,17 @@ protokol kamery: [docs/ht102-protocol.md](docs/ht102-protocol.md)
 
 ## Stav
 
-**Fáze 4 – snímky, galerie a sdílení**; Fáze 3 – měření a kalibrace (rozsahy, emisivita, kalibrace, profily, fRsi, izoterma). Dříve: **Fáze 2 – zobrazení a kamery.** Živý obraz z HT-102 (protokol v `docs/ht102-protocol.md`), 4 režimy, body P1–P5,
-orientace, zarovnání překryvu, kamera telefonu s automatickým zarovnáním, svítilna, rozložení pro telefon i tablet.
-Na emulátoru běží simulátor.
-**Ještě neověřeno na skutečném telefonu** – postup v `docs/manual-test.md`.
+Hotové Fáze 0–6 podle zadání (`docs/zadani.md`): živý obraz z HT-102 (protokol v `docs/ht102-protocol.md`),
+4 režimy, body, orientace, zarovnání, kamera telefonu s automatickým zarovnáním, svítilna, rozsahy, emisivita,
+kalibrace, profily, tepelné mosty (fRsi, izoterma), snímky, galerie, sdílení (JPG/PDF/CSV), aktualizace z GitHubu,
+6 jazyků, °C/°F, telefon i tablet. Na emulátoru běží simulátor.
+
+Ověřeno na Pixelu 10 Pro: Fáze 1–2 (viz `docs/manual-test.md`). Fáze 3–6 zatím jen na emulátoru.
+Vydání verzí: `docs/release.md` (čeká na nahrání podpisového klíče do GitHub Secrets).
 
 ## Sestavení
 
-Potřeba: JDK 21, Android SDK (API 37).
+Potřeba: JDK 21, Android SDK (API 37), NDK 28.2 a CMake 3.22.1 (nativní USB vrstva).
 
 ```
 ./gradlew :thermal-core:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug

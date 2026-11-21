@@ -99,7 +99,7 @@ fun <T> SegmentedControl(
 ) {
     val c = ThermoTheme.colors
     Row(
-        modifier.fillMaxWidth().heightIn(min = 44.dp).glass(RoundedCornerShape(22.dp)).padding(3.dp),
+        modifier.fillMaxWidth().heightIn(min = 48.dp).glass(RoundedCornerShape(22.dp)).padding(3.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         for ((value, label) in options) {
@@ -153,7 +153,7 @@ fun GlassChip(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, 
     val c = ThermoTheme.colors
     Row(
         modifier
-            .heightIn(min = 40.dp)
+            .heightIn(min = 48.dp)
             .glass(RoundedCornerShape(20.dp))
             .clickable(role = Role.Button, onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 8.dp),

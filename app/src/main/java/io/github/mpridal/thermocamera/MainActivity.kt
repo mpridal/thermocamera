@@ -50,6 +50,12 @@ class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var updater: io.github.mpridal.thermocamera.update.Updater
 
+    private fun systemAnimationsOff(): Boolean = runCatching {
+        val r = contentResolver
+        android.provider.Settings.Global.getFloat(r, android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f ||
+            android.provider.Settings.Global.getFloat(r, android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, 1f) == 0f
+    }.getOrDefault(false)
+
     override fun onStart() {
         super.onStart()
         liveVm.setDisplayRotation(androidx.core.content.ContextCompat.getDisplayOrDefault(this).rotation)
@@ -79,8 +85,14 @@ class MainActivity : AppCompatActivity() {
         updater.checkOnStart() // background, never delays the start (zadání kap. 9)
         setContent {
             val settings by liveVm.settings.collectAsStateWithLifecycle()
-            ThermoTheme(settings.themeMode, settings.reduceTransparency) {
-                AppRoot(liveVm, updater)
+            // Reduce transparency also when the system has animations switched off (zadání kap. 7.1).
+            val animationsOff = androidx.compose.runtime.remember { systemAnimationsOff() }
+            ThermoTheme(settings.themeMode, settings.reduceTransparency || animationsOff) {
+                androidx.compose.runtime.CompositionLocalProvider(
+                    io.github.mpridal.thermocamera.ui.components.LocalFahrenheit provides settings.fahrenheit,
+                ) {
+                    AppRoot(liveVm, updater)
+                }
             }
         }
     }

@@ -58,6 +58,9 @@ class SnapshotExporter @Inject constructor(
 ) {
     val locale: Locale get() = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault()
 
+    /** Display unit for renders and reports (data and CSV stay in °C). */
+    @Volatile var fahrenheit: Boolean = false
+
     private fun exportDir() = File(context.cacheDir, "exports").apply { mkdirs() }
 
     fun points(s: SnapshotEntity): List<Pair<Float, Float>> = s.points.split(';').filter { it.isNotBlank() }.mapNotNull {
@@ -77,7 +80,7 @@ class SnapshotExporter @Inject constructor(
             insideTemp = s.insideTemp, outsideTemp = s.outsideTemp, fRsiLimit = s.fRsiLimit, isotherm = false,
             rangeName = context.getString(LiveViewModel.rangeNameRes(preset)), createdAt = s.createdAt, title = s.title,
         )
-        return SnapshotRenderer(context, locale).render(input, sideBySide, square).also { vis?.first?.recycle() }
+        return SnapshotRenderer(context, locale, fahrenheit).render(input, sideBySide, square).also { vis?.first?.recycle() }
     }
 
     private fun baseName(s: SnapshotEntity) = "thermocamera-" + s.dir
@@ -123,6 +126,7 @@ class SnapshotExporter @Inject constructor(
         if (list.isEmpty()) return@withContext null
         val r = context.resources
         val fmt = NumberFormatter(locale)
+        val fmtUnit = NumberFormatter(locale, fahrenheit)
         val doc = PdfDocument()
         val pageW = 595; val pageH = 842; val margin = 40
         val title = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 18f; typeface = Typeface.DEFAULT_BOLD; color = Color.BLACK }
@@ -146,7 +150,7 @@ class SnapshotExporter @Inject constructor(
                 c.drawBitmap(bmp, null, dst, Paint(Paint.FILTER_BITMAP_FLAG))
                 y = dst.bottom + 22f
                 val m = rendered.measurements
-                val cel = { v: Float -> fmt.one(v) + " °C" }
+                val cel = { v: Float -> fmtUnit.temp(v) }
                 c.drawText("MIN ${cel(m.min.celsius)}   ${r.getString(R.string.label_center)} ${cel(m.center)}   MAX ${cel(m.max.celsius)}", margin.toFloat(), y, text)
                 y += 16f
                 m.points.forEachIndexed { k, p -> c.drawText("P${k + 1}: ${cel(p.celsius)}", margin.toFloat() + (k % 5) * 100f, y, text) }

@@ -63,7 +63,7 @@ fun UpdateBanner(updater: Updater) {
             if (s is UpdateState.Downloaded) {
                 Spacer(Modifier.width(8.dp))
                 Box(
-                    Modifier.heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp)).background(c.accent)
+                    Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp)).background(c.accent)
                         .clickable(role = Role.Button) { if (updater.canInstall()) updater.install() else explain = true }
                         .padding(horizontal = 14.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center,

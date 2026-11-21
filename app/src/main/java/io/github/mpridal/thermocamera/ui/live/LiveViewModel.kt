@@ -386,7 +386,7 @@ class LiveViewModel @Inject constructor(
                 rangeName = rangeName, createdAt = now,
             )
             return withContext(Dispatchers.Default) {
-                val result = io.github.mpridal.thermocamera.snapshot.SnapshotRenderer(context, locale).render(input)
+                val result = io.github.mpridal.thermocamera.snapshot.SnapshotRenderer(context, locale, s.fahrenheit).render(input)
                 val entity = io.github.mpridal.thermocamera.data.db.SnapshotEntity(
                     createdAt = now, projectId = s.activeProjectId.takeIf { it >= 0 }, dir = dir.name, title = "", note = "",
                     viewMode = s.viewMode.name, blend = s.blend, palette = s.palette.name, rangePreset = s.rangePreset.name,

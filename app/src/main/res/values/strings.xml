@@ -50,7 +50,7 @@
     <string name="cd_scale">Temperature scale from %1$s to %2$s</string>
     <string name="coming_later">Available in a later version</string>
     <string name="badge_emissivity">ε %1$s</string>
-    <string name="facade_warning">The camera is specified for 0–35 °C. Readings outdoors in frost are unreliable.</string>
+    <string name="facade_warning">The camera is specified for 0–35 °C. Readings outdoors in frost are unreliable.</string>
     <string name="disconnected_title">Connect the HT-102 thermal camera</string>
     <string name="disconnected_body">Plug the module into the USB-C port of your phone or tablet.</string>
     <string name="disconnected_help_title">If the camera does not appear</string>
@@ -114,7 +114,7 @@
     <string name="settings_section_camera">Camera</string>
     <string name="settings_orientation">Module orientation</string>
     <string name="settings_mirror">Mirror image</string>
-    <string name="settings_mirror_summary">When the module faces you</string>
+    <string name="settings_mirror_summary">Usually on – lens facing away from you, like the rear camera</string>
     <string name="settings_alignment">Overlay alignment</string>
     <string name="settings_alignment_summary">Match the module camera to the thermal image</string>
     <string name="settings_photo_camera">Camera for photos and preview</string>
@@ -179,13 +179,13 @@
     <string name="cal_current">Correction: offset %1$s · gain %2$s</string>
     <string name="cal_reset">Remove correction</string>
     <string name="cal_no_data">No data from the camera.</string>
-    <string name="cal_too_close">The two references must differ by more than 0.5 °C.</string>
+    <string name="cal_too_close">The two references must differ by more than 0.5 °C.</string>
     <string name="cal_section_bridge">Thermal bridge</string>
     <string name="bridge_inside">Inside air θi</string>
     <string name="bridge_outside">Outside air θe</string>
     <string name="bridge_limit">Limit fRsi</string>
     <string name="bridge_isotherm">Highlight spots below the limit</string>
-    <string name="bridge_small_difference">The inside–outside difference is below 10 °C – too small for reliable thermal-bridge detection.</string>
+    <string name="bridge_small_difference">The inside–outside difference is below 10 °C – too small for reliable thermal-bridge detection.</string>
     <string name="bridge_warning">Possible thermal bridge</string>
     <string name="bridge_note">The app is a guide, not an expert assessment.</string>
     <string name="cal_section_profiles">Profiles</string>
@@ -236,4 +236,9 @@
     <string name="settings_section_updates">Updates</string>
     <string name="settings_check_updates">Check for updates at start</string>
     <string name="settings_updates_wifi_only">Download only over Wi-Fi</string>
+    <string name="temp_fahrenheit">%1$s °F</string>
+    <string name="settings_units">Temperature unit</string>
+    <string name="settings_smoothing">Smooth the image over time</string>
+    <string name="settings_pixelated">Show sensor pixels (no interpolation)</string>
+    <string name="settings_section_display">Display</string>
 </resources>

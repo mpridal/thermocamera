@@ -109,7 +109,7 @@ fun AlignmentScreen(liveVm: LiveViewModel, onBack: () -> Unit) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 GlassChip(stringResource(R.string.align_reset), { align = OverlayAlignment.DEFAULT })
                 Box(
-                    Modifier.heightIn(min = 40.dp).clip(RoundedCornerShape(20.dp)).background(c.accent)
+                    Modifier.heightIn(min = 48.dp).clip(RoundedCornerShape(20.dp)).background(c.accent)
                         .clickable { liveVm.setModuleAlignment(align); onBack() }
                         .padding(horizontal = 18.dp, vertical = 10.dp),
                     contentAlignment = Alignment.Center,

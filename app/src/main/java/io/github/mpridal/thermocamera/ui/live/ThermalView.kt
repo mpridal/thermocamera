@@ -172,7 +172,7 @@ private fun ImageSquare(
         if (showThermal) frame.range?.let { r ->
             val cdScale = stringResource(R.string.cd_scale, celsius(fmt, r.min), celsius(fmt, r.max))
             ScaleBar(
-                palette, fmt.zero(r.max), fmt.zero(r.min),
+                palette, fmt.t0(r.max), fmt.t0(r.min),
                 Modifier.align(Alignment.CenterEnd).padding(end = 8.dp).fillMaxHeight(0.62f)
                     .semantics { contentDescription = cdScale },
             )

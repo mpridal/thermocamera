@@ -37,7 +37,7 @@
     <string name="cd_scale">Teplotní stupnice od %1$s do %2$s</string>
     <string name="coming_later">Bude v některé z dalších verzí</string>
     <string name="badge_emissivity">ε %1$s</string>
-    <string name="facade_warning">Kamera je určená pro 0–35 °C. Měření venku v mrazu je nespolehlivé.</string>
+    <string name="facade_warning">Kamera je určená pro 0–35 °C. Měření venku v mrazu je nespolehlivé.</string>
     <string name="disconnected_title">Připoj termokameru HT-102</string>
     <string name="disconnected_body">Zasuň modul do USB-C portu telefonu nebo tabletu.</string>
     <string name="disconnected_help_title">Když se kamera neobjeví</string>
@@ -101,7 +101,7 @@
     <string name="settings_section_camera">Kamera</string>
     <string name="settings_orientation">Orientace modulu</string>
     <string name="settings_mirror">Zrcadlit obraz</string>
-    <string name="settings_mirror_summary">Když modul míří na tebe</string>
+    <string name="settings_mirror_summary">Obvykle zapnuto – čočka míří od tebe jako zadní kamera</string>
     <string name="settings_alignment">Zarovnání překryvu</string>
     <string name="settings_alignment_summary">Srovnat kameru modulu s termo obrazem</string>
     <string name="settings_photo_camera">Kamera pro fotografie a náhled</string>
@@ -166,13 +166,13 @@
     <string name="cal_current">Korekce: offset %1$s · gain %2$s</string>
     <string name="cal_reset">Zrušit korekci</string>
     <string name="cal_no_data">Z kamery nechodí data.</string>
-    <string name="cal_too_close">Obě reference se musí lišit o víc než 0,5 °C.</string>
+    <string name="cal_too_close">Obě reference se musí lišit o víc než 0,5 °C.</string>
     <string name="cal_section_bridge">Tepelný most</string>
     <string name="bridge_inside">Uvnitř θi</string>
     <string name="bridge_outside">Venku θe</string>
     <string name="bridge_limit">Limit fRsi</string>
     <string name="bridge_isotherm">Zvýraznit místa pod limitem</string>
-    <string name="bridge_small_difference">Rozdíl teplot uvnitř a venku je menší než 10 °C – pro spolehlivé hledání tepelných mostů je malý.</string>
+    <string name="bridge_small_difference">Rozdíl teplot uvnitř a venku je menší než 10 °C – pro spolehlivé hledání tepelných mostů je malý.</string>
     <string name="bridge_warning">Možný tepelný most</string>
     <string name="bridge_note">Aplikace je orientační pomůcka, ne posudek.</string>
     <string name="cal_section_profiles">Profily</string>
@@ -223,4 +223,9 @@
     <string name="settings_section_updates">Aktualizace</string>
     <string name="settings_check_updates">Kontrolovat aktualizace při startu</string>
     <string name="settings_updates_wifi_only">Stahovat jen přes Wi-Fi</string>
+    <string name="temp_fahrenheit">%1$s °F</string>
+    <string name="settings_units">Jednotky teploty</string>
+    <string name="settings_smoothing">Časově vyhlazovat obraz</string>
+    <string name="settings_pixelated">Zobrazit body senzoru (bez interpolace)</string>
+    <string name="settings_section_display">Zobrazení</string>
 </resources>

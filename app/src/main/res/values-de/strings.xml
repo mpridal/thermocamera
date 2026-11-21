@@ -37,7 +37,7 @@
     <string name="cd_scale">Temperaturskala von %1$s bis %2$s</string>
     <string name="coming_later">In einer späteren Version verfügbar</string>
     <string name="badge_emissivity">ε %1$s</string>
-    <string name="facade_warning">Die Kamera ist für 0–35 °C spezifiziert. Messungen draußen bei Frost sind unzuverlässig.</string>
+    <string name="facade_warning">Die Kamera ist für 0–35 °C spezifiziert. Messungen draußen bei Frost sind unzuverlässig.</string>
     <string name="disconnected_title">Wärmebildkamera HT-102 anschließen</string>
     <string name="disconnected_body">Stecke das Modul in den USB-C-Anschluss von Smartphone oder Tablet.</string>
     <string name="disconnected_help_title">Wenn die Kamera nicht erscheint</string>
@@ -101,7 +101,7 @@
     <string name="settings_section_camera">Kamera</string>
     <string name="settings_orientation">Ausrichtung des Moduls</string>
     <string name="settings_mirror">Bild spiegeln</string>
-    <string name="settings_mirror_summary">Wenn das Modul zu dir zeigt</string>
+    <string name="settings_mirror_summary">Meist an – Objektiv zeigt von dir weg wie die Rückkamera</string>
     <string name="settings_alignment">Ausrichtung der Überlagerung</string>
     <string name="settings_alignment_summary">Kamera des Moduls am Wärmebild ausrichten</string>
     <string name="settings_photo_camera">Kamera für Fotos und Vorschau</string>
@@ -166,13 +166,13 @@
     <string name="cal_current">Korrektur: Offset %1$s · Verstärkung %2$s</string>
     <string name="cal_reset">Korrektur entfernen</string>
     <string name="cal_no_data">Keine Daten von der Kamera.</string>
-    <string name="cal_too_close">Die beiden Referenzen müssen sich um mehr als 0,5 °C unterscheiden.</string>
+    <string name="cal_too_close">Die beiden Referenzen müssen sich um mehr als 0,5 °C unterscheiden.</string>
     <string name="cal_section_bridge">Wärmebrücke</string>
     <string name="bridge_inside">Innenluft θi</string>
     <string name="bridge_outside">Außenluft θe</string>
     <string name="bridge_limit">Grenzwert fRsi</string>
     <string name="bridge_isotherm">Stellen unter dem Grenzwert hervorheben</string>
-    <string name="bridge_small_difference">Der Unterschied innen–außen liegt unter 10 °C – zu klein für eine zuverlässige Suche nach Wärmebrücken.</string>
+    <string name="bridge_small_difference">Der Unterschied innen–außen liegt unter 10 °C – zu klein für eine zuverlässige Suche nach Wärmebrücken.</string>
     <string name="bridge_warning">Mögliche Wärmebrücke</string>
     <string name="bridge_note">Die App ist eine Orientierungshilfe, kein Gutachten.</string>
     <string name="cal_section_profiles">Profile</string>
@@ -223,4 +223,9 @@
     <string name="settings_section_updates">Updates</string>
     <string name="settings_check_updates">Beim Start nach Updates suchen</string>
     <string name="settings_updates_wifi_only">Nur über WLAN herunterladen</string>
+    <string name="temp_fahrenheit">%1$s °F</string>
+    <string name="settings_units">Temperatureinheit</string>
+    <string name="settings_smoothing">Bild zeitlich glätten</string>
+    <string name="settings_pixelated">Sensorpixel zeigen (ohne Interpolation)</string>
+    <string name="settings_section_display">Anzeige</string>
 </resources>

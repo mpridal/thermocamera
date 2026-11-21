@@ -11,7 +11,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 /** Locale-aware number formatting (decimal comma in cs/es/it/fr/de, point in en). */
-class NumberFormatter(locale: Locale) {
+class NumberFormatter(locale: Locale, val fahrenheit: Boolean = false) {
     private val one = NumberFormat.getNumberInstance(locale).apply {
         minimumFractionDigits = 1; maximumFractionDigits = 1; isGroupingUsed = false
     }
@@ -24,19 +24,39 @@ class NumberFormatter(locale: Locale) {
     fun two(v: Float): String = two.format(v.toDouble())
     fun zero(v: Float): String = zero.format(v.toDouble())
 
+    /** °C → display unit. Measurements, calibration and CSV stay in °C; only the display converts. */
+    fun toUnit(celsius: Float): Float = if (fahrenheit) celsius * 9f / 5f + 32f else celsius
+
+    /** Display unit symbol. */
+    val unit: String get() = if (fahrenheit) "°F" else "°C"
+
+    /** Temperature with one decimal in the display unit, without the unit. */
+    fun t1(celsius: Float): String = one(toUnit(celsius))
+
+    /** Temperature rounded to whole degrees in the display unit, without the unit. */
+    fun t0(celsius: Float): String = zero(toUnit(celsius))
+
     /** Short in-image label, e.g. "13,4°". */
-    fun deg(v: Float): String = one(v) + "°"
+    fun deg(celsius: Float): String = one(toUnit(celsius)) + "°"
+
+    /** Temperature with unit, e.g. "19,6 °C" (non-breaking space). */
+    fun temp(celsius: Float): String = t1(celsius) + "\u00a0" + unit
 }
+
+/** True when temperatures are shown in °F (Nastavení, zadání F10). */
+val LocalFahrenheit = androidx.compose.runtime.staticCompositionLocalOf { false }
 
 @Composable
 fun rememberNumberFormatter(): NumberFormatter {
     val locale = LocalConfiguration.current.locales[0]
-    return remember(locale) { NumberFormatter(locale) }
+    val f = LocalFahrenheit.current
+    return remember(locale, f) { NumberFormatter(locale, f) }
 }
 
 /** "19,6 °C" with a non-breaking space. */
 @Composable
-fun celsius(f: NumberFormatter, v: Float): String = stringResource(R.string.temp_celsius, f.one(v))
+fun celsius(f: NumberFormatter, v: Float): String =
+    stringResource(if (f.fahrenheit) R.string.temp_fahrenheit else R.string.temp_celsius, f.t1(v))
 
 @Composable
 fun rangePresetName(p: RangePreset): String = stringResource(

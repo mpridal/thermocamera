@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -49,6 +50,8 @@ android {
 
     buildTypes {
         debug {
+            // Pseudo-locale en-XA (elongated texts) for layout checks (zadání kap. 10).
+            isPseudoLocalesEnabled = true
             // Debug builds also run on the x86_64 emulator.
             ndk { abiFilters += "x86_64" }
         }
@@ -72,6 +75,13 @@ android {
 
     androidResources {
         localeFilters += listOf("en", "cs", "es", "it", "fr", "de")
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            all { it.systemProperty("robolectric.pixelCopyRenderMode", "hardware") }
+        }
     }
 
     lint {
@@ -120,6 +130,13 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.junit.rule)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.compose.ui.test.junit4)

@@ -73,6 +73,10 @@ class GalleryViewModel @Inject constructor(
 
     private val thumbs = LruCache<Long, ImageBitmap>(60)
 
+    init {
+        viewModelScope.launch { settingsRepo.settings.collect { exporter.fahrenheit = it.fahrenheit } }
+    }
+
     fun setFilter(f: ProjectFilter) { _filter.value = f; _selected.value = emptySet() }
     fun toggle(id: Long) { _selected.value = _selected.value.let { if (id in it) it - id else it + id } }
     fun clearSelection() { _selected.value = emptySet() }

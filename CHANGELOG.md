@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] – Fáze 6
+
+- Jednotky °C / °F (zobrazení, snímky a PDF; měření, kalibrace a CSV zůstávají v °C), časové vyhlazení a „body senzoru“
+  v Nastavení › Zobrazení.
+- „Omezit průhlednost“ se zapne i automaticky při vypnutých systémových animacích.
+- Dotykové cíle ovládacích prvků aspoň 48 dp; nezlomitelná mezera mezi číslem a jednotkou ve všech jazycích.
+- Screenshot testy (Roborazzi): 6 jazyků + pseudo-jazyk en-XA × světlý/tmavý × telefon/tablet, obrázky jako artefakt CI.
+- Opraven popis zrcadlení (výchozí zapnuto, čočka míří od uživatele).
+
 ## [Unreleased] – Fáze 5
 
 - Aktualizace z GitHub Releases: při startu na pozadí (jen s ověřenou sítí, volitelně jen Wi-Fi), stažení s navazováním,
