@@ -141,4 +141,5 @@
     <string name="camera_permission_for_usb">Android consente l\'accesso a una fotocamera USB solo con il permesso Fotocamera: la HT-102 si presenta come fotocamera. Tocca lo stato per consentirlo.</string>
     <string name="settings_video_fps">Frequenza video della termocamera</string>
     <string name="settings_video_fps_summary">Fotogrammi al secondo richiesti alla HT-102: i dati termici arrivano con ogni fotogramma. Per i test.</string>
+    <string name="settings_video_resolution">Risoluzione video della termocamera</string>
 </resources>

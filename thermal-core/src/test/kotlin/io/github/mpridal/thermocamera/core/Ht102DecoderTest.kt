@@ -42,4 +42,15 @@ class Ht102DecoderTest {
             assertTrue("byte $i", diff == 0 || (diff == 1 && i % 2 == 1))
         }
     }
+
+    /** The matrix is also in smaller frames (captured from the same camera on Windows). */
+    @Test fun decodesSmallerResolutions() {
+        for ((name, size) in listOf("frame-320x240-yuy2.bin" to 320 * 240 * 2, "frame-160x120-yuy2.bin" to 160 * 120 * 2)) {
+            val bytes = requireNotNull(javaClass.getResourceAsStream("/ht102/$name")).use { it.readBytes() }
+            assertEquals(name, size, bytes.size)
+            val m = Measure.of(Ht102Decoder.decode(bytes).celsius, 32, 32)
+            assertTrue("$name min ${m.min.celsius}", m.min.celsius in 13f..17f)
+            assertTrue("$name max ${m.max.celsius}", m.max.celsius in 30f..33f)
+        }
+    }
 }

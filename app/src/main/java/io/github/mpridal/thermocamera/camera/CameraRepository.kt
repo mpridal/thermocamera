@@ -30,6 +30,11 @@ class CameraRepository @Inject constructor(
     init {
         // Video frame rate for the HT-102 (Nastavení › Pro pokročilé).
         scope.launch { settings.settings.map { it.videoFps }.distinctUntilChanged().collect { ht102.setRequestedFps(it) } }
+        scope.launch {
+            settings.settings.map { it.videoResolution }.distinctUntilChanged().collect {
+                ht102.setRequestedFrame(it.frameIndex, it.width, it.height)
+            }
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

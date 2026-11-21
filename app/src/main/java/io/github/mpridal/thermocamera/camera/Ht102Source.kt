@@ -84,6 +84,17 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
         restartStream()
     }
 
+    /** Requested video resolution as (UVC frame index, width, height); changing it restarts the stream. */
+    @Volatile var requestedFrame: Triple<Int, Int, Int> = Triple(2, 320, 240)
+        private set
+
+    fun setRequestedFrame(frameIndex: Int, width: Int, height: Int) {
+        val f = Triple(frameIndex, width, height)
+        if (f == requestedFrame) return
+        requestedFrame = f
+        restartStream()
+    }
+
     /** Stops the current stream so that [refresh] opens it again with the new parameters. */
     private fun restartStream() {
         scope.launch {
@@ -198,12 +209,18 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
             _state.value = CameraState.Error(CameraState.Reason.USB_ERROR)
             return
         }
-        val stream = UvcStream(dev, conn, frameIntervalNs100 = 10_000_000 / requestedFps)
+        val (frameIndex, frameW, frameH) = requestedFrame
+        val stream = UvcStream(
+            dev, conn,
+            frameIndex = frameIndex,
+            frameIntervalNs100 = 10_000_000 / requestedFps,
+            frameBytes = frameW * frameH * 2,
+        )
         var videoCount = 0L
         var videoWindowStart = System.nanoTime()
         var videoFps = 0f
         val prevThermal = FloatArray(Ht102Decoder.WIDTH * Ht102Decoder.HEIGHT)
-        val visibleRing = Array(4) { IntArray(FRAME_W * FRAME_H) }
+        val visibleRing = Array(4) { IntArray(frameW * frameH) }
         var ring = 0
         var lastThermalNs = System.nanoTime()
         var fps = 0f
@@ -235,8 +252,8 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
                 }
                 // Visible image from the module camera.
                 val argb = visibleRing[ring]; ring = (ring + 1) % visibleRing.size
-                Yuy2.toArgb(raw, FRAME_W, FRAME_H, argb)
-                _visible.tryEmit(VisibleFrame(FRAME_W, FRAME_H, argb, now))
+                Yuy2.toArgb(raw, frameW, frameH, argb)
+                _visible.tryEmit(VisibleFrame(frameW, frameH, argb, now))
             }
             lastThermalNs = System.nanoTime()
             stream.pump(assembler, isActive = { job?.isActive != false }) {

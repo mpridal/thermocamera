@@ -76,6 +76,7 @@ class SettingsViewModel @Inject constructor(private val repo: SettingsRepository
     fun setPhotoCamera(p: PhotoCamera) = viewModelScope.launch { repo.setPhotoCamera(p) }
     fun setAutoAlign(v: Boolean) = viewModelScope.launch { repo.setAutoAlign(v) }
     fun setVideoFps(v: Int) = viewModelScope.launch { repo.setVideoFps(v) }
+    fun setVideoResolution(v: io.github.mpridal.thermocamera.data.VideoResolution) = viewModelScope.launch { repo.setVideoResolution(v) }
 }
 
 /** Supported app languages in the order of the combo box (zadání F10). */
@@ -170,6 +171,12 @@ fun SettingsScreen(
                     options = Settings.VIDEO_FPS_OPTIONS.map { it to it.toString() },
                     selected = s.videoFps,
                     onSelect = vm::setVideoFps,
+                )
+                Text(stringResource(R.string.settings_video_resolution), color = c.text, fontSize = 15.sp)
+                SegmentedControl(
+                    options = io.github.mpridal.thermocamera.data.VideoResolution.entries.map { it to "${it.width}×${it.height}" },
+                    selected = s.videoResolution,
+                    onSelect = vm::setVideoResolution,
                 )
                 NavRow(
                     stringResource(R.string.settings_usb_diagnostics),

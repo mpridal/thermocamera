@@ -65,7 +65,8 @@ Opakované termo matice se přeskakují (senzor ~9 Hz, video 10 fps).
 ## Co zbývá ověřit na telefonu
 
 - Na Androidu: stream 640 × 480 YUY2 přes UVC knihovnu, dekódování živě, skutečná frekvence termo dat.
-- Zda se termo data objevují i v rozlišení 320 × 240 / 160 × 120 (aplikace výrobce používá jen 640 × 480 → použijeme také jen to).
+- ~~Zda se termo data objevují i v rozlišení 320 × 240 / 160 × 120~~ – **ano**, ověřeno na snímcích z Windows
+  (stejné hodnoty, test `decodesSmallerResolutions`).
 - Orientace termo matice vůči obrazu modulu (otočení/zrcadlení) – ruka v pravé části záběru.
 - Absolutní přesnost a emisivita: led ve vodě ≈ 0 °C, teplá voda s teploměrem, dlaň ≈ 34 °C.
 
@@ -75,3 +76,15 @@ Ověřeno ve Windows 21. 11. 2026 (`tools/windows-diag/`, výsledky v `docs/capt
 VID `0x0416`, PID `0x9393`, „W55FA93 USB UVC Device“, UVC 1.0, jediný formát YUY2
 (640 × 480, 320 × 240, 160 × 120), žádná Extension Unit, HID ani vendor rozhraní.
 Úplný výpis: příloha A zadání (`docs/zadani.md`).
+
+## Měření na Pixelu 10 Pro (2026-11-21)
+
+| Rozlišení | Vyžádáno | Skutečně video | Termo | Ztracené snímky |
+|---|---|---|---|---|
+| 640 × 480 | 10 fps | 5,2 fps | 5,2 Hz (nová matice v každém snímku) | 0 |
+| 640 × 480 | 30 fps | 5,0 fps | 5,2 Hz | 0 |
+| 320 × 240 | … | … | … | … |
+| 160 × 120 | … | … | … | … |
+
+Při 640 × 480 kamera dává ~5 snímků/s bez ohledu na požadavek (omezení čipu), test vyžaduje ≥ 7 Hz.
+Rozlišení a frekvence jdou přepnout v Nastavení › Pro pokročilé.

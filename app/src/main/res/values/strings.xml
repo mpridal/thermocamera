@@ -154,4 +154,5 @@
     <string name="camera_permission_for_usb">Android allows access to a USB camera only with the Camera permission – the HT-102 identifies itself as a camera. Tap the status to allow it.</string>
     <string name="settings_video_fps">Camera video frame rate</string>
     <string name="settings_video_fps_summary">Frames per second requested from the HT-102 – thermal data comes with every frame. For testing.</string>
+    <string name="settings_video_resolution">Camera video resolution</string>
 </resources>

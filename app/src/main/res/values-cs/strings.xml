@@ -141,4 +141,5 @@
     <string name="camera_permission_for_usb">Android povolí přístup k USB kameře jen s oprávněním Fotoaparát – HT-102 se hlásí jako kamera. Klepnutím na stav ho povolíš.</string>
     <string name="settings_video_fps">Snímková frekvence videa kamery</string>
     <string name="settings_video_fps_summary">Kolik snímků za sekundu se žádá od HT-102 – termo data chodí s každým snímkem. Pro testování.</string>
+    <string name="settings_video_resolution">Rozlišení videa kamery</string>
 </resources>

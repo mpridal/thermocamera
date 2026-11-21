@@ -23,6 +23,16 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK }
 
 enum class ViewMode { THERMAL, OVERLAY, SIDE_BY_SIDE, PHOTO }
 
+/**
+ * HT-102 video resolution (UVC frame index). The thermal matrix is in the first 30 720 bytes of every
+ * frame in all three resolutions (verified on captures), smaller frames may come faster.
+ */
+enum class VideoResolution(val frameIndex: Int, val width: Int, val height: Int) {
+    R640(1, 640, 480),
+    R320(2, 320, 240),
+    R160(3, 160, 120),
+}
+
 /** Which camera provides the normal image (zadání F11 bod 3). */
 enum class PhotoCamera {
     /** Camera inside the HT-102 module (640 × 480). */
@@ -52,6 +62,7 @@ data class Settings(
     val betterCameraAnsweredFor: String = "",
     /** Requested video frame rate of the HT-102 stream (Pro pokročilé); thermal data comes with every frame. */
     val videoFps: Int = DEFAULT_VIDEO_FPS,
+    val videoResolution: VideoResolution = VideoResolution.R320,
 ) {
     companion object {
         /** Frame rates the HT-102 advertises for 640 × 480 (UVC descriptor). */
@@ -90,6 +101,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         val autoAlign = booleanPreferencesKey("auto_align")
         val betterCameraAnswered = stringPreferencesKey("better_camera_answered_for")
         val videoFps = intPreferencesKey("video_fps")
+        val videoResolution = stringPreferencesKey("video_resolution")
     }
 
     val settings: Flow<Settings> = context.dataStore.data.map { p ->
@@ -117,6 +129,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
             autoAlign = p[Keys.autoAlign] ?: d.autoAlign,
             betterCameraAnsweredFor = p[Keys.betterCameraAnswered] ?: "",
             videoFps = p[Keys.videoFps]?.takeIf { it in Settings.VIDEO_FPS_OPTIONS } ?: d.videoFps,
+            videoResolution = p[Keys.videoResolution].toEnum(d.videoResolution),
         )
     }
 
@@ -135,6 +148,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
     suspend fun setPhotoCamera(v: PhotoCamera) = context.dataStore.edit { it[Keys.photoCamera] = v.name }
     suspend fun setAutoAlign(v: Boolean) = context.dataStore.edit { it[Keys.autoAlign] = v }
     suspend fun setVideoFps(v: Int) = context.dataStore.edit { it[Keys.videoFps] = v }
+    suspend fun setVideoResolution(v: VideoResolution) = context.dataStore.edit { it[Keys.videoResolution] = v.name }
     suspend fun setBetterCameraAnsweredFor(device: String) = context.dataStore.edit { it[Keys.betterCameraAnswered] = device }
 }
 
