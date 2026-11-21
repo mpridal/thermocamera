@@ -19,7 +19,9 @@ class IsoReader(
     val lengths = IntArray(packetsPerUrb)
 
     init {
-        if (handle <= 0L) throw UsbStreamException("Cannot start isochronous transfers (errno ${-handle})")
+        // The handle is a native pointer. On arm64 Android tags heap pointers in the top byte, so a
+        // valid handle can be negative – only -1..-4095 are errors (negative errno), 0 = no memory.
+        if (isError(handle)) throw UsbStreamException("Cannot start isochronous transfers (errno ${-handle})")
     }
 
     /**
@@ -35,7 +37,7 @@ class IsoReader(
     }
 
     override fun close() {
-        if (handle > 0L) {
+        if (!isError(handle)) {
             nativeClose(handle)
             handle = 0L
         }
@@ -45,6 +47,9 @@ class IsoReader(
         private const val EPIPE = 32
         private const val ENODEV = 19
         private const val ESHUTDOWN = 108
+
+        /** Negative errno (-1..-4095) or null pointer; anything else is a valid (possibly tagged) pointer. */
+        fun isError(handle: Long): Boolean = handle == 0L || handle in -4095L..-1L
 
         init {
             System.loadLibrary("ht102usb")

@@ -229,6 +229,8 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
                 _state.value = CameraState.Error(CameraState.Reason.USB_ERROR)
             }
         } finally {
+            // Also when opening failed half-way, so the diagnostics show how far negotiation got.
+            if (stream.negotiated.isNotEmpty()) lastNegotiation = stream.negotiated
             stream.close()
             conn.close()
             streamingDevice = null
