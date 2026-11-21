@@ -2,6 +2,11 @@
 
 Checklist pro test na skutečném telefonu/tabletu (zadání kap. 10). Výsledky zapiš do tabulky dole.
 
+## Testovací zařízení
+
+- Telefon: Google Pixel 10 Pro
+- Tablet: JENBIZZ 10", Android 16, slabé GPU (ověřit plynulost skla, případně „Omezit průhlednost“; zjistit, zda má blesk)
+
 ## Fáze 1 – kamera
 
 Příprava: nainstalovat debug APK (artefakt `thermocamera-debug` z GitHub Actions nebo `app/build/outputs/apk/debug/app-debug.apk`),
