@@ -89,6 +89,9 @@ private object Routes {
     const val USB_DIAG = "usb-diagnostics"
     const val CAMERA_TEST = "camera-test"
     const val ALIGN = "align"
+    const val GALLERY = "gallery"
+    const val DETAIL = "detail/{id}"
+    fun detail(id: Long) = "detail/$id"
 }
 
 @Composable
@@ -152,6 +155,7 @@ private fun AppRoot(liveVm: LiveViewModel) {
                         onOpenSettings = { nav.navigate(Routes.SETTINGS) },
                         onOpenCameraTest = openCameraTest,
                         onChoosePhotoCamera = choosePhotoCamera,
+                        onOpenGallery = { nav.navigate(Routes.GALLERY) },
                         snackbar = snackbar,
                     )
                 }
@@ -163,6 +167,19 @@ private fun AppRoot(liveVm: LiveViewModel) {
                         onOpenAlignment = { nav.navigate(Routes.ALIGN) },
                         onChoosePhotoCamera = choosePhotoCamera,
                     )
+                }
+                composable(Routes.GALLERY) {
+                    io.github.mpridal.thermocamera.ui.gallery.GalleryScreen(
+                        hiltViewModel(),
+                        onBack = { nav.popBackStack() },
+                        onOpen = { id -> nav.navigate(Routes.detail(id)) },
+                    )
+                }
+                composable(
+                    Routes.DETAIL,
+                    arguments = listOf(androidx.navigation.navArgument("id") { type = androidx.navigation.NavType.LongType }),
+                ) {
+                    io.github.mpridal.thermocamera.ui.gallery.SnapshotDetailScreen(hiltViewModel(), onBack = { nav.popBackStack() })
                 }
                 composable(Routes.ALIGN) {
                     AlignmentScreen(liveVm, onBack = { nav.popBackStack() })

@@ -92,6 +92,7 @@ class LiveViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val cameras: CameraRepository,
     private val settingsRepo: SettingsRepository,
+    private val snapshots: io.github.mpridal.thermocamera.snapshot.SnapshotStore,
 ) : ViewModel() {
 
     val settings: StateFlow<Settings> = settingsRepo.settings.stateIn(viewModelScope, SharingStarted.Eagerly, Settings())
@@ -297,6 +298,7 @@ class LiveViewModel @Inject constructor(
         val emOnly = Correction(s.emissivity, s.reflected)
         val c0 = (f[15, 15] + f[16, 15] + f[15, 16] + f[16, 16]) / 4f
         recordCenterSample(f.timestampNanos, emOnly.apply(c0))
+        lastRaw = Triple(orientedB.copyOf(), w, h)
         s.correction().applyTo(orientedB, corrected)
         lastCorrected = corrected.copyOf()
         val m = Measure.of(corrected, w, h, _points.value.map { it.x to it.y })
@@ -333,6 +335,79 @@ class LiveViewModel @Inject constructor(
                 fRsi = fRsi,
                 pointsFRsi = pointsFRsi,
             )
+        }
+    }
+
+    // ---- Snapshots (zadání F4) ----
+    @Volatile private var lastRaw: Triple<FloatArray, Int, Int>? = null
+
+    private val _saving = MutableStateFlow(false)
+    val saving: StateFlow<Boolean> = _saving.asStateFlow()
+
+    /**
+     * Saves a measurement snapshot: raw matrix, the normal image, a full phone photo when the phone
+     * camera is active, the rendered JPG and the metadata. Returns the new id, or null without data.
+     */
+    suspend fun takeSnapshot(): Long? {
+        if (_saving.value) return null
+        val (raw, w, h) = lastRaw ?: return null
+        _saving.value = true
+        try {
+            val s = settings.value
+            val f = _frame.value
+            val fromPhone = f.visibleFromPhone
+            val vis = (if (fromPhone) phoneLatest else moduleLatest)?.let { (argb, vw, vh) ->
+                Bitmap.createBitmap(argb.copyOf(vw * vh), vw, vh, Bitmap.Config.ARGB_8888)
+            }
+            val visCrop = f.visibleCrop
+            val dir = snapshots.newDir()
+            // Full-resolution phone photo (F11 bod 5) with the thermal square scaled to it.
+            var photoCrop: CropSquare? = null
+            if (phone.running.value && s.photoCamera != PhotoCamera.MODULE) {
+                val preview = phoneLatest
+                val size = phone.takePhoto(File(dir, io.github.mpridal.thermocamera.snapshot.SnapshotStore.PHOTO))
+                if (size != null && preview != null) {
+                    val k = maxOf(size.width, size.height).toFloat() / maxOf(preview.second, preview.third)
+                    val pc = phoneCrop ?: _phoneInfo.value?.let { info ->
+                        CropSquare(preview.second / 2f, preview.third / 2f, FovMath.pixelsInThermal(minOf(preview.second, preview.third), info.vfovDeg))
+                    }
+                    photoCrop = pc?.let { CropSquare(it.cx * k, it.cy * k, it.side * k, it.angleDeg) }
+                }
+            }
+            val now = System.currentTimeMillis()
+            val pts = _points.value.map { it.x to it.y }
+            val locale = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales()[0] ?: java.util.Locale.getDefault()
+            val rangeName = context.getString(rangeNameRes(s.rangePreset))
+            val input = io.github.mpridal.thermocamera.snapshot.RenderInput(
+                raw = raw, width = w, height = h, visible = vis, visibleCrop = visCrop,
+                viewMode = s.viewMode, blend = s.blend, palette = s.palette,
+                range = s.fixedRange() ?: f.range, correction = s.correction(), points = pts,
+                insideTemp = s.insideTemp, outsideTemp = s.outsideTemp, fRsiLimit = s.fRsiLimit, isotherm = s.isotherm,
+                rangeName = rangeName, createdAt = now,
+            )
+            return withContext(Dispatchers.Default) {
+                val result = io.github.mpridal.thermocamera.snapshot.SnapshotRenderer(context, locale).render(input)
+                val entity = io.github.mpridal.thermocamera.data.db.SnapshotEntity(
+                    createdAt = now, projectId = s.activeProjectId.takeIf { it >= 0 }, dir = dir.name, title = "", note = "",
+                    viewMode = s.viewMode.name, blend = s.blend, palette = s.palette.name, rangePreset = s.rangePreset.name,
+                    rangeMin = result.range.min, rangeMax = result.range.max, emissivity = s.emissivity, reflected = s.reflected,
+                    offset = s.calOffset, gain = s.calGain, insideTemp = s.insideTemp, outsideTemp = s.outsideTemp,
+                    fRsiLimit = s.fRsiLimit, points = pts.joinToString(";") { "${it.first},${it.second}" },
+                    orientationRotation = s.orientation.rotation, orientationMirror = s.orientation.mirror,
+                    cameraSource = if (fromPhone || photoCrop != null) "PHONE" else "MODULE",
+                    appVersion = io.github.mpridal.thermocamera.BuildConfig.VERSION_NAME,
+                    minC = result.measurements.min.celsius, maxC = result.measurements.max.celsius, centerC = result.measurements.center,
+                    hasVisible = vis != null, hasPhoto = photoCrop != null,
+                )
+                val id = snapshots.save(dir, entity, raw, w, h, result.bitmap, vis, visCrop, photoCrop, s.saveToGallery)
+                result.bitmap.recycle()
+                id
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Snapshot failed", e)
+            return null
+        } finally {
+            _saving.value = false
         }
     }
 
@@ -492,6 +567,15 @@ class LiveViewModel @Inject constructor(
     }
 
     companion object {
+        fun rangeNameRes(p: RangePreset): Int = when (p) {
+            RangePreset.AUTO -> io.github.mpridal.thermocamera.R.string.range_auto
+            RangePreset.INTERIOR -> io.github.mpridal.thermocamera.R.string.range_interior
+            RangePreset.FACADE -> io.github.mpridal.thermocamera.R.string.range_facade
+            RangePreset.HEATING -> io.github.mpridal.thermocamera.R.string.range_heating
+            RangePreset.FULL -> io.github.mpridal.thermocamera.R.string.range_full
+            RangePreset.CUSTOM -> io.github.mpridal.thermocamera.R.string.range_custom
+        }
+
         private const val TAG = "LiveViewModel"
         const val DISPLAY_SIZE = 320
         const val BG_SIZE = 8

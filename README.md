@@ -8,7 +8,7 @@ protokol kamery: [docs/ht102-protocol.md](docs/ht102-protocol.md)
 
 ## Stav
 
-**Fáze 3 – měření a kalibrace** (rozsahy, emisivita, kalibrace, profily, fRsi, izoterma). Dříve: **Fáze 2 – zobrazení a kamery.** Živý obraz z HT-102 (protokol v `docs/ht102-protocol.md`), 4 režimy, body P1–P5,
+**Fáze 4 – snímky, galerie a sdílení**; Fáze 3 – měření a kalibrace (rozsahy, emisivita, kalibrace, profily, fRsi, izoterma). Dříve: **Fáze 2 – zobrazení a kamery.** Živý obraz z HT-102 (protokol v `docs/ht102-protocol.md`), 4 režimy, body P1–P5,
 orientace, zarovnání překryvu, kamera telefonu s automatickým zarovnáním, svítilna, rozložení pro telefon i tablet.
 Na emulátoru běží simulátor.
 **Ještě neověřeno na skutečném telefonu** – postup v `docs/manual-test.md`.

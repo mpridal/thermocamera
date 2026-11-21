@@ -87,6 +87,7 @@ fun LiveScreen(
     onOpenSettings: () -> Unit,
     onOpenCameraTest: () -> Unit,
     onChoosePhotoCamera: (PhotoCamera) -> Unit,
+    onOpenGallery: () -> Unit,
     snackbar: SnackbarHostState,
 ) {
     val settings by vm.settings.collectAsStateWithLifecycle()
@@ -105,14 +106,13 @@ fun LiveScreen(
     val scope = rememberCoroutineScope()
     val comingLater = stringResource(R.string.coming_later)
     val notYet: () -> Unit = { scope.launch { snackbar.showSnackbar(comingLater) } }
-    val photoText = stringResource(R.string.photo_saved, "%s")
-    val mpFormat = stringResource(R.string.megapixels, "%s")
-    // Shutter: with the phone camera a full-resolution photo; saving measurement snapshots comes in Phase 4.
+    val savedText = stringResource(R.string.snapshot_saved)
+    val failedText = stringResource(R.string.snapshot_failed)
+    // Shutter: saves a measurement snapshot (zadání F4).
     val onShutter: () -> Unit = {
         scope.launch {
-            val mp = vm.takePhonePhoto()
-            if (mp == null) snackbar.showSnackbar(comingLater)
-            else snackbar.showSnackbar(photoText.replace("%s", mpFormat.replace("%s", fmt.zero(mp))))
+            val id = vm.takeSnapshot()
+            snackbar.showSnackbar(if (id != null) savedText else failedText)
         }
     }
     val photoMp by vm.photoMegapixels.collectAsStateWithLifecycle()
@@ -136,6 +136,7 @@ fun LiveScreen(
         LocalNeedsCameraForUsb provides needsCameraForUsb,
         LocalOpenCalibration provides { showCalibration = true },
         LocalProfiles provides calibrationVm,
+        LocalOpenGallery provides onOpenGallery,
     ) {
     Box(Modifier.fillMaxSize().safeDrawingPadding()) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -394,7 +395,7 @@ private fun BottomBar(notYet: () -> Unit, onShutter: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        GlassIconButton(AppIcons.Gallery, stringResource(R.string.cd_gallery), notYet)
+        GlassIconButton(AppIcons.Gallery, stringResource(R.string.cd_gallery), LocalOpenGallery.current)
         ShutterButton(stringResource(R.string.cd_shutter), onShutter)
         GlassIconButton(AppIcons.Video, stringResource(R.string.cd_video), notYet)
     }
@@ -520,7 +521,7 @@ private fun SidePanel(
         }
         VerticalModes(settings.viewMode, vm::setViewMode)
         ShutterButton(stringResource(R.string.cd_shutter), onShutter)
-        GlassIconButton(AppIcons.Gallery, stringResource(R.string.cd_gallery), notYet)
+        GlassIconButton(AppIcons.Gallery, stringResource(R.string.cd_gallery), LocalOpenGallery.current)
     }
 }
 
@@ -566,7 +567,7 @@ private fun VerticalPill(notYet: () -> Unit, onShutter: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        GlassIconButton(AppIcons.Gallery, stringResource(R.string.cd_gallery), notYet)
+        GlassIconButton(AppIcons.Gallery, stringResource(R.string.cd_gallery), LocalOpenGallery.current)
         ShutterButton(stringResource(R.string.cd_shutter), onShutter)
         GlassIconButton(AppIcons.Video, stringResource(R.string.cd_video), notYet)
     }
@@ -602,7 +603,7 @@ private fun NavRail(onOpenCameraTest: () -> Unit, onOpenSettings: () -> Unit, no
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         RailItem("◉", stringResource(R.string.rail_camera), selected = true) {}
-        RailItem("▦", stringResource(R.string.cd_gallery), selected = false, onClick = notYet)
+        RailItem("▦", stringResource(R.string.cd_gallery), selected = false, onClick = LocalOpenGallery.current)
         RailItem("◐", stringResource(R.string.rail_calibration), selected = false, onClick = LocalOpenCalibration.current)
         RailItem("✓", stringResource(R.string.rail_test), selected = false, onClick = onOpenCameraTest)
         Spacer(Modifier.weight(1f))
@@ -720,6 +721,9 @@ private fun FacadeWarning() {
 
 /** Whether the pending permission is the CAMERA one needed for USB cameras (status chip text). */
 private val LocalNeedsCameraForUsb = androidx.compose.runtime.staticCompositionLocalOf { false }
+
+/** Opens the gallery from the bottom bar, side panel, pill or rail. */
+private val LocalOpenGallery = androidx.compose.runtime.staticCompositionLocalOf<() -> Unit> { {} }
 
 /** Opens the "Range and calibration" sheet from anywhere on the live screen. */
 private val LocalOpenCalibration = androidx.compose.runtime.staticCompositionLocalOf<() -> Unit> { {} }

@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] – Fáze 4
+
+- Spoušť ukládá snímek měření: render.jpg (obraz se značkami, stupnicí a pruhem hodnot), thermal.f32 + thermal.json
+  (surová matice, °C před korekcemi), visible.jpg, u kamery telefonu photo.jpg v plném rozlišení + alignment.json
+  (matice termo → foto); metadata v Room; kopie do Pictures/ThermoCamera (volitelně).
+- Galerie: mřížka, filtr podle projektu, projekty („Nové snímky jdou do…“), vícenásobný výběr (dlouhý stisk),
+  sdílení výběru jako JPG nebo jeden PDF protokol, mazání s potvrzením.
+- Detail: přerenderování (režim, paleta, automatický/uložený rozsah, prolnutí, emisivita), „Ponechat toto zobrazení“,
+  název, poznámka, projekt, sdílení jako JPG / vedle sebe / PDF / CSV (oddělovač `;`, desetinná čárka podle jazyka).
+
 ## [Unreleased] – Fáze 3
 
 - Panel „Rozsah a kalibrace“ (z čipu Rozsah, na tabletu z lišty): předvolby rozsahu, vlastní min/max po 0,1 °C,

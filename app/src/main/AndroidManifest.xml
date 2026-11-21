@@ -9,6 +9,11 @@
     <!-- Only requested when the user chooses the phone camera (zadání F11 bod 7). -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Copy of snapshots into Pictures/ThermoCamera on Android 8–9 (MediaStore needs no permission on 10+). -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <application
         android:name=".ThermoApp"
         android:allowBackup="false"

@@ -64,6 +64,18 @@ adb shell run-as io.github.mpridal.thermocamera ls files/diagnostics
 | 8 | Zvýraznit místa pod limitem | studená místa azurově |
 | 9 | θi − θe < 10 °C | upozornění v panelu |
 
+## Fáze 4 – snímky a sdílení
+
+| # | Krok | Očekávání |
+|---|---|---|
+| 1 | Spoušť (kamera modulu i telefonu) | „Snímek uložen“, kopie v Galerii telefonu › Pictures/ThermoCamera |
+| 2 | Galerie → snímek | detail s obrázkem a hodnotami |
+| 3 | V detailu jiná paleta / Vedle sebe / ε, „Ponechat toto zobrazení“ | obrázek se přepočítá, náhled v galerii se změní |
+| 4 | Sdílet jako JPG, Vedle sebe, PDF, CSV do e-mailu / WhatsAppu | přílohy jdou otevřít; CSV v Excelu ve sloupcích, česky s desetinnou čárkou |
+| 5 | Nový projekt, „Nové snímky jdou do…“, filtr | snímky se řadí do projektu |
+| 6 | Dlouhý stisk, výběr více snímků, Sdílet › PDF | jeden PDF protokol, strana na snímek |
+| 7 | Smazat | potvrzení, snímek zmizí (kopie v galerii telefonu zůstane) |
+
 ## Výsledky
 
 | Datum | Zařízení (model, Android) | Kroky OK | Poznámky |

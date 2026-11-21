@@ -86,6 +86,8 @@ data class Settings(
     val fahrenheit: Boolean = false,
     val smoothing: Boolean = true,
     val pixelated: Boolean = false,
+    /** Project new snapshots go to; -1 = "No project". */
+    val activeProjectId: Long = -1L,
 ) {
     /** Correction applied to raw camera values (emissivity, reflected temperature, offset, gain). */
     fun correction() = io.github.mpridal.thermocamera.core.Correction(emissivity, reflected, calOffset, calGain)
@@ -152,6 +154,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         val fahrenheit = booleanPreferencesKey("fahrenheit")
         val smoothing = booleanPreferencesKey("smoothing")
         val pixelated = booleanPreferencesKey("pixelated")
+        val activeProjectId = androidx.datastore.preferences.core.longPreferencesKey("active_project_id")
     }
 
     val settings: Flow<Settings> = context.dataStore.data.map { p ->
@@ -197,6 +200,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
             fahrenheit = p[Keys.fahrenheit] ?: d.fahrenheit,
             smoothing = p[Keys.smoothing] ?: d.smoothing,
             pixelated = p[Keys.pixelated] ?: d.pixelated,
+            activeProjectId = p[Keys.activeProjectId] ?: d.activeProjectId,
         )
     }
 
@@ -243,6 +247,8 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         it[Keys.rangeLocked] = false
         it[Keys.activeProfile] = p.name
     }
+
+    suspend fun setActiveProject(id: Long) = context.dataStore.edit { it[Keys.activeProjectId] = id }
 
     suspend fun setActiveProfile(name: String) = context.dataStore.edit { it[Keys.activeProfile] = name }
 

@@ -76,6 +76,7 @@ class SettingsViewModel @Inject constructor(private val repo: SettingsRepository
     fun setPhotoCamera(p: PhotoCamera) = viewModelScope.launch { repo.setPhotoCamera(p) }
     fun setAutoAlign(v: Boolean) = viewModelScope.launch { repo.setAutoAlign(v) }
     fun setVideoFps(v: Int) = viewModelScope.launch { repo.setVideoFps(v) }
+    fun setSaveToGallery(v: Boolean) = viewModelScope.launch { repo.setSaveToGallery(v) }
     fun setVideoResolution(v: io.github.mpridal.thermocamera.data.VideoResolution) = viewModelScope.launch { repo.setVideoResolution(v) }
 }
 
@@ -156,6 +157,9 @@ fun SettingsScreen(
                 if (s.photoCamera != PhotoCamera.MODULE) {
                     SwitchRow(stringResource(R.string.settings_auto_align), "", s.autoAlign, vm::setAutoAlign)
                 }
+            }
+            Section(stringResource(R.string.gallery_title)) {
+                SwitchRow(stringResource(R.string.settings_save_to_gallery), "", s.saveToGallery, vm::setSaveToGallery)
             }
             Section(stringResource(R.string.settings_section_language)) { LanguageDropdown() }
             Section(stringResource(R.string.settings_section_advanced)) {
