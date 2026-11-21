@@ -202,6 +202,7 @@ class CameraTestViewModel @Inject constructor(
         const val RAW_SIZE = 32 * 8
         private const val COLLECT_MS = 6_000L
         private const val PERMISSION_WAIT_MS = 20_000L
-        private const val MIN_HZ = 7f
+        /** HT-102 delivers ~5–6.5 new thermal matrices per second in practice (docs/ht102-protocol.md, D22). */
+        private const val MIN_HZ = 5f
     }
 }
