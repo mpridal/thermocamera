@@ -150,6 +150,11 @@ class LiveViewModel @Inject constructor(
     private val _phoneInfo = MutableStateFlow<PhoneCameraInfo?>(null)
     val phoneInfo: StateFlow<PhoneCameraInfo?> = _phoneInfo.asStateFlow()
     val phoneActive: StateFlow<Boolean> = phone.running
+
+    /** Megapixels of photos from the phone camera while it runs (badge "foto … Mpx"). */
+    val photoMegapixels: StateFlow<Float?> = combine(phone.captureSize, _phoneInfoForBadge()) { size, info ->
+        size?.let { it.width * it.height / 1e6f } ?: info
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     @Volatile private var phoneCrop: CropSquare? = null
     private var registrationFailures = 0
     private val _alignTip = MutableStateFlow(false)
@@ -225,8 +230,13 @@ class LiveViewModel @Inject constructor(
                     val permitted = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) ==
                         PackageManager.PERMISSION_GRANTED
                     if (wanted && permitted) {
-                        if (!phone.start()) Log.w(TAG, "Phone camera did not start")
-                        else if (_torch.value) applyTorch(true)
+                        if (!phone.start()) {
+                            Log.w(TAG, "Phone camera did not start")
+                        } else {
+                            if (_torch.value) applyTorch(true)
+                            // With the CAMERA permission all lens data is available – refresh the FOV estimate.
+                            launch(Dispatchers.Default) { PhoneCameraInfo.best(context)?.let { _phoneInfo.value = it } }
+                        }
                     } else {
                         phone.stop()
                         phoneLatest = null
@@ -416,6 +426,8 @@ class LiveViewModel @Inject constructor(
         autoRange.reset(); smoother.reset()
         settingsRepo.setOrientation(o)
     }
+
+    private fun _phoneInfoForBadge() = combine(_phoneInfo, phone.running) { info, running -> if (running) info?.megapixels else null }
 
     override fun onCleared() {
         applyTorch(false)

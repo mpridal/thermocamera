@@ -54,7 +54,8 @@ data class Settings(
     val palette: Palette = Palette.IRON,
     val rangePreset: RangePreset = RangePreset.INTERIOR,
     val emissivity: Float = 0.95f,
-    val orientation: Orientation = Orientation(),
+    /** Mirrored by default: with the lens facing away from the user (like the rear camera) the image is mirrored (tested on Pixel 10 Pro). */
+    val orientation: Orientation = Orientation(rotation = 0, mirror = true),
     val moduleAlignment: OverlayAlignment = OverlayAlignment.DEFAULT,
     val photoCamera: PhotoCamera = PhotoCamera.MODULE,
     val autoAlign: Boolean = true,
@@ -117,7 +118,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
             emissivity = p[Keys.emissivity] ?: d.emissivity,
             orientation = Orientation(
                 rotation = p[Keys.rotation]?.takeIf { it in Orientation.ROTATIONS } ?: 0,
-                mirror = p[Keys.mirror] ?: false,
+                mirror = p[Keys.mirror] ?: d.orientation.mirror,
             ),
             moduleAlignment = OverlayAlignment(
                 dx = p[Keys.alignDx] ?: 0f,

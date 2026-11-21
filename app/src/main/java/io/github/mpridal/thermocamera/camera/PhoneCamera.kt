@@ -59,8 +59,8 @@ data class PhoneCameraInfo(
                     val map = ch.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) ?: return@mapNotNull null
                     val jpeg = map.getOutputSizes(android.graphics.ImageFormat.JPEG)?.maxByOrNull { it.width.toLong() * it.height }
                         ?: return@mapNotNull null
-                    val sensor = ch.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE) ?: return@mapNotNull null
-                    val focal = ch.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.minOrNull() ?: return@mapNotNull null
+                    val sensor = ch.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE)
+                    val focal = ch.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.minOrNull()
                     // Sensor is landscape; the app shows the image in landscape 4:3 too.
                     val w = maxOf(jpeg.width, jpeg.height)
                     val h = minOf(jpeg.width, jpeg.height)
@@ -68,8 +68,9 @@ data class PhoneCameraInfo(
                         cameraId = id,
                         jpegWidth = w,
                         jpegHeight = h,
-                        hfovDeg = FovMath.fovDeg(maxOf(sensor.width, sensor.height), focal),
-                        vfovDeg = FovMath.fovDeg(minOf(sensor.width, sensor.height), focal),
+                        // Without lens data assume a typical main camera (~70° × 55°).
+                        hfovDeg = if (sensor != null && focal != null) FovMath.fovDeg(maxOf(sensor.width, sensor.height), focal) else 70f,
+                        vfovDeg = if (sensor != null && focal != null) FovMath.fovDeg(minOf(sensor.width, sensor.height), focal) else 55f,
                         hasFlash = ch.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true,
                     )
                 }.filter { it.hfovDeg >= FovMath.THERMAL_FOV_DEG && it.vfovDeg >= FovMath.THERMAL_FOV_DEG * 0.9f }
@@ -96,6 +97,11 @@ class PhoneCamera(private val context: Context) : LifecycleOwner {
 
     private val _frames = MutableSharedFlow<VisibleFrame>(extraBufferCapacity = 1)
     val frames: SharedFlow<VisibleFrame> = _frames.asSharedFlow()
+
+    private val _captureSize = MutableStateFlow<Size?>(null)
+
+    /** Resolution of full photos as negotiated by CameraX (for the "photo … MP" badge). */
+    val captureSize: StateFlow<Size?> = _captureSize.asStateFlow()
 
     private val _running = MutableStateFlow(false)
     val running: StateFlow<Boolean> = _running.asStateFlow()
@@ -139,6 +145,7 @@ class PhoneCamera(private val context: Context) : LifecycleOwner {
             camera = provider.bindToLifecycle(this@PhoneCamera, CameraSelector.DEFAULT_BACK_CAMERA, analysis, photo)
             capture = photo
             analysisUseCase = analysis
+            _captureSize.value = photo.resolutionInfo?.resolution
             _running.value = true
             true
         }.getOrElse {
@@ -153,6 +160,7 @@ class PhoneCamera(private val context: Context) : LifecycleOwner {
         runCatching { awaitProvider().unbindAll() }
         camera = null
         capture = null
+        _captureSize.value = null
         _running.value = false
     }
 

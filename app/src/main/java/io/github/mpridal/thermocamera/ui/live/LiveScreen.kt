@@ -112,8 +112,9 @@ fun LiveScreen(
             else snackbar.showSnackbar(photoText.replace("%s", mpFormat.replace("%s", fmt.zero(mp))))
         }
     }
+    val photoMp by vm.photoMegapixels.collectAsStateWithLifecycle()
     val photoBadge: String? = if (phoneActive && settings.photoCamera != PhotoCamera.MODULE) {
-        phoneInfo?.let { stringResource(R.string.badge_photo, stringResource(R.string.megapixels, fmt.zero(it.megapixels))) }
+        photoMp?.let { stringResource(R.string.badge_photo, stringResource(R.string.megapixels, fmt.zero(it))) }
     } else null
 
     // Keep the screen on during the live view (zadání F1).
