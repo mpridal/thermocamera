@@ -51,6 +51,19 @@ data class CropSquare(val cx: Float, val cy: Float, val side: Float, val angleDe
         return (cx + (x * cos(a) - y * sin(a)).toFloat()) to (cy + (x * sin(a) + y * cos(a)).toFloat())
     }
 
+    /**
+     * The same square after its [imageW] × [imageH] image was rotated clockwise by [rotation]
+     * (0/90/180/270) with [Orientation]. The centre follows the content; the angle (misalignment
+     * relative to the image axes) stays, so the drawn square turns together with the image –
+     * exactly like the thermal grid rotated by the same [Orientation].
+     */
+    fun rotatedWithImage(rotation: Int, imageW: Int, imageH: Int): CropSquare = when (rotation) {
+        90 -> copy(cx = imageH - cy, cy = cx)
+        180 -> copy(cx = imageW - cx, cy = imageH - cy)
+        270 -> copy(cx = cy, cy = imageW - cx)
+        else -> this
+    }
+
     /** Applies a similarity transform (scale [s], rotation [angleDeg], translation) to the square. */
     fun transformed(s: Float, rotDeg: Float, tx: Float, ty: Float): CropSquare {
         val a = Math.toRadians(rotDeg.toDouble())

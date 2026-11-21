@@ -131,4 +131,10 @@
     <string name="align_failing_tip">Modul možná míří jinam než kamera telefonu.</string>
     <string name="photo_saved">Fotka pořízena (%1$s)</string>
     <string name="flash_help">Světlo pomáhá jen běžnému obrazu, termo obraz neovlivní.</string>
+    <string name="rail_camera">Kamera</string>
+    <string name="rail_calibration">Kalibrace</string>
+    <string name="rail_test">Test</string>
+    <string name="panel_measurement">Měření</string>
+    <string name="panel_range">Rozsah</string>
+    <string name="panel_palette">Paleta</string>
 </resources>

@@ -134,6 +134,12 @@ S = {
  "align_failing_tip": ("The module may be pointing somewhere else than the phone camera.", "Modul možná míří jinam než kamera telefonu.", "Puede que el módulo apunte a otro lugar que la cámara del teléfono.", "Il modulo potrebbe essere rivolto altrove rispetto alla fotocamera del telefono.", "Le module vise peut-être ailleurs que la caméra du téléphone.", "Das Modul zeigt vielleicht woanders hin als die Handykamera."),
  "photo_saved": ("Photo taken (%1$s)", "Fotka pořízena (%1$s)", "Foto tomada (%1$s)", "Foto scattata (%1$s)", "Photo prise (%1$s)", "Foto aufgenommen (%1$s)"),
  "flash_help": ("The light helps only the normal image – it does not affect the thermal image.", "Světlo pomáhá jen běžnému obrazu, termo obraz neovlivní.", "La luz solo ayuda a la imagen normal; no afecta a la imagen térmica.", "La luce aiuta solo l'immagine normale, non influisce su quella termica.", "La lumière n'aide que l'image normale, elle n'influence pas l'image thermique.", "Das Licht hilft nur dem normalen Bild, das Wärmebild bleibt unverändert."),
+ "rail_camera": ("Camera", "Kamera", "Cámara", "Fotocamera", "Caméra", "Kamera"),
+ "rail_calibration": ("Calibration", "Kalibrace", "Calibración", "Calibrazione", "Étalonnage", "Kalibrierung"),
+ "rail_test": ("Test", "Test", "Prueba", "Test", "Test", "Test"),
+ "panel_measurement": ("Measurement", "Měření", "Medición", "Misura", "Mesure", "Messung"),
+ "panel_range": ("Range", "Rozsah", "Rango", "Intervallo", "Plage", "Bereich"),
+ "panel_palette": ("Palette", "Paleta", "Paleta", "Tavolozza", "Palette", "Palette"),
 }
 
 NONTRANSLATABLE = {

@@ -61,6 +61,10 @@ fun AlignmentScreen(liveVm: LiveViewModel, onBack: () -> Unit) {
     val frame by liveVm.frame.collectAsStateWithLifecycle()
     var align by remember(settings.moduleAlignment) { mutableStateOf(settings.moduleAlignment) }
     val noPoints = remember { PointActions(emptyList(), { _, _ -> }, { _, _, _ -> }, {}) }
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        liveVm.setAlignmentWizardOpen(true)
+        onDispose { liveVm.setAlignmentWizardOpen(false) }
+    }
 
     Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -77,7 +81,7 @@ fun AlignmentScreen(liveVm: LiveViewModel, onBack: () -> Unit) {
             if (visible == null) {
                 Text(stringResource(R.string.align_needs_camera), color = c.warnText, fontSize = 14.sp)
             } else {
-                val shown = frame.copy(visibleCrop = align.cropSquare(visible.width, visible.height))
+                val shown = frame.copy(visibleCrop = liveVm.moduleCropFor(align) ?: align.cropSquare(visible.width, visible.height))
                 Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
                     MeasuringSurface(shown, ViewMode.OVERLAY, 0.5f, settings.palette, fmt, stacked = true, points = noPoints, modifier = Modifier.fillMaxSize())
                     // Gesture layer on top: moves the normal image relative to the thermal one.

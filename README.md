@@ -8,8 +8,9 @@ protokol kamery: [docs/ht102-protocol.md](docs/ht102-protocol.md)
 
 ## Stav
 
-**Fáze 1 – kamera.** Aplikace čte živě termo data i obraz z HT-102 (protokol v `docs/ht102-protocol.md`),
-má stavový čip, obrazovku „Kamera odpojena“ a Test kamery. Na emulátoru běží simulátor.
+**Fáze 2 – zobrazení a kamery.** Živý obraz z HT-102 (protokol v `docs/ht102-protocol.md`), 4 režimy, body P1–P5,
+orientace, zarovnání překryvu, kamera telefonu s automatickým zarovnáním, svítilna, rozložení pro telefon i tablet.
+Na emulátoru běží simulátor.
 **Ještě neověřeno na skutečném telefonu** – postup v `docs/manual-test.md`.
 
 ## Sestavení

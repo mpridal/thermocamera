@@ -81,6 +81,9 @@ dependencies {
     implementation(libs.compose.material.icons.core)
     implementation(libs.haze)
     implementation(libs.haze.blur)
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
     debugImplementation(libs.compose.ui.tooling)
 
     implementation(libs.hilt.android)

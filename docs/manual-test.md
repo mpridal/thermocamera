@@ -29,6 +29,21 @@ v Nastavení › Pro pokročilé musí být **simulátor vypnutý**.
 
 Když něco nejde: v Testu kamery **Zkopírovat diagnostiku** a poslat text.
 
+## Fáze 2 – zobrazení a kamery
+
+| # | Krok | Očekávání |
+|---|---|---|
+| 1 | Test kamery › Orientace: ruka vpravo | teplé místo vpravo; jinak „Otočit o 90°“ / „Zrcadlit“ dokud nesedí |
+| 2 | Otočit telefon na šířku | termo i obraz modulu zůstanou správně otočené vůči scéně, rozložení s panelem vpravo |
+| 3 | Klepnout do obrazu, táhnout bod, dlouze podržet | P1 přibude s hodnotou, posune se, zmizí |
+| 4 | Nastavení › Kamera › Zarovnání překryvu, hrnek s horkou vodou | tažením/sevřením hrany sedí; po „Hotovo“ drží v režimu Překryv |
+| 5 | První připojení HT-102 | nabídka „Tvůj telefon má lepší kameru“ → Použít → povolit kameru |
+| 6 | Režim Překryv s kamerou telefonu na 0,5 / 1 / 3 m | obrazy se do ~1 s srovnají, odchylka ≤ 1 termo bod; odznak „foto … Mpx“ |
+| 7 | Zakrýt kameru telefonu | po ~3 s tip „Modul možná míří jinam…“, překryv drží poslední polohu |
+| 8 | Spoušť s kamerou telefonu | hláška „Fotka pořízena (… Mpx)“ |
+| 9 | Svítilna ve tmě (s kamerou modulu i telefonu) | rozsvítí/zhasne; po odchodu z aplikace zhasne, po návratu se obnoví |
+| 10 | Tablet (JENBIZZ) na šířku i na výšku | lišta vlevo, panel vpravo / pod obrazem; bez blesku tlačítko svítilny chybí; plynulost skla (případně „Omezit průhlednost“) |
+
 ## Výsledky
 
 | Datum | Zařízení (model, Android) | Kroky OK | Poznámky |

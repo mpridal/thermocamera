@@ -131,4 +131,10 @@
     <string name="align_failing_tip">Il modulo potrebbe essere rivolto altrove rispetto alla fotocamera del telefono.</string>
     <string name="photo_saved">Foto scattata (%1$s)</string>
     <string name="flash_help">La luce aiuta solo l\'immagine normale, non influisce su quella termica.</string>
+    <string name="rail_camera">Fotocamera</string>
+    <string name="rail_calibration">Calibrazione</string>
+    <string name="rail_test">Test</string>
+    <string name="panel_measurement">Misura</string>
+    <string name="panel_range">Intervallo</string>
+    <string name="panel_palette">Tavolozza</string>
 </resources>

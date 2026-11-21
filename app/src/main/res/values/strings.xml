@@ -144,4 +144,10 @@
     <string name="align_failing_tip">The module may be pointing somewhere else than the phone camera.</string>
     <string name="photo_saved">Photo taken (%1$s)</string>
     <string name="flash_help">The light helps only the normal image – it does not affect the thermal image.</string>
+    <string name="rail_camera">Camera</string>
+    <string name="rail_calibration">Calibration</string>
+    <string name="rail_test">Test</string>
+    <string name="panel_measurement">Measurement</string>
+    <string name="panel_range">Range</string>
+    <string name="panel_palette">Palette</string>
 </resources>

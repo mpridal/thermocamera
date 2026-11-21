@@ -45,3 +45,36 @@ class OrientationTest {
         assertArrayEquals(floatArrayOf(2f, 0f, 3f, 1f), out, 0f)
     }
 }
+
+class CropSquareRotationTest {
+    /**
+     * Rotating image and crop together must show the crop content rotated the same way as the
+     * thermal grid: new crop-relative (u, v) shows what was at the rotated position before.
+     */
+    @Test fun cropContentRotatesWithImage() {
+        val w = 80; val h = 60
+        val img = IntArray(w * h) { it }
+        val crop = CropSquare(cx = 30f, cy = 20f, side = 20f)
+        // Inverse of a clockwise rotation in normalised crop coordinates.
+        val before: Map<Int, (Float, Float) -> Pair<Float, Float>> = mapOf(
+            0 to { u, v -> u to v },
+            90 to { u, v -> v to 1f - u },
+            180 to { u, v -> 1f - u to 1f - v },
+            270 to { u, v -> 1f - v to u },
+        )
+        for (r in Orientation.ROTATIONS) {
+            val o = Orientation(r)
+            val out = IntArray(w * h).also { o.apply(img, w, h, it) }
+            val ow = o.outWidth(w, h)
+            val c2 = crop.rotatedWithImage(r, w, h)
+            for ((u, v) in listOf(0.33f to 0.21f, 0.71f to 0.63f)) {
+                val (x2, y2) = c2.map(u, v)
+                val (bu, bv) = before.getValue(r)(u, v)
+                val (x1, y1) = crop.map(bu, bv)
+                val expected = img[kotlin.math.floor(y1).toInt() * w + kotlin.math.floor(x1).toInt()]
+                val got = out[kotlin.math.floor(y2).toInt() * ow + kotlin.math.floor(x2).toInt()]
+                assertEquals("rotation $r at $u,$v", expected, got)
+            }
+        }
+    }
+}

@@ -131,4 +131,10 @@
     <string name="align_failing_tip">Puede que el módulo apunte a otro lugar que la cámara del teléfono.</string>
     <string name="photo_saved">Foto tomada (%1$s)</string>
     <string name="flash_help">La luz solo ayuda a la imagen normal; no afecta a la imagen térmica.</string>
+    <string name="rail_camera">Cámara</string>
+    <string name="rail_calibration">Calibración</string>
+    <string name="rail_test">Prueba</string>
+    <string name="panel_measurement">Medición</string>
+    <string name="panel_range">Rango</string>
+    <string name="panel_palette">Paleta</string>
 </resources>

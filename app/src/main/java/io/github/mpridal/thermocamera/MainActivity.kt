@@ -50,7 +50,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        liveVm.setDisplayRotation(androidx.core.content.ContextCompat.getDisplayOrDefault(this).rotation)
         liveVm.setForeground(true)
+    }
+
+    /** The activity handles rotation itself; the module image follows the display (see LiveViewModel). */
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        liveVm.setDisplayRotation(androidx.core.content.ContextCompat.getDisplayOrDefault(this).rotation)
     }
 
     override fun onStop() {
@@ -126,6 +133,7 @@ private fun AppRoot(liveVm: LiveViewModel) {
                         liveVm,
                         onOpenSettings = { nav.navigate(Routes.SETTINGS) },
                         onOpenCameraTest = { nav.navigate(Routes.CAMERA_TEST) },
+                        onChoosePhotoCamera = choosePhotoCamera,
                         snackbar = snackbar,
                     )
                 }

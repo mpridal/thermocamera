@@ -84,15 +84,15 @@ fun MeasuringSurface(
         }
         if (stacked) {
             Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                content(Modifier.weight(1f).aspectRatio(1f))
+                content(Modifier.weight(1f).aspectRatio(1f, matchHeightConstraintsFirst = !stacked))
             }
         } else {
             Row(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                content(Modifier.weight(1f).aspectRatio(1f))
+                content(Modifier.weight(1f).aspectRatio(1f, matchHeightConstraintsFirst = !stacked))
             }
         }
     } else {
-        ImageSquare(frame, viewMode, blend, palette, fmt, points, modifier.aspectRatio(1f))
+        ImageSquare(frame, viewMode, blend, palette, fmt, points, modifier.aspectRatio(1f, matchHeightConstraintsFirst = true))
     }
 }
 

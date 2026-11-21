@@ -131,4 +131,10 @@
     <string name="align_failing_tip">Das Modul zeigt vielleicht woanders hin als die Handykamera.</string>
     <string name="photo_saved">Foto aufgenommen (%1$s)</string>
     <string name="flash_help">Das Licht hilft nur dem normalen Bild, das Wärmebild bleibt unverändert.</string>
+    <string name="rail_camera">Kamera</string>
+    <string name="rail_calibration">Kalibrierung</string>
+    <string name="rail_test">Test</string>
+    <string name="panel_measurement">Messung</string>
+    <string name="panel_range">Bereich</string>
+    <string name="panel_palette">Palette</string>
 </resources>

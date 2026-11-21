@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased] – Fáze 2
+
+- Orientace modulu (0/90/180/270°, zrcadlení) v Nastavení a v Testu kamery; kompenzace otočení displeje.
+- Body P1–P5 (klepnutí, tažení, dlouhý stisk), tlačítko „+ Bod“, Zmrazit / Živě.
+- Zarovnání překryvu kamery modulu: průvodce s tažením, sevřením a otočením prstů.
+- Kamera telefonu (F11): výběr nejlepší zadní kamery, nabídka „Tvůj telefon má lepší kameru“, 3 režimy
+  v Nastavení, živý náhled, focení v plném rozlišení, automatické zarovnání na obraz modulu (vlastní registrace
+  obrazu ~2× za s), tip při opakovaném selhání, odznak „foto 12 Mpx“. Oprávnění CAMERA až při volbě.
+- Svítilna (F7) – skrytá bez blesku, vypíná se při odchodu z aplikace.
+- Rozložení podle kap. 7.5: telefon na šířku (postranní panel 140 dp), tablet na šířku (lišta, svislá pilulka,
+  panel 336 dp) i na výšku (panel pod obrazem).
+- `:thermal-core`: Orientation, OverlayAlignment/CropSquare, ImageRegistration, FovMath – s testy.
+
 ## [Unreleased] – Fáze 1
 
 - `Ht102Source`: živý stream z HT-102 – UVC 640 × 480 YUY2 při 10 fps, termo matice dekódovaná z každého snímku,
