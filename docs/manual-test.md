@@ -54,4 +54,5 @@ adb shell run-as io.github.mpridal.thermocamera ls files/diagnostics
 
 | Datum | Zařízení (model, Android) | Kroky OK | Poznámky |
 |---|---|---|---|
-| | | | |
+| 2026-11-21 | Pixel 10 Pro, Android 17 | Fáze 1: Test kamery 6/6 (320 × 240, 6,2 Hz, 0 vadných bodů) | nejdřív chybělo oprávnění Fotoaparát pro USB a handle na arm64 – opraveno; HT-102 reálně ~5–6,5 Hz (D22) |
+| 2026-11-21 | Pixel 10 Pro, Android 17 | Fáze 2: orientace (nutné **zrcadlení**), telefon na šířku, překryv s kamerou telefonu, spoušť, svítilna – OK | odznak „foto … Mpx“ neověřen; přesnost proti teploměru a tablet zatím ne |
