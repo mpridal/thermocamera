@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,6 +26,11 @@ class CameraRepository @Inject constructor(
 
     val simulator = SimulatedSource()
     val ht102 = Ht102Source(context)
+
+    init {
+        // Video frame rate for the HT-102 (Nastavení › Pro pokročilé).
+        scope.launch { settings.settings.map { it.videoFps }.distinctUntilChanged().collect { ht102.setRequestedFps(it) } }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val active: StateFlow<ThermalCameraSource> = settings.settings

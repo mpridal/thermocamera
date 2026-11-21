@@ -50,8 +50,14 @@ data class Settings(
     val autoAlign: Boolean = true,
     /** Device id for which the "better phone camera" offer was answered; offered again on another device. */
     val betterCameraAnsweredFor: String = "",
+    /** Requested video frame rate of the HT-102 stream (Pro pokročilé); thermal data comes with every frame. */
+    val videoFps: Int = DEFAULT_VIDEO_FPS,
 ) {
     companion object {
+        /** Frame rates the HT-102 advertises for 640 × 480 (UVC descriptor). */
+        val VIDEO_FPS_OPTIONS = listOf(5, 10, 15, 20, 30)
+        const val DEFAULT_VIDEO_FPS = 30
+
         /** The simulator is on by default only on an emulator (zadání kap. 3.1), which has no USB camera. */
         val isEmulator: Boolean by lazy {
             android.os.Build.FINGERPRINT.startsWith("generic") || android.os.Build.HARDWARE.contains("ranchu") ||
@@ -83,6 +89,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         val photoCamera = stringPreferencesKey("photo_camera")
         val autoAlign = booleanPreferencesKey("auto_align")
         val betterCameraAnswered = stringPreferencesKey("better_camera_answered_for")
+        val videoFps = intPreferencesKey("video_fps")
     }
 
     val settings: Flow<Settings> = context.dataStore.data.map { p ->
@@ -109,6 +116,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
             photoCamera = p[Keys.photoCamera].toEnum(d.photoCamera),
             autoAlign = p[Keys.autoAlign] ?: d.autoAlign,
             betterCameraAnsweredFor = p[Keys.betterCameraAnswered] ?: "",
+            videoFps = p[Keys.videoFps]?.takeIf { it in Settings.VIDEO_FPS_OPTIONS } ?: d.videoFps,
         )
     }
 
@@ -126,6 +134,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
     }
     suspend fun setPhotoCamera(v: PhotoCamera) = context.dataStore.edit { it[Keys.photoCamera] = v.name }
     suspend fun setAutoAlign(v: Boolean) = context.dataStore.edit { it[Keys.autoAlign] = v }
+    suspend fun setVideoFps(v: Int) = context.dataStore.edit { it[Keys.videoFps] = v }
     suspend fun setBetterCameraAnsweredFor(device: String) = context.dataStore.edit { it[Keys.betterCameraAnswered] = device }
 }
 

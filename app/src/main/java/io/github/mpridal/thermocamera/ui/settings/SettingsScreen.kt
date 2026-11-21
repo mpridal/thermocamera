@@ -75,6 +75,7 @@ class SettingsViewModel @Inject constructor(private val repo: SettingsRepository
     fun setMirror(m: Boolean) = viewModelScope.launch { repo.setOrientation(settings.value.orientation.copy(mirror = m)) }
     fun setPhotoCamera(p: PhotoCamera) = viewModelScope.launch { repo.setPhotoCamera(p) }
     fun setAutoAlign(v: Boolean) = viewModelScope.launch { repo.setAutoAlign(v) }
+    fun setVideoFps(v: Int) = viewModelScope.launch { repo.setVideoFps(v) }
 }
 
 /** Supported app languages in the order of the combo box (zadání F10). */
@@ -162,6 +163,13 @@ fun SettingsScreen(
                     stringResource(R.string.settings_simulator_summary),
                     s.useSimulator,
                     vm::setSimulator,
+                )
+                Text(stringResource(R.string.settings_video_fps), color = c.text, fontSize = 15.sp)
+                Text(stringResource(R.string.settings_video_fps_summary), color = c.textMuted, fontSize = 13.sp)
+                SegmentedControl(
+                    options = Settings.VIDEO_FPS_OPTIONS.map { it to it.toString() },
+                    selected = s.videoFps,
+                    onSelect = vm::setVideoFps,
                 )
                 NavRow(
                     stringResource(R.string.settings_usb_diagnostics),

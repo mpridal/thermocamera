@@ -65,7 +65,32 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
     @Volatile var stats = Stats()
         private set
 
-    data class Stats(val videoFrames: Long = 0, val dropped: Long = 0, val thermalFrames: Long = 0, val maxHeader: Int = 0)
+    data class Stats(
+        val videoFrames: Long = 0,
+        val dropped: Long = 0,
+        val thermalFrames: Long = 0,
+        val maxHeader: Int = 0,
+        /** Measured video frames per second (all complete frames). */
+        val videoFps: Float = 0f,
+    )
+
+    /** Requested video frame rate; changing it restarts the stream. */
+    @Volatile var requestedFps: Int = 30
+        private set
+
+    fun setRequestedFps(fps: Int) {
+        if (fps == requestedFps) return
+        requestedFps = fps
+        restartStream()
+    }
+
+    /** Stops the current stream so that [refresh] opens it again with the new parameters. */
+    private fun restartStream() {
+        scope.launch {
+            lock.withLock { streamJob?.cancelAndJoin(); streamJob = null }
+            refresh()
+        }
+    }
 
     private var registered = false
     private var permissionAsked = false
@@ -173,7 +198,10 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
             _state.value = CameraState.Error(CameraState.Reason.USB_ERROR)
             return
         }
-        val stream = UvcStream(dev, conn)
+        val stream = UvcStream(dev, conn, frameIntervalNs100 = 10_000_000 / requestedFps)
+        var videoCount = 0L
+        var videoWindowStart = System.nanoTime()
+        var videoFps = 0f
         val prevThermal = FloatArray(Ht102Decoder.WIDTH * Ht102Decoder.HEIGHT)
         val visibleRing = Array(4) { IntArray(FRAME_W * FRAME_H) }
         var ring = 0
@@ -216,7 +244,13 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
                 if (silent > WATCHDOG_NS && _state.value !is CameraState.Error) {
                     _state.value = CameraState.Error(CameraState.Reason.NO_DATA)
                 }
-                stats = Stats(assembler.framesDelivered, assembler.framesDropped, thermalCount, assembler.maxHeaderLength)
+                val nowNs = System.nanoTime()
+                if (nowNs - videoWindowStart >= 2_000_000_000L) {
+                    videoFps = (assembler.framesDelivered - videoCount) * 1e9f / (nowNs - videoWindowStart)
+                    videoCount = assembler.framesDelivered
+                    videoWindowStart = nowNs
+                }
+                stats = Stats(assembler.framesDelivered, assembler.framesDropped, thermalCount, assembler.maxHeaderLength, videoFps)
             }
         } catch (e: CameraGoneException) {
             _state.value = CameraState.Disconnected

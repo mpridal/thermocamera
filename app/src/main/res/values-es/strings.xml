@@ -139,4 +139,6 @@
     <string name="panel_palette">Paleta</string>
     <string name="status_needs_camera_permission">Permite el acceso a la cámara</string>
     <string name="camera_permission_for_usb">Android solo permite acceder a una cámara USB con el permiso de Cámara: la HT-102 se identifica como cámara. Toca el estado para permitirlo.</string>
+    <string name="settings_video_fps">Frecuencia de vídeo de la cámara</string>
+    <string name="settings_video_fps_summary">Imágenes por segundo pedidas a la HT-102: los datos térmicos llegan con cada imagen. Para pruebas.</string>
 </resources>

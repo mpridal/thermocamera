@@ -22,7 +22,7 @@ class UvcStream(
     private val conn: UsbDeviceConnection,
     private val formatIndex: Int = 1,
     private val frameIndex: Int = 1,           // 1 = 640 × 480 on the HT-102
-    private val frameIntervalNs100: Int = 1_000_000, // 10 fps – thermal data comes at ~9 Hz anyway
+    private val frameIntervalNs100: Int = 333_333, // 30 fps; the camera may deliver less (Pro pokročilé)
     val frameBytes: Int = 640 * 480 * 2,
 ) {
     private lateinit var vsAlt0: UsbInterface

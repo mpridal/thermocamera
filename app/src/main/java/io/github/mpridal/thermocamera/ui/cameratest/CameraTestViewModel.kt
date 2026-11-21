@@ -135,31 +135,35 @@ class CameraTestViewModel @Inject constructor(
             val seconds = COLLECT_MS / 1000f
             val hz = if (frames.size >= 2) (frames.size - 1) / ((frames.last().timestampNanos - frames.first().timestampNanos) / 1e9f) else frames.size / seconds
             val hzText = "%.1f Hz".format(hz)
-            if (hz < MIN_HZ) return@launch fail(TestStep.THERMAL, hzText)
-            set(TestStep.THERMAL, StepStatus.OK, hzText)
+            // Evaluate every step even when one fails, so the report shows the whole picture.
+            var failed: TestStep? = null
+            fun result(step: TestStep, ok: Boolean, detail: String) {
+                set(step, if (ok) StepStatus.OK else StepStatus.FAIL, detail)
+                if (!ok && failed == null) failed = step
+            }
+            result(TestStep.THERMAL, hz >= MIN_HZ, hzText)
 
             val vs = visibleSize
-            if (vs == null) return@launch fail(TestStep.VISIBLE)
-            set(TestStep.VISIBLE, StepStatus.OK, "${vs.first} × ${vs.second}")
+            result(TestStep.VISIBLE, vs != null, vs?.let { "${it.first} × ${it.second}" } ?: "")
 
-            set(TestStep.SENSOR, StepStatus.RUNNING)
-            val n = frames.first().celsius.size
-            var faulty = 0
-            for (i in 0 until n) {
-                val outOfRange = frames.any { it.celsius[i] !in -40f..350f }
-                val stuck = frames.size >= 5 && frames.all { it.celsius[i] == frames.first().celsius[i] }
-                if (outOfRange || stuck) faulty++
+            if (frames.isEmpty()) {
+                result(TestStep.SENSOR, false, "–")
+                result(TestStep.READING, false, "–")
+            } else {
+                val n = frames.first().celsius.size
+                var faulty = 0
+                for (i in 0 until n) {
+                    val outOfRange = frames.any { it.celsius[i] !in -40f..350f }
+                    val stuck = frames.size >= 5 && frames.all { it.celsius[i] == frames.first().celsius[i] }
+                    if (outOfRange || stuck) faulty++
+                }
+                result(TestStep.SENSOR, faulty == 0, faulty.toString())
+                val last = frames.last()
+                val c = (last[15, 15] + last[16, 15] + last[15, 16] + last[16, 16]) / 4f
+                result(TestStep.READING, c in -20f..300f, "%.1f °C".format(c))
             }
-            if (faulty > 0) return@launch fail(TestStep.SENSOR, faulty.toString())
-            set(TestStep.SENSOR, StepStatus.OK, "0")
-
-            set(TestStep.READING, StepStatus.RUNNING)
-            val last = frames.last()
-            val c = (last[15, 15] + last[16, 15] + last[15, 16] + last[16, 16]) / 4f
-            val cText = "%.1f °C".format(c)
-            if (c !in -20f..300f) return@launch fail(TestStep.READING, cText)
-            set(TestStep.READING, StepStatus.OK, cText)
-
+            _ui.update { it.copy(running = false, finished = true, firstFailure = failed, diagnostics = diagnostics(src)) }
+            return@launch
             _ui.update { it.copy(running = false, finished = true, diagnostics = diagnostics(src)) }
         }
     }
