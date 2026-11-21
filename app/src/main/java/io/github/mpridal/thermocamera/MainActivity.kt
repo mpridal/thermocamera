@@ -112,6 +112,24 @@ private fun AppRoot(liveVm: LiveViewModel) {
             scope.launch { snackbar.showSnackbar(permissionDenied) }
         }
     }
+    // Android 10+ grants USB access to a UVC camera only with the CAMERA permission, so the HT-102
+    // needs it too: ask automatically once when the camera is plugged in, again on tapping the status.
+    val needsCameraForUsb by liveVm.needsCameraForUsb.collectAsStateWithLifecycle()
+    var cameraForUsbRequests by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(0) }
+    val usbExplanation = androidx.compose.ui.res.stringResource(R.string.camera_permission_for_usb)
+    val cameraForUsb = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        liveVm.onCameraPermissionResult()
+        if (!granted) scope.launch { snackbar.showSnackbar(usbExplanation) }
+    }
+    androidx.compose.runtime.LaunchedEffect(needsCameraForUsb, cameraForUsbRequests) {
+        if (needsCameraForUsb) cameraForUsb.launch(android.Manifest.permission.CAMERA)
+    }
+    val openCameraTest: () -> Unit = {
+        if (needsCameraForUsb) cameraForUsbRequests++ else nav.navigate(Routes.CAMERA_TEST)
+    }
+
     /** Choosing the phone camera asks for the CAMERA permission first (zadání F11 bod 7). */
     val choosePhotoCamera: (PhotoCamera) -> Unit = { choice ->
         val needs = choice != PhotoCamera.MODULE &&
@@ -132,7 +150,7 @@ private fun AppRoot(liveVm: LiveViewModel) {
                     LiveScreen(
                         liveVm,
                         onOpenSettings = { nav.navigate(Routes.SETTINGS) },
-                        onOpenCameraTest = { nav.navigate(Routes.CAMERA_TEST) },
+                        onOpenCameraTest = openCameraTest,
                         onChoosePhotoCamera = choosePhotoCamera,
                         snackbar = snackbar,
                     )

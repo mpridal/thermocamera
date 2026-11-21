@@ -124,6 +124,8 @@ fun LiveScreen(
     }
 
     val streaming = state is CameraState.Streaming
+    val needsCameraForUsb by vm.needsCameraForUsb.collectAsStateWithLifecycle()
+    androidx.compose.runtime.CompositionLocalProvider(LocalNeedsCameraForUsb provides needsCameraForUsb) {
     Box(Modifier.fillMaxSize().safeDrawingPadding()) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // Layout by window size class (zadání kap. 7.5): compact height = phone landscape,
@@ -223,6 +225,7 @@ fun LiveScreen(
             )
         }
     }
+    }
 }
 
 @Composable
@@ -244,7 +247,7 @@ private fun TopBar(
             fpsText,
         ) to StatusKind.OK
         CameraState.Connecting -> stringResource(R.string.status_connecting) to StatusKind.PENDING
-        CameraState.NeedsPermission -> stringResource(R.string.status_needs_permission) to StatusKind.PENDING
+        CameraState.NeedsPermission -> stringResource(if (LocalNeedsCameraForUsb.current) R.string.status_needs_camera_permission else R.string.status_needs_permission) to StatusKind.PENDING
         CameraState.Disconnected -> stringResource(R.string.status_disconnected) to StatusKind.ERROR
         is CameraState.Error -> stringResource(
             when (state.reason) {
@@ -462,7 +465,7 @@ private fun statusText(state: CameraState, source: ThermalCameraSource, fpsText:
         fpsText,
     ) to StatusKind.OK
     CameraState.Connecting -> stringResource(R.string.status_connecting) to StatusKind.PENDING
-    CameraState.NeedsPermission -> stringResource(R.string.status_needs_permission) to StatusKind.PENDING
+    CameraState.NeedsPermission -> stringResource(if (LocalNeedsCameraForUsb.current) R.string.status_needs_camera_permission else R.string.status_needs_permission) to StatusKind.PENDING
     CameraState.Disconnected -> stringResource(R.string.status_disconnected) to StatusKind.ERROR
     is CameraState.Error -> stringResource(
         when (state.reason) {
@@ -700,3 +703,6 @@ private fun FacadeWarning() {
         Text(stringResource(R.string.facade_warning), color = c.warnText, fontSize = 13.sp)
     }
 }
+
+/** Whether the pending permission is the CAMERA one needed for USB cameras (status chip text). */
+private val LocalNeedsCameraForUsb = androidx.compose.runtime.staticCompositionLocalOf { false }

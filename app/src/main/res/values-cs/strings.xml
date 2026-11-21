@@ -137,4 +137,6 @@
     <string name="panel_measurement">Měření</string>
     <string name="panel_range">Rozsah</string>
     <string name="panel_palette">Paleta</string>
+    <string name="status_needs_camera_permission">Povol přístup ke kameře</string>
+    <string name="camera_permission_for_usb">Android povolí přístup k USB kameře jen s oprávněním Fotoaparát – HT-102 se hlásí jako kamera. Klepnutím na stav ho povolíš.</string>
 </resources>

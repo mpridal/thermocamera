@@ -150,4 +150,6 @@
     <string name="panel_measurement">Measurement</string>
     <string name="panel_range">Range</string>
     <string name="panel_palette">Palette</string>
+    <string name="status_needs_camera_permission">Allow camera access</string>
+    <string name="camera_permission_for_usb">Android allows access to a USB camera only with the Camera permission – the HT-102 identifies itself as a camera. Tap the status to allow it.</string>
 </resources>

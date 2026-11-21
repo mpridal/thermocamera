@@ -137,4 +137,6 @@
     <string name="panel_measurement">Medición</string>
     <string name="panel_range">Rango</string>
     <string name="panel_palette">Paleta</string>
+    <string name="status_needs_camera_permission">Permite el acceso a la cámara</string>
+    <string name="camera_permission_for_usb">Android solo permite acceder a una cámara USB con el permiso de Cámara: la HT-102 se identifica como cámara. Toca el estado para permitirlo.</string>
 </resources>

@@ -140,6 +140,8 @@ S = {
  "panel_measurement": ("Measurement", "Měření", "Medición", "Misura", "Mesure", "Messung"),
  "panel_range": ("Range", "Rozsah", "Rango", "Intervallo", "Plage", "Bereich"),
  "panel_palette": ("Palette", "Paleta", "Paleta", "Tavolozza", "Palette", "Palette"),
+ "status_needs_camera_permission": ("Allow camera access", "Povol přístup ke kameře", "Permite el acceso a la cámara", "Consenti l'accesso alla fotocamera", "Autorise l'accès à la caméra", "Kamerazugriff erlauben"),
+ "camera_permission_for_usb": ("Android allows access to a USB camera only with the Camera permission – the HT-102 identifies itself as a camera. Tap the status to allow it.", "Android povolí přístup k USB kameře jen s oprávněním Fotoaparát – HT-102 se hlásí jako kamera. Klepnutím na stav ho povolíš.", "Android solo permite acceder a una cámara USB con el permiso de Cámara: la HT-102 se identifica como cámara. Toca el estado para permitirlo.", "Android consente l'accesso a una fotocamera USB solo con il permesso Fotocamera: la HT-102 si presenta come fotocamera. Tocca lo stato per consentirlo.", "Android n'autorise l'accès à une caméra USB qu'avec l'autorisation Caméra : la HT-102 se présente comme une caméra. Touche l'état pour l'autoriser.", "Android erlaubt den Zugriff auf eine USB-Kamera nur mit der Kameraberechtigung – die HT-102 meldet sich als Kamera. Tippe auf den Status, um sie zu erlauben."),
 }
 
 NONTRANSLATABLE = {

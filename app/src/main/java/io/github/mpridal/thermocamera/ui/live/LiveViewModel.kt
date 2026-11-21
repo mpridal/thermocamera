@@ -168,6 +168,11 @@ class LiveViewModel @Inject constructor(
     private val _torch = MutableStateFlow(false)
     val torch: StateFlow<Boolean> = _torch.asStateFlow()
 
+    /** HT-102 plugged in but the CAMERA permission (required by Android for USB cameras) is missing. */
+    val needsCameraForUsb: StateFlow<Boolean> = cameras.ht102.needsCameraPermission
+
+    fun onCameraPermissionResult() = cameras.ht102.onCameraPermissionResult()
+
     /** Device identity for the "better camera" offer – offered again only on another device. */
     private val deviceKey = "${Build.MANUFACTURER} ${Build.MODEL}"
 

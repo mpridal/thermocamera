@@ -137,4 +137,6 @@
     <string name="panel_measurement">Misura</string>
     <string name="panel_range">Intervallo</string>
     <string name="panel_palette">Tavolozza</string>
+    <string name="status_needs_camera_permission">Consenti l\'accesso alla fotocamera</string>
+    <string name="camera_permission_for_usb">Android consente l\'accesso a una fotocamera USB solo con il permesso Fotocamera: la HT-102 si presenta come fotocamera. Tocca lo stato per consentirlo.</string>
 </resources>

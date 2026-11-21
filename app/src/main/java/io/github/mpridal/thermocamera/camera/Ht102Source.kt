@@ -111,10 +111,18 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
                 val dev = findCamera()
                 when {
                     dev == null -> {
+                        _needsCameraPermission.value = false
                         streamJob?.cancelAndJoin(); streamJob = null
                         _state.value = CameraState.Disconnected
                     }
+                    // Android 10+ grants USB access to a UVC camera only to apps holding the CAMERA
+                    // permission; without it the USB dialog is silently ignored. Ask for CAMERA first.
+                    !hasCameraPermission() -> {
+                        _state.value = CameraState.NeedsPermission
+                        _needsCameraPermission.value = true
+                    }
                     !usb.hasPermission(dev) -> {
+                        _needsCameraPermission.value = false
                         _state.value = CameraState.NeedsPermission
                         if (!permissionAsked) {
                             permissionAsked = true
@@ -131,6 +139,22 @@ class Ht102Source(private val context: Context) : ThermalCameraSource {
                 }
             }
         }
+    }
+
+    private val _needsCameraPermission = MutableStateFlow(false)
+
+    /** True when the HT-102 is plugged in but the app still lacks the CAMERA runtime permission. */
+    val needsCameraPermission: StateFlow<Boolean> = _needsCameraPermission.asStateFlow()
+
+    private fun hasCameraPermission() =
+        ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) ==
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+
+    /** Called after the CAMERA permission dialog was answered. */
+    fun onCameraPermissionResult() {
+        _needsCameraPermission.value = !hasCameraPermission()
+        permissionAsked = false
+        refresh()
     }
 
     /** Asks for USB permission again (button on the status chip / test screen). */
