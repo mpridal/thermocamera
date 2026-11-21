@@ -84,7 +84,7 @@ VID `0x0416`, PID `0x9393`, „W55FA93 USB UVC Device“, UVC 1.0, jediný form�
 | 640 × 480 | 10 fps | 5,2 fps | 5,2 Hz (nová matice v každém snímku) | 0 |
 | 640 × 480 | 30 fps | 5,0 fps | 5,2 Hz | 0 |
 | 320 × 240 | … | … | … | … |
-| 160 × 120 | … | … | … | … |
+| 160 × 120 | 30 fps | 6,5 fps | 6,6 Hz | 0 |
 
-Při 640 × 480 kamera dává ~5 snímků/s bez ohledu na požadavek (omezení čipu), test vyžaduje ≥ 7 Hz.
+Kamera dává ~5–6,5 snímku/s bez ohledu na požadavek a šířku pásma (160 × 120 = jen ~1 MB/s); každý snímek nese novou termo matici. Udávaných 9 Hz v praxi nedosahuje. Test zatím vyžaduje ≥ 7 Hz.
 Rozlišení a frekvence jdou přepnout v Nastavení › Pro pokročilé.

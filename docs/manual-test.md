@@ -27,7 +27,13 @@ v Nastavení › Pro pokročilé musí být **simulátor vypnutý**.
 | 11 | Led ve vodě (≈ 0 °C), teplá voda s teploměrem, dlaň | zapsat naměřené vs. skutečné hodnoty (přesnost ±3 °C, emisivita) |
 | 12 | Nastavení › Pro pokročilé › USB diagnostika › Načíst deskriptory › Exportovat | soubor poslat zpět (uloží se do `docs/captures/`) |
 
-Když něco nejde: v Testu kamery **Zkopírovat diagnostiku** a poslat text.
+Když něco nejde: v Testu kamery **Zkopírovat diagnostiku** a poslat text – nebo jen připojit telefon k počítači.
+Každý dokončený test se ukládá sám a z počítače se přečte (debug build):
+
+```
+adb shell run-as io.github.mpridal.thermocamera cat files/diagnostics/latest-camera-test.txt
+adb shell run-as io.github.mpridal.thermocamera ls files/diagnostics
+```
 
 ## Fáze 2 – zobrazení a kamery
 
