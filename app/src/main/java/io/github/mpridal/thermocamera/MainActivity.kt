@@ -26,7 +26,10 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
+import io.github.mpridal.thermocamera.camera.CameraRepository
 import io.github.mpridal.thermocamera.camera.CameraState
+import io.github.mpridal.thermocamera.ui.cameratest.CameraTestScreen
+import javax.inject.Inject
 import io.github.mpridal.thermocamera.ui.components.LocalHazeState
 import io.github.mpridal.thermocamera.ui.diagnostics.UsbDiagnosticsScreen
 import io.github.mpridal.thermocamera.ui.live.LiveScreen
@@ -38,6 +41,24 @@ import io.github.mpridal.thermocamera.ui.theme.ThermoTheme
 class MainActivity : AppCompatActivity() {
 
     private val liveVm: LiveViewModel by viewModels()
+
+    @Inject lateinit var cameras: CameraRepository
+
+    override fun onStart() {
+        super.onStart()
+        liveVm.setForeground(true)
+    }
+
+    override fun onStop() {
+        liveVm.setForeground(false)
+        super.onStop()
+    }
+
+    /** The app is opened by the system when the HT-102 is plugged in (USB_DEVICE_ATTACHED). */
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        cameras.ht102.refresh()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -55,6 +76,7 @@ private object Routes {
     const val LIVE = "live"
     const val SETTINGS = "settings"
     const val USB_DIAG = "usb-diagnostics"
+    const val CAMERA_TEST = "camera-test"
 }
 
 @Composable
@@ -67,10 +89,18 @@ private fun AppRoot(liveVm: LiveViewModel) {
         CompositionLocalProvider(LocalHazeState provides hazeState) {
             NavHost(nav, startDestination = Routes.LIVE) {
                 composable(Routes.LIVE) {
-                    LiveScreen(liveVm, onOpenSettings = { nav.navigate(Routes.SETTINGS) }, snackbar = snackbar)
+                    LiveScreen(
+                        liveVm,
+                        onOpenSettings = { nav.navigate(Routes.SETTINGS) },
+                        onOpenCameraTest = { nav.navigate(Routes.CAMERA_TEST) },
+                        snackbar = snackbar,
+                    )
                 }
                 composable(Routes.SETTINGS) {
                     SettingsScreen(hiltViewModel(), onBack = { nav.popBackStack() }, onOpenUsbDiagnostics = { nav.navigate(Routes.USB_DIAG) })
+                }
+                composable(Routes.CAMERA_TEST) {
+                    CameraTestScreen(hiltViewModel(), onBack = { nav.popBackStack() })
                 }
                 composable(Routes.USB_DIAG) {
                     UsbDiagnosticsScreen(hiltViewModel(), onBack = { nav.popBackStack() })

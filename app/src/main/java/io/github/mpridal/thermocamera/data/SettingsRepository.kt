@@ -23,7 +23,7 @@ enum class ViewMode { THERMAL, OVERLAY, SIDE_BY_SIDE, PHOTO }
 data class Settings(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val reduceTransparency: Boolean = false,
-    val useSimulator: Boolean = DEFAULT_SIMULATOR,
+    val useSimulator: Boolean = false,
     val viewMode: ViewMode = ViewMode.THERMAL,
     val blend: Float = 0.55f,
     val palette: Palette = Palette.IRON,
@@ -31,11 +31,11 @@ data class Settings(
     val emissivity: Float = 0.95f,
 ) {
     companion object {
-        /**
-         * Until Ht102Source can read thermal data (Phase 0/1), the simulator is on by default
-         * so the app shows a live image. Switch the default off once the camera works.
-         */
-        const val DEFAULT_SIMULATOR = true
+        /** The simulator is on by default only on an emulator (zadání kap. 3.1), which has no USB camera. */
+        val isEmulator: Boolean by lazy {
+            android.os.Build.FINGERPRINT.startsWith("generic") || android.os.Build.HARDWARE.contains("ranchu") ||
+                android.os.Build.HARDWARE.contains("goldfish") || android.os.Build.PRODUCT.contains("sdk")
+        }
     }
 }
 
@@ -60,7 +60,7 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         Settings(
             themeMode = p[Keys.theme].toEnum(d.themeMode),
             reduceTransparency = p[Keys.reduceTransparency] ?: d.reduceTransparency,
-            useSimulator = p[Keys.simulator] ?: d.useSimulator,
+            useSimulator = p[Keys.simulator] ?: Settings.isEmulator,
             viewMode = p[Keys.viewMode].toEnum(d.viewMode),
             blend = p[Keys.blend] ?: d.blend,
             palette = p[Keys.palette].toEnum(d.palette),

@@ -1,5 +1,7 @@
 package io.github.mpridal.thermocamera.ui.live
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -39,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -72,6 +75,7 @@ import kotlinx.coroutines.launch
 fun LiveScreen(
     vm: LiveViewModel,
     onOpenSettings: () -> Unit,
+    onOpenCameraTest: () -> Unit,
     snackbar: SnackbarHostState,
 ) {
     val settings by vm.settings.collectAsStateWithLifecycle()
@@ -95,9 +99,9 @@ fun LiveScreen(
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val wide = maxWidth > maxHeight
             Column(Modifier.fillMaxSize()) {
-                TopBar(state, source, frame.fps, fmt, onOpenSettings)
+                TopBar(state, source, frame.fps, fmt, onOpenSettings, onOpenCameraTest)
                 if (!streaming) {
-                    DisconnectedContent(onUseSimulator = vm::useSimulator, modifier = Modifier.weight(1f))
+                    DisconnectedContent(onStartTest = onOpenCameraTest, onUseSimulator = vm::useSimulator, modifier = Modifier.weight(1f))
                 } else if (wide) {
                     Row(Modifier.weight(1f).padding(horizontal = 12.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Column(Modifier.weight(1f).fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -142,6 +146,7 @@ private fun TopBar(
     fps: Float,
     fmt: NumberFormatter,
     onOpenSettings: () -> Unit,
+    onOpenCameraTest: () -> Unit,
 ) {
     val fpsText = fmt.zero(fps)
     val (text, kind) = when (state) {
@@ -154,8 +159,8 @@ private fun TopBar(
         CameraState.Disconnected -> stringResource(R.string.status_disconnected) to StatusKind.ERROR
         is CameraState.Error -> stringResource(
             when (state.reason) {
-                CameraState.Reason.PROTOCOL_UNSUPPORTED -> R.string.status_error_protocol
-                else -> R.string.status_error_no_data
+                CameraState.Reason.NO_DATA -> R.string.status_error_no_data
+                CameraState.Reason.USB_ERROR -> R.string.status_error_usb
             },
         ) to StatusKind.ERROR
     }
@@ -163,7 +168,7 @@ private fun TopBar(
         Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        StatusChip(text, kind, modifier = Modifier.weight(1f, fill = false))
+        StatusChip(text, kind, onClick = onOpenCameraTest, modifier = Modifier.weight(1f, fill = false))
         Spacer(Modifier.weight(1f))
         GlassIconButton(Icons.Filled.Settings, stringResource(R.string.cd_settings), onOpenSettings)
     }
@@ -282,7 +287,7 @@ private fun BottomBar(notYet: () -> Unit) {
 }
 
 @Composable
-private fun DisconnectedContent(onUseSimulator: () -> Unit, modifier: Modifier = Modifier) {
+private fun DisconnectedContent(onStartTest: () -> Unit, onUseSimulator: () -> Unit, modifier: Modifier = Modifier) {
     val c = ThermoTheme.colors
     Column(
         modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(20.dp),
@@ -297,7 +302,17 @@ private fun DisconnectedContent(onUseSimulator: () -> Unit, modifier: Modifier =
             Spacer(Modifier.height(6.dp))
             Text(stringResource(R.string.disconnected_help_body), color = c.textMuted, fontSize = 14.sp)
         }
-        GlassChip(stringResource(R.string.action_use_simulator), onUseSimulator)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(
+                Modifier.heightIn(min = 44.dp)
+                    .clip(RoundedCornerShape(22.dp))
+                    .background(c.accent)
+                    .clickable(onClick = onStartTest)
+                    .padding(horizontal = 18.dp, vertical = 10.dp),
+                contentAlignment = Alignment.Center,
+            ) { Text(stringResource(R.string.action_start_camera_test), color = c.onAccent, fontSize = 14.sp) }
+            GlassChip(stringResource(R.string.action_use_simulator), onUseSimulator)
+        }
     }
 }
 

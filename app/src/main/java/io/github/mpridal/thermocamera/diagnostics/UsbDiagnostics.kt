@@ -5,7 +5,7 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
 import io.github.mpridal.thermocamera.BuildConfig
-import io.github.mpridal.thermocamera.camera.UsbCameraSource
+import io.github.mpridal.thermocamera.camera.Ht102Source
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -35,7 +35,7 @@ object UsbDiagnostics {
     }
 
     private fun StringBuilder.appendDevice(d: UsbDevice, permission: Boolean) {
-        val ht = if (UsbCameraSource.isHt102(d)) "  <-- HT-102" else ""
+        val ht = if (Ht102Source.isHt102(d)) "  <-- HT-102" else ""
         appendLine("DEVICE ${d.deviceName}$ht")
         appendLine("  VID 0x%04X  PID 0x%04X  class %s  subclass 0x%02X  protocol 0x%02X".format(
             d.vendorId, d.productId, className(d.deviceClass), d.deviceSubclass, d.deviceProtocol,

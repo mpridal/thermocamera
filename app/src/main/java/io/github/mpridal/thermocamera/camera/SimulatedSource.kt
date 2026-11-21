@@ -46,17 +46,22 @@ class SimulatedSource(
         if (job?.isActive == true) return
         _state.value = CameraState.Connecting
         val start = System.nanoTime()
-        val periodMs = (1000f / fps).toLong()
+        val periodNs = (1e9f / fps).toLong()
         job = scope.launch {
             _state.value = CameraState.Streaming(fps)
+            var next = System.nanoTime()
             while (isActive) {
+                // Fixed rate: the next frame is due one period after the previous one was due,
+                // regardless of how long producing a frame took.
+                next += periodNs
                 val now = System.nanoTime()
                 val t = (now - start) / 1e9
                 val values = FloatArray(scene.width * scene.height)
                 scene.fill(values, t)
                 _frames.tryEmit(ThermalFrame(scene.width, scene.height, values, now))
                 _visible.tryEmit(renderVisible(t, now))
-                delay(periodMs)
+                val wait = next - System.nanoTime()
+                if (wait > 0) delay(wait / 1_000_000) else next = System.nanoTime()
             }
         }
     }
@@ -77,21 +82,33 @@ class SimulatedSource(
     override fun diagnostics() = DiagnosticsDump("SimulatedSource fps=$fps size=${scene.width}x${scene.height}")
 
     /** Simple flat-shaded drawing of the same scene as seen by a normal camera. */
+    /**
+     * The scene is drawn once into a slightly larger image; each frame only copies a crop shifted
+     * by the same sway as the thermal scene (cheap enough for 9 Hz even on an emulator).
+     */
+    private val visibleScene: IntArray by lazy {
+        val w = VISIBLE_W + 2 * MARGIN
+        val h = VISIBLE_H + 2 * MARGIN
+        val crop = VISIBLE_H // the thermal FOV is the centred square of side VISIBLE_H
+        val x0 = (VISIBLE_W - crop) / 2 + MARGIN
+        IntArray(w * h) { i ->
+            val x = i % w
+            val y = i / w
+            visibleColorAt((x - x0).toFloat() / (crop - 1), (y - MARGIN).toFloat() / (VISIBLE_H - 1))
+        }
+    }
+
     private fun renderVisible(t: Double, now: Long): VisibleFrame {
         val w = VISIBLE_W
         val h = VISIBLE_H
+        val srcW = w + 2 * MARGIN
         val px = IntArray(w * h)
-        val dx = sin(t * 0.6) * 0.8 / 31.0
-        val dy = sin(t * 0.45 + 1.0) * 0.5 / 31.0
-        val crop = h // square crop of side h, centred horizontally
-        val x0 = (w - crop) / 2
+        // Same sway as SimulatedScene (in thermal pixels of 1/31 of the square), converted to image pixels.
+        val dx = (sin(t * 0.6) * 0.8 / 31.0 * (h - 1)).roundToInt().coerceIn(-MARGIN, MARGIN)
+        val dy = (sin(t * 0.45 + 1.0) * 0.5 / 31.0 * (h - 1)).roundToInt().coerceIn(-MARGIN, MARGIN)
+        val scene = visibleScene
         for (y in 0 until h) {
-            for (x in 0 until w) {
-                // Same normalised coordinates as the thermal scene, extended beyond the square.
-                val u = ((x - x0).toDouble() / (crop - 1) + dx).toFloat()
-                val v = (y.toDouble() / (h - 1) + dy).toFloat()
-                px[y * w + x] = visibleColorAt(u, v)
-            }
+            System.arraycopy(scene, (y + MARGIN + dy) * srcW + MARGIN + dx, px, y * w, w)
         }
         return VisibleFrame(w, h, px, now)
     }
@@ -118,5 +135,6 @@ class SimulatedSource(
     companion object {
         const val VISIBLE_W = 320
         const val VISIBLE_H = 240
+        private const val MARGIN = 16
     }
 }

@@ -32,8 +32,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -80,9 +80,17 @@ class LiveViewModel @Inject constructor(
     private var fpsEma = 0f
     private var frameNo = 0L
 
+    /** The camera streams only while the app is visible (set from MainActivity onStart/onStop). */
+    private val foreground = MutableStateFlow(false)
+
+    fun setForeground(visible: Boolean) {
+        foreground.value = visible
+    }
+
     init {
         viewModelScope.launch {
-            cameras.active.collectLatest { src ->
+            combine(cameras.active, foreground) { src, fg -> src.takeIf { fg } }.collectLatest { src ->
+                if (src == null) return@collectLatest // previous source was stopped in its finally block
                 autoRange.reset(); smoother.reset(); fpsEma = 0f; lastTs = 0L
                 _frame.value = LiveFrameUi()
                 src.start()

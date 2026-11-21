@@ -56,7 +56,13 @@ Implementace: `thermal-core/.../Ht102Decoder.kt` (`decode` + `encode` pro testy 
    min 13,7–15,7 °C, max 30,7–31,7 °C, střed 25,7–26,8 °C; horní polovina scény 18–20 °C (místnost),
    dolní 28–31 °C (teplý předmět). Snímky se liší jen šumem. Test `Ht102DecoderTest`.
 
-## Co zbývá ověřit (Fáze 1)
+## Implementace v aplikaci (Fáze 1)
+
+`Ht102Source` → `UvcStream` (VS_PROBE/COMMIT, 640 × 480 při 10 fps, alt. nastavení podle `dwMaxPayloadTransferSize`)
+→ `IsoReader` (nativní izochronní přenosy přes usbfs) → `UvcFrameAssembler` → `Ht102Decoder` + `Yuy2`.
+Opakované termo matice se přeskakují (senzor ~9 Hz, video 10 fps).
+
+## Co zbývá ověřit na telefonu
 
 - Na Androidu: stream 640 × 480 YUY2 přes UVC knihovnu, dekódování živě, skutečná frekvence termo dat.
 - Zda se termo data objevují i v rozlišení 320 × 240 / 160 × 120 (aplikace výrobce používá jen 640 × 480 → použijeme také jen to).

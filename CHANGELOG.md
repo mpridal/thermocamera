@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased] – Fáze 1
+
+- `Ht102Source`: živý stream z HT-102 – UVC 640 × 480 YUY2 při 10 fps, termo matice dekódovaná z každého snímku,
+  obraz kamery modulu jako běžný obraz. Oprávnění k USB, připojení/odpojení, watchdog (žádná data > 2 s → chyba),
+  automatické obnovení po opětovném připojení.
+- Vlastní malá nativní vrstva pro izochronní USB přenosy (usbfs), bez cizích knihoven; skládání snímků UVC
+  a převod YUY2 → ARGB v `:thermal-core` s testy (včetně skutečného snímku z kamery).
+- Test kamery (F6): 6 kroků, surová data 32 × 32, šum mezi snímky, Zopakovat / Hotovo / Zkopírovat diagnostiku;
+  otevírá se ze stavového čipu a z obrazovky „Kamera odpojena“.
+- Kamera streamuje jen když je aplikace vidět. Simulátor je výchozí jen na emulátoru.
+- `docs/manual-test.md`: checklist pro test na telefonu.
+
 ## [Unreleased] – Fáze 0
 
 - Projekt: `:app` (Kotlin, Jetpack Compose, Hilt) + `:thermal-core` (čistý Kotlin).

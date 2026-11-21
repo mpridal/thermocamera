@@ -4,7 +4,7 @@ import io.github.mpridal.thermocamera.core.ThermalFrame
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
-/** A thermal camera (zadání kap. 4.1). Implementations: [SimulatedSource], later Ht102Source. */
+/** A thermal camera (zadání kap. 4.1). Implementations: [SimulatedSource], [Ht102Source]. */
 interface ThermalCameraSource {
     val kind: Kind
     val state: StateFlow<CameraState>
@@ -28,7 +28,7 @@ sealed interface CameraState {
     data class Streaming(val fps: Float) : CameraState
     data class Error(val reason: Reason) : CameraState
 
-    enum class Reason { NO_DATA, PROTOCOL_UNSUPPORTED, USB_ERROR }
+    enum class Reason { NO_DATA, USB_ERROR }
 }
 
 /** A visible-light frame as ARGB pixels (row-major). */

@@ -24,12 +24,12 @@ class CameraRepository @Inject constructor(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     val simulator = SimulatedSource()
-    val usb = UsbCameraSource(context)
+    val ht102 = Ht102Source(context)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val active: StateFlow<ThermalCameraSource> = settings.settings
         .map { it.useSimulator }
         .distinctUntilChanged()
-        .map { sim -> if (sim) simulator else usb }
-        .stateIn(scope, SharingStarted.Eagerly, usb)
+        .map { sim -> if (sim) simulator else ht102 }
+        .stateIn(scope, SharingStarted.Eagerly, ht102)
 }
