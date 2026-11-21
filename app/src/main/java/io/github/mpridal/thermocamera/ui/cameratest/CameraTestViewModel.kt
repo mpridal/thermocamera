@@ -12,7 +12,12 @@ import io.github.mpridal.thermocamera.camera.Ht102Source
 import io.github.mpridal.thermocamera.camera.ThermalCameraSource
 import io.github.mpridal.thermocamera.core.FrameRenderer
 import io.github.mpridal.thermocamera.core.Interpolation
+import io.github.mpridal.thermocamera.core.Orientation
 import io.github.mpridal.thermocamera.core.Palette
+import io.github.mpridal.thermocamera.data.SettingsRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import io.github.mpridal.thermocamera.core.TempRange
 import io.github.mpridal.thermocamera.core.ThermalFrame
 import kotlinx.coroutines.Job
@@ -52,7 +57,15 @@ data class CameraTestUi(
 @HiltViewModel
 class CameraTestViewModel @Inject constructor(
     private val cameras: CameraRepository,
+    private val settingsRepo: SettingsRepository,
 ) : ViewModel() {
+
+    val orientation: StateFlow<Orientation> = settingsRepo.settings.map { it.orientation }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, Orientation())
+
+    fun rotate() = viewModelScope.launch { settingsRepo.setOrientation(orientation.value.rotatedBy90()) }
+    fun mirror() = viewModelScope.launch { settingsRepo.setOrientation(orientation.value.toggledMirror()) }
+
 
     private val _ui = MutableStateFlow(CameraTestUi())
     val ui: StateFlow<CameraTestUi> = _ui.asStateFlow()
@@ -72,10 +85,12 @@ class CameraTestViewModel @Inject constructor(
         previewJob = viewModelScope.launch {
             var prev: FloatArray? = null
             cameras.active.value.frames.collect { f ->
-                val lo = f.celsius.min()
-                val hi = maxOf(f.celsius.max(), lo + 1f)
+                val o = orientation.value
+                val data = FloatArray(f.celsius.size).also { o.apply(f.celsius, f.width, f.height, it) }
+                val lo = data.min()
+                val hi = maxOf(data.max(), lo + 1f)
                 val range = TempRange(lo, hi)
-                val px = rawRenderer.render(f.celsius, f.width, f.height, range, Palette.IRON, Interpolation.Mode.NEAREST)
+                val px = rawRenderer.render(data, o.outWidth(f.width, f.height), o.outHeight(f.width, f.height), range, Palette.IRON, Interpolation.Mode.NEAREST)
                 rawBitmap.setPixels(px, 0, RAW_SIZE, 0, 0, RAW_SIZE, RAW_SIZE)
                 val noise = prev?.let { p -> f.celsius.indices.sumOf { abs(f.celsius[it] - p[it]).toDouble() }.toFloat() / f.celsius.size }
                 prev = f.celsius.copyOf()

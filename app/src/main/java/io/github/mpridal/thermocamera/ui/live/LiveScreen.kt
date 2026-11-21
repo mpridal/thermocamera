@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -82,6 +83,9 @@ fun LiveScreen(
     val state by vm.cameraState.collectAsStateWithLifecycle()
     val source by vm.source.collectAsStateWithLifecycle()
     val frame by vm.frame.collectAsStateWithLifecycle()
+    val points by vm.points.collectAsStateWithLifecycle()
+    val frozen by vm.frozen.collectAsStateWithLifecycle()
+    val pointActions = PointActions(points, vm::addPoint, vm::movePoint, vm::removePoint)
     val fmt = rememberNumberFormatter()
     val scope = rememberCoroutineScope()
     val comingLater = stringResource(R.string.coming_later)
@@ -107,13 +111,13 @@ fun LiveScreen(
                         Column(Modifier.weight(1f).fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
                             Badges(settings, fmt)
                             Spacer(Modifier.height(6.dp))
-                            MeasuringSurface(frame, settings.viewMode, settings.blend, settings.palette, fmt, stacked = false, Modifier.weight(1f))
+                            MeasuringSurface(frame, settings.viewMode, settings.blend, settings.palette, fmt, stacked = false, pointActions, Modifier.weight(1f))
                         }
                         Column(
                             Modifier.width(360.dp).fillMaxHeight().verticalScroll(rememberScrollState()),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
-                            Controls(vm, settings, frame, fmt, notYet)
+                            Controls(vm, settings, frame, fmt, notYet, frozen)
                             BottomBar(notYet)
                         }
                     }
@@ -124,11 +128,11 @@ fun LiveScreen(
                     ) {
                         Badges(settings, fmt)
                         MeasuringSurface(
-                            frame, settings.viewMode, settings.blend, settings.palette, fmt, stacked = true,
+                            frame, settings.viewMode, settings.blend, settings.palette, fmt, stacked = true, pointActions,
                             Modifier.fillMaxWidth().weight(1f, fill = false).align(Alignment.CenterHorizontally),
                         )
                         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Controls(vm, settings, frame, fmt, notYet)
+                            Controls(vm, settings, frame, fmt, notYet, frozen)
                         }
                     }
                     Box(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) { BottomBar(notYet) }
@@ -203,6 +207,7 @@ private fun Controls(
     frame: LiveFrameUi,
     fmt: NumberFormatter,
     notYet: () -> Unit,
+    frozen: Boolean,
 ) {
     val c = ThermoTheme.colors
     val m = frame.measurements
@@ -250,7 +255,7 @@ private fun Controls(
             Text(fmt.zero(local * 100) + " %", color = c.text, fontSize = 13.sp)
         }
     }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
         Box {
             var open by remember { mutableStateOf(false) }
             GlassChip(stringResource(R.string.chip_range, rangePresetName(settings.rangePreset)) + " ▾", { open = true })
@@ -269,7 +274,12 @@ private fun Controls(
                 }
             }
         }
-        GlassChip(stringResource(R.string.action_add_point), notYet, leading = "+")
+        GlassChip(stringResource(R.string.action_add_point), { vm.addPoint(15.5f, 15.5f) }, leading = "+")
+        GlassChip(
+            stringResource(if (frozen) R.string.action_unfreeze else R.string.action_freeze),
+            { vm.setFrozen(!frozen) },
+            leading = if (frozen) "▶" else "❚❚",
+        )
     }
 }
 

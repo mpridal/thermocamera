@@ -4,6 +4,10 @@
 
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+
+    <!-- Only requested when the user chooses the phone camera (zadání F11 bod 7). -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".ThermoApp"

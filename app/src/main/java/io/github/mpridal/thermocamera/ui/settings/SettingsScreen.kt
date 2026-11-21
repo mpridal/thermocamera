@@ -46,7 +46,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.mpridal.thermocamera.BuildConfig
 import io.github.mpridal.thermocamera.R
+import io.github.mpridal.thermocamera.core.Orientation
+import io.github.mpridal.thermocamera.data.PhotoCamera
 import io.github.mpridal.thermocamera.data.Settings
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import io.github.mpridal.thermocamera.data.SettingsRepository
 import io.github.mpridal.thermocamera.data.ThemeMode
 import io.github.mpridal.thermocamera.ui.components.GlassIconButton
@@ -66,13 +71,23 @@ class SettingsViewModel @Inject constructor(private val repo: SettingsRepository
     fun setTheme(m: ThemeMode) = viewModelScope.launch { repo.setThemeMode(m) }
     fun setReduceTransparency(v: Boolean) = viewModelScope.launch { repo.setReduceTransparency(v) }
     fun setSimulator(v: Boolean) = viewModelScope.launch { repo.setUseSimulator(v) }
+    fun setRotation(r: Int) = viewModelScope.launch { repo.setOrientation(settings.value.orientation.copy(rotation = r)) }
+    fun setMirror(m: Boolean) = viewModelScope.launch { repo.setOrientation(settings.value.orientation.copy(mirror = m)) }
+    fun setPhotoCamera(p: PhotoCamera) = viewModelScope.launch { repo.setPhotoCamera(p) }
+    fun setAutoAlign(v: Boolean) = viewModelScope.launch { repo.setAutoAlign(v) }
 }
 
 /** Supported app languages in the order of the combo box (zadání F10). */
 val APP_LANGUAGES = listOf("cs", "en", "es", "it", "fr", "de")
 
 @Composable
-fun SettingsScreen(vm: SettingsViewModel, onBack: () -> Unit, onOpenUsbDiagnostics: () -> Unit) {
+fun SettingsScreen(
+    vm: SettingsViewModel,
+    onBack: () -> Unit,
+    onOpenUsbDiagnostics: () -> Unit,
+    onOpenAlignment: () -> Unit,
+    onChoosePhotoCamera: (PhotoCamera) -> Unit,
+) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val c = ThermoTheme.colors
     Column(Modifier.fillMaxSize().safeDrawingPadding()) {
@@ -101,6 +116,44 @@ fun SettingsScreen(vm: SettingsViewModel, onBack: () -> Unit, onOpenUsbDiagnosti
                     s.reduceTransparency,
                     vm::setReduceTransparency,
                 )
+            }
+            Section(stringResource(R.string.settings_section_camera)) {
+                Text(stringResource(R.string.settings_orientation), color = c.text, fontSize = 15.sp)
+                SegmentedControl(
+                    options = Orientation.ROTATIONS.map { it to "$it°" },
+                    selected = s.orientation.rotation,
+                    onSelect = vm::setRotation,
+                )
+                SwitchRow(
+                    stringResource(R.string.settings_mirror),
+                    stringResource(R.string.settings_mirror_summary),
+                    s.orientation.mirror,
+                    vm::setMirror,
+                )
+                NavRow(
+                    stringResource(R.string.settings_alignment),
+                    stringResource(R.string.settings_alignment_summary),
+                    onOpenAlignment,
+                )
+                Text(stringResource(R.string.settings_photo_camera), color = c.text, fontSize = 15.sp)
+                listOf(
+                    PhotoCamera.PHONE to R.string.photo_camera_phone,
+                    PhotoCamera.PHONE_WITH_MODULE_PREVIEW to R.string.photo_camera_phone_module_preview,
+                    PhotoCamera.MODULE to R.string.photo_camera_module,
+                ).forEach { (option, label) ->
+                    Row(
+                        Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                            .selectable(selected = s.photoCamera == option, role = Role.RadioButton) { onChoosePhotoCamera(option) },
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(selected = s.photoCamera == option, onClick = null, colors = RadioButtonDefaults.colors(selectedColor = c.accent))
+                        Spacer(Modifier.width(12.dp))
+                        Text(stringResource(label), color = c.text, fontSize = 15.sp)
+                    }
+                }
+                if (s.photoCamera != PhotoCamera.MODULE) {
+                    SwitchRow(stringResource(R.string.settings_auto_align), "", s.autoAlign, vm::setAutoAlign)
+                }
             }
             Section(stringResource(R.string.settings_section_language)) { LanguageDropdown() }
             Section(stringResource(R.string.settings_section_advanced)) {
@@ -145,7 +198,7 @@ private fun SwitchRow(title: String, summary: String, checked: Boolean, onChange
     ) {
         Column(Modifier.weight(1f)) {
             Text(title, color = c.text, fontSize = 15.sp)
-            Text(summary, color = c.textMuted, fontSize = 13.sp)
+            if (summary.isNotEmpty()) Text(summary, color = c.textMuted, fontSize = 13.sp)
         }
         Spacer(Modifier.width(12.dp))
         Switch(

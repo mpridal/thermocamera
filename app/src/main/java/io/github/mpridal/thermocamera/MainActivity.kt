@@ -27,6 +27,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import io.github.mpridal.thermocamera.camera.CameraRepository
+import io.github.mpridal.thermocamera.data.PhotoCamera
+import io.github.mpridal.thermocamera.ui.align.AlignmentScreen
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import io.github.mpridal.thermocamera.camera.CameraState
 import io.github.mpridal.thermocamera.ui.cameratest.CameraTestScreen
 import javax.inject.Inject
@@ -77,6 +81,7 @@ private object Routes {
     const val SETTINGS = "settings"
     const val USB_DIAG = "usb-diagnostics"
     const val CAMERA_TEST = "camera-test"
+    const val ALIGN = "align"
 }
 
 @Composable
@@ -84,6 +89,34 @@ private fun AppRoot(liveVm: LiveViewModel) {
     val hazeState = remember { HazeState() }
     val snackbar = remember { SnackbarHostState() }
     val nav = rememberNavController()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val permissionDenied = androidx.compose.ui.res.stringResource(R.string.camera_permission_denied)
+    var pendingPhotoCamera by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<PhotoCamera?>(null) }
+    val cameraPermission = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        val wanted = pendingPhotoCamera
+        pendingPhotoCamera = null
+        if (granted && wanted != null) {
+            liveVm.setPhotoCamera(wanted)
+        } else {
+            liveVm.setPhotoCamera(PhotoCamera.MODULE)
+            scope.launch { snackbar.showSnackbar(permissionDenied) }
+        }
+    }
+    /** Choosing the phone camera asks for the CAMERA permission first (zadání F11 bod 7). */
+    val choosePhotoCamera: (PhotoCamera) -> Unit = { choice ->
+        val needs = choice != PhotoCamera.MODULE &&
+            androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) !=
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+        if (needs) {
+            pendingPhotoCamera = choice
+            cameraPermission.launch(android.Manifest.permission.CAMERA)
+        } else {
+            liveVm.setPhotoCamera(choice)
+        }
+    }
     Box(Modifier.fillMaxSize()) {
         ScreenBackground(liveVm, Modifier.fillMaxSize().hazeSource(hazeState))
         CompositionLocalProvider(LocalHazeState provides hazeState) {
@@ -97,7 +130,16 @@ private fun AppRoot(liveVm: LiveViewModel) {
                     )
                 }
                 composable(Routes.SETTINGS) {
-                    SettingsScreen(hiltViewModel(), onBack = { nav.popBackStack() }, onOpenUsbDiagnostics = { nav.navigate(Routes.USB_DIAG) })
+                    SettingsScreen(
+                        hiltViewModel(),
+                        onBack = { nav.popBackStack() },
+                        onOpenUsbDiagnostics = { nav.navigate(Routes.USB_DIAG) },
+                        onOpenAlignment = { nav.navigate(Routes.ALIGN) },
+                        onChoosePhotoCamera = choosePhotoCamera,
+                    )
+                }
+                composable(Routes.ALIGN) {
+                    AlignmentScreen(liveVm, onBack = { nav.popBackStack() })
                 }
                 composable(Routes.CAMERA_TEST) {
                     CameraTestScreen(hiltViewModel(), onBack = { nav.popBackStack() })

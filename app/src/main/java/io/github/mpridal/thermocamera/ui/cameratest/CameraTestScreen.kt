@@ -128,6 +128,17 @@ fun CameraTestScreen(vm: CameraTestViewModel, onBack: () -> Unit) {
                 }
             }
 
+            val orientation by vm.orientation.collectAsStateWithLifecycle()
+            Column(Modifier.fillMaxWidth().glass(RoundedCornerShape(20.dp)).padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.orientation_title), color = c.textMuted, style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.orientation_hint), color = c.text, fontSize = 14.sp)
+                Text("${orientation.rotation}°" + if (orientation.mirror) " · ⇋" else "", color = c.textMuted, style = NumberStyleSmall)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GlassChip(stringResource(R.string.action_rotate), vm::rotate, leading = "⟳")
+                    GlassChip(stringResource(R.string.action_mirror), vm::mirror, leading = "⇋")
+                }
+            }
+
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 GlassChip(stringResource(R.string.action_repeat), vm::run)
                 GlassChip(stringResource(R.string.action_done), onBack)
