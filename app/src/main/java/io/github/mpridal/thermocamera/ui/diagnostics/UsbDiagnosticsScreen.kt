@@ -129,6 +129,7 @@ class UsbDiagnosticsViewModel @Inject constructor(
                 return
             }
             pending.removeFirst()
+            readAny = true
             usb.openDevice(d)?.let { conn ->
                 try {
                     conn.rawDescriptors?.let { raw[d.deviceName] = it }
@@ -138,13 +139,19 @@ class UsbDiagnosticsViewModel @Inject constructor(
             }
         }
         refresh()
+        if (readAny) {
+            readAny = false
+            io.github.mpridal.thermocamera.diagnostics.DiagnosticsLog.save(context, "usb", _ui.value.text)
+        }
     }
 
     private val asked = mutableSetOf<String>()
+    private var readAny = false
 
     fun exportFile(): File {
         val dir = File(context.cacheDir, "exports").apply { mkdirs() }
         val name = "ht102-usb-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".txt"
+        io.github.mpridal.thermocamera.diagnostics.DiagnosticsLog.save(context, "usb", _ui.value.text)
         return File(dir, name).apply { writeText(_ui.value.text) }
     }
 

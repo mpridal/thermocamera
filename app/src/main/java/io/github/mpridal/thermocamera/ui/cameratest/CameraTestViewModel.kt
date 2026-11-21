@@ -17,6 +17,7 @@ import io.github.mpridal.thermocamera.core.Palette
 import io.github.mpridal.thermocamera.data.SettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import io.github.mpridal.thermocamera.core.TempRange
 import io.github.mpridal.thermocamera.core.ThermalFrame
@@ -56,6 +57,7 @@ data class CameraTestUi(
  */
 @HiltViewModel
 class CameraTestViewModel @Inject constructor(
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
     private val cameras: CameraRepository,
     private val settingsRepo: SettingsRepository,
 ) : ViewModel() {
@@ -78,6 +80,16 @@ class CameraTestViewModel @Inject constructor(
     init {
         startPreview()
         run()
+        // Every finished test is saved for reading from a computer (DiagnosticsLog).
+        viewModelScope.launch {
+            ui.map { it.finished to it.diagnostics }.distinctUntilChanged().collect { (finished, text) ->
+                if (finished && text.isNotEmpty()) {
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                        io.github.mpridal.thermocamera.diagnostics.DiagnosticsLog.save(context, "camera-test", text)
+                    }
+                }
+            }
+        }
     }
 
     private fun startPreview() {
