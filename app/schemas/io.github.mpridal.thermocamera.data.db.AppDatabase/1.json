@@ -1,0 +1,294 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "9dfd24fb61056b38c335e4a86d07019e",
+    "entities": [
+      {
+        "tableName": "calibration_profile",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `range_preset` TEXT NOT NULL, `custom_min` REAL NOT NULL, `custom_max` REAL NOT NULL, `emissivity` REAL NOT NULL, `reflected` REAL NOT NULL, `offset` REAL NOT NULL, `gain` REAL NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rangePreset",
+            "columnName": "range_preset",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customMin",
+            "columnName": "custom_min",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customMax",
+            "columnName": "custom_max",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emissivity",
+            "columnName": "emissivity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reflected",
+            "columnName": "reflected",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "offset",
+            "columnName": "offset",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gain",
+            "columnName": "gain",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "project",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `created_at` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "snapshot",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `created_at` INTEGER NOT NULL, `project_id` INTEGER, `dir` TEXT NOT NULL, `title` TEXT NOT NULL, `note` TEXT NOT NULL, `view_mode` TEXT NOT NULL, `blend` REAL NOT NULL, `palette` TEXT NOT NULL, `range_preset` TEXT NOT NULL, `range_min` REAL NOT NULL, `range_max` REAL NOT NULL, `emissivity` REAL NOT NULL, `reflected` REAL NOT NULL, `offset` REAL NOT NULL, `gain` REAL NOT NULL, `inside_temp` REAL NOT NULL, `outside_temp` REAL NOT NULL, `frsi_limit` REAL NOT NULL, `points` TEXT NOT NULL, `orientation_rotation` INTEGER NOT NULL, `orientation_mirror` INTEGER NOT NULL, `camera_source` TEXT NOT NULL, `app_version` TEXT NOT NULL, `min_c` REAL NOT NULL, `max_c` REAL NOT NULL, `center_c` REAL NOT NULL, `has_visible` INTEGER NOT NULL, `has_photo` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "projectId",
+            "columnName": "project_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "dir",
+            "columnName": "dir",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viewMode",
+            "columnName": "view_mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "blend",
+            "columnName": "blend",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "palette",
+            "columnName": "palette",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rangePreset",
+            "columnName": "range_preset",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rangeMin",
+            "columnName": "range_min",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rangeMax",
+            "columnName": "range_max",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emissivity",
+            "columnName": "emissivity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reflected",
+            "columnName": "reflected",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "offset",
+            "columnName": "offset",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gain",
+            "columnName": "gain",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "insideTemp",
+            "columnName": "inside_temp",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outsideTemp",
+            "columnName": "outside_temp",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fRsiLimit",
+            "columnName": "frsi_limit",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "points",
+            "columnName": "points",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orientationRotation",
+            "columnName": "orientation_rotation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orientationMirror",
+            "columnName": "orientation_mirror",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cameraSource",
+            "columnName": "camera_source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appVersion",
+            "columnName": "app_version",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minC",
+            "columnName": "min_c",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxC",
+            "columnName": "max_c",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "centerC",
+            "columnName": "center_c",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasVisible",
+            "columnName": "has_visible",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasPhoto",
+            "columnName": "has_photo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9dfd24fb61056b38c335e4a86d07019e')"
+    ]
+  }
+}

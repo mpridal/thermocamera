@@ -55,6 +55,7 @@ fun BetterCameraSheet(
         containerColor = c.menu,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
     ) {
+        androidx.compose.runtime.CompositionLocalProvider(io.github.mpridal.thermocamera.ui.components.LocalHazeState provides null) {
         Column(
             Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -78,5 +79,6 @@ fun BetterCameraSheet(
             GlassChip(stringResource(R.string.better_camera_keep), onKeepModule)
             Text(stringResource(R.string.better_camera_note), color = c.textMuted, fontSize = 12.sp, textAlign = TextAlign.Center)
         }
+    }
     }
 }

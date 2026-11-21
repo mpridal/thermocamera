@@ -58,6 +58,9 @@ import io.github.mpridal.thermocamera.camera.ThermalCameraSource
 import io.github.mpridal.thermocamera.core.Palette
 import io.github.mpridal.thermocamera.core.RangePreset
 import io.github.mpridal.thermocamera.data.PhotoCamera
+import io.github.mpridal.thermocamera.ui.calibration.CalibrationSheet
+import io.github.mpridal.thermocamera.ui.calibration.CalibrationViewModel
+import io.github.mpridal.thermocamera.ui.calibration.ThermalBridgeBar
 import io.github.mpridal.thermocamera.data.Settings
 import io.github.mpridal.thermocamera.data.ViewMode
 import io.github.mpridal.thermocamera.ui.components.AppIcons
@@ -126,7 +129,14 @@ fun LiveScreen(
 
     val streaming = state is CameraState.Streaming
     val needsCameraForUsb by vm.needsCameraForUsb.collectAsStateWithLifecycle()
-    androidx.compose.runtime.CompositionLocalProvider(LocalNeedsCameraForUsb provides needsCameraForUsb) {
+    val calibrationVm: CalibrationViewModel = androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel()
+    var showCalibration by remember { mutableStateOf(false) }
+    if (showCalibration) CalibrationSheet(calibrationVm, vm, onDismiss = { showCalibration = false })
+    androidx.compose.runtime.CompositionLocalProvider(
+        LocalNeedsCameraForUsb provides needsCameraForUsb,
+        LocalOpenCalibration provides { showCalibration = true },
+        LocalProfiles provides calibrationVm,
+    ) {
     Box(Modifier.fillMaxSize().safeDrawingPadding()) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // Layout by window size class (zadání kap. 7.5): compact height = phone landscape,
@@ -174,6 +184,7 @@ fun LiveScreen(
                             CompactValues(frame, fmt)
                         }
                         if (alignTip) AlignTip()
+                        ThermalBridgeBar(frame.fRsi, settings.fRsiLimit, fmt)
                         surface(Modifier.weight(1f).align(Alignment.CenterHorizontally), false)
                     }
                     SidePanel(
@@ -279,11 +290,11 @@ private fun Badges(settings: Settings, fmt: NumberFormatter, photoBadge: String?
             Modifier.glass(RoundedCornerShape(10.dp), GlassLevel.IMAGE_LABEL).padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (settings.rangePreset != RangePreset.AUTO) {
+            val r = settings.fixedRange()
+            if (r != null) {
                 Icon(Icons.Filled.Lock, stringResource(R.string.cd_range_locked), tint = c.imgLabelText, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
             }
-            val r = settings.rangePreset.range
             val txt = rangePresetName(settings.rangePreset) + (r?.let { " " + fmt.zero(it.min) + "–" + fmt.zero(it.max) + " °C" } ?: "")
             Text(txt, color = c.imgLabelText, fontSize = 12.sp)
         }
@@ -314,6 +325,7 @@ private fun Controls(
         ValueTile(stringResource(R.string.label_center), m?.let { fmt.one(it.center) } ?: "–", "+", c.text, Modifier.weight(1f))
         ValueTile(stringResource(R.string.label_max), m?.let { fmt.one(it.max.celsius) } ?: "–", "▲", c.hotText, Modifier.weight(1f))
     }
+    ThermalBridgeBar(frame.fRsi, settings.fRsiLimit, fmt)
     if (settings.rangePreset == RangePreset.FACADE) {
         Row(
             Modifier.fillMaxWidth().glass(RoundedCornerShape(14.dp), tint = c.warnFill, border = c.warnBorder).padding(10.dp),
@@ -354,15 +366,9 @@ private fun Controls(
         }
     }
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Box {
-            var open by remember { mutableStateOf(false) }
-            GlassChip(stringResource(R.string.chip_range, rangePresetName(settings.rangePreset)) + " ▾", { open = true })
-            DropdownMenu(open, { open = false }, containerColor = ThermoTheme.colors.menu) {
-                RangePreset.entries.filter { it != RangePreset.CUSTOM }.forEach { p ->
-                    DropdownMenuItem(text = { Text(rangePresetName(p)) }, onClick = { open = false; vm.setRangePreset(p) })
-                }
-            }
-        }
+        val openCalibration = LocalOpenCalibration.current
+        GlassChip(stringResource(R.string.chip_range, rangePresetName(settings.rangePreset)) + " ▾", openCalibration)
+        ProfileChip(settings)
         Box {
             var open by remember { mutableStateOf(false) }
             GlassChip(paletteName(settings.palette) + " ▾", { open = true }, leading = "◐")
@@ -597,7 +603,7 @@ private fun NavRail(onOpenCameraTest: () -> Unit, onOpenSettings: () -> Unit, no
     ) {
         RailItem("◉", stringResource(R.string.rail_camera), selected = true) {}
         RailItem("▦", stringResource(R.string.cd_gallery), selected = false, onClick = notYet)
-        RailItem("◐", stringResource(R.string.rail_calibration), selected = false, onClick = notYet)
+        RailItem("◐", stringResource(R.string.rail_calibration), selected = false, onClick = LocalOpenCalibration.current)
         RailItem("✓", stringResource(R.string.rail_test), selected = false, onClick = onOpenCameraTest)
         Spacer(Modifier.weight(1f))
         RailItem("⚙", stringResource(R.string.cd_settings), selected = false, onClick = onOpenSettings)
@@ -658,7 +664,14 @@ private fun TabletPanelContent(
             leading = if (frozen) "▶" else "❚❚",
         )
     }
+    ThermalBridgeBar(frame.fRsi, settings.fRsiLimit, fmt)
+    m?.points?.indices?.forEach { i ->
+        frame.pointsFRsi.getOrNull(i)?.let { f ->
+            if (f < settings.fRsiLimit) Text("P${i + 1}: fRsi " + fmt.two(f) + " < " + fmt.two(settings.fRsiLimit), color = ThermoTheme.colors.warnText, fontSize = 13.sp)
+        }
+    }
     if (settings.rangePreset == RangePreset.FACADE) FacadeWarning()
+    GlassChip(stringResource(R.string.cal_title), LocalOpenCalibration.current, leading = "◐")
     Text(stringResource(R.string.panel_range).uppercase(androidx.compose.ui.platform.LocalConfiguration.current.locales[0]),
         style = MaterialTheme.typography.labelMedium, color = c.textMuted)
     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -707,3 +720,26 @@ private fun FacadeWarning() {
 
 /** Whether the pending permission is the CAMERA one needed for USB cameras (status chip text). */
 private val LocalNeedsCameraForUsb = androidx.compose.runtime.staticCompositionLocalOf { false }
+
+/** Opens the "Range and calibration" sheet from anywhere on the live screen. */
+private val LocalOpenCalibration = androidx.compose.runtime.staticCompositionLocalOf<() -> Unit> { {} }
+
+private val LocalProfiles = androidx.compose.runtime.staticCompositionLocalOf<CalibrationViewModel?> { null }
+
+/** Quick profile switch (zadání F2) – only when some profiles exist. */
+@Composable
+private fun ProfileChip(settings: Settings) {
+    val vm = LocalProfiles.current ?: return
+    val profiles by vm.profiles.collectAsStateWithLifecycle()
+    if (profiles.isEmpty()) return
+    Box {
+        var open by remember { mutableStateOf(false) }
+        val name = settings.activeProfile.ifEmpty { "–" }
+        GlassChip(stringResource(R.string.profile_chip, name) + " ▾", { open = true })
+        DropdownMenu(open, { open = false }, containerColor = ThermoTheme.colors.menu) {
+            profiles.forEach { p ->
+                DropdownMenuItem(text = { Text(p.name) }, onClick = { open = false; vm.applyProfile(p) })
+            }
+        }
+    }
+}

@@ -64,7 +64,39 @@ data class Settings(
     /** Requested video frame rate of the HT-102 stream (Pro pokročilé); thermal data comes with every frame. */
     val videoFps: Int = DEFAULT_VIDEO_FPS,
     val videoResolution: VideoResolution = VideoResolution.R320,
+    // ---- Phase 3: range, calibration, thermal bridge (zadání F2, F3) ----
+    val customMin: Float = 12f,
+    val customMax: Float = 24f,
+    /** Locked range: with AUTO the current automatic range is frozen into [lockedMin]..[lockedMax]. */
+    val rangeLocked: Boolean = false,
+    val lockedMin: Float = 12f,
+    val lockedMax: Float = 24f,
+    val reflected: Float = 20f,
+    val calOffset: Float = 0f,
+    val calGain: Float = 1f,
+    /** Inside air θi and outside air θe for the temperature factor fRsi. */
+    val insideTemp: Float = 21f,
+    val outsideTemp: Float = 0f,
+    val fRsiLimit: Float = 0.75f,
+    val isotherm: Boolean = false,
+    /** Name of the calibration profile last applied (shown on the main screen). */
+    val activeProfile: String = "",
+    // ---- Phase 4/6 ----
+    val saveToGallery: Boolean = true,
+    val fahrenheit: Boolean = false,
+    val smoothing: Boolean = true,
+    val pixelated: Boolean = false,
 ) {
+    /** Correction applied to raw camera values (emissivity, reflected temperature, offset, gain). */
+    fun correction() = io.github.mpridal.thermocamera.core.Correction(emissivity, reflected, calOffset, calGain)
+
+    /** Fixed colour range for the current settings, or null for automatic. */
+    fun fixedRange(): io.github.mpridal.thermocamera.core.TempRange? = when {
+        rangeLocked && rangePreset == RangePreset.AUTO -> io.github.mpridal.thermocamera.core.TempRange(lockedMin, maxOf(lockedMax, lockedMin + 0.5f))
+        rangePreset == RangePreset.CUSTOM -> io.github.mpridal.thermocamera.core.TempRange(customMin, maxOf(customMax, customMin + 0.5f))
+        else -> rangePreset.range
+    }
+
     companion object {
         /** Frame rates the HT-102 advertises for 640 × 480 (UVC descriptor). */
         val VIDEO_FPS_OPTIONS = listOf(5, 10, 15, 20, 30)
@@ -103,6 +135,23 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         val betterCameraAnswered = stringPreferencesKey("better_camera_answered_for")
         val videoFps = intPreferencesKey("video_fps")
         val videoResolution = stringPreferencesKey("video_resolution")
+        val customMin = floatPreferencesKey("custom_min")
+        val customMax = floatPreferencesKey("custom_max")
+        val rangeLocked = booleanPreferencesKey("range_locked")
+        val lockedMin = floatPreferencesKey("locked_min")
+        val lockedMax = floatPreferencesKey("locked_max")
+        val reflected = floatPreferencesKey("reflected")
+        val calOffset = floatPreferencesKey("cal_offset")
+        val calGain = floatPreferencesKey("cal_gain")
+        val insideTemp = floatPreferencesKey("inside_temp")
+        val outsideTemp = floatPreferencesKey("outside_temp")
+        val fRsiLimit = floatPreferencesKey("frsi_limit")
+        val isotherm = booleanPreferencesKey("isotherm")
+        val activeProfile = stringPreferencesKey("active_profile")
+        val saveToGallery = booleanPreferencesKey("save_to_gallery")
+        val fahrenheit = booleanPreferencesKey("fahrenheit")
+        val smoothing = booleanPreferencesKey("smoothing")
+        val pixelated = booleanPreferencesKey("pixelated")
     }
 
     val settings: Flow<Settings> = context.dataStore.data.map { p ->
@@ -131,6 +180,23 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
             betterCameraAnsweredFor = p[Keys.betterCameraAnswered] ?: "",
             videoFps = p[Keys.videoFps]?.takeIf { it in Settings.VIDEO_FPS_OPTIONS } ?: d.videoFps,
             videoResolution = p[Keys.videoResolution].toEnum(d.videoResolution),
+            customMin = p[Keys.customMin] ?: d.customMin,
+            customMax = p[Keys.customMax] ?: d.customMax,
+            rangeLocked = p[Keys.rangeLocked] ?: d.rangeLocked,
+            lockedMin = p[Keys.lockedMin] ?: d.lockedMin,
+            lockedMax = p[Keys.lockedMax] ?: d.lockedMax,
+            reflected = p[Keys.reflected] ?: d.reflected,
+            calOffset = p[Keys.calOffset] ?: d.calOffset,
+            calGain = p[Keys.calGain] ?: d.calGain,
+            insideTemp = p[Keys.insideTemp] ?: d.insideTemp,
+            outsideTemp = p[Keys.outsideTemp] ?: d.outsideTemp,
+            fRsiLimit = p[Keys.fRsiLimit] ?: d.fRsiLimit,
+            isotherm = p[Keys.isotherm] ?: d.isotherm,
+            activeProfile = p[Keys.activeProfile] ?: d.activeProfile,
+            saveToGallery = p[Keys.saveToGallery] ?: d.saveToGallery,
+            fahrenheit = p[Keys.fahrenheit] ?: d.fahrenheit,
+            smoothing = p[Keys.smoothing] ?: d.smoothing,
+            pixelated = p[Keys.pixelated] ?: d.pixelated,
         )
     }
 
@@ -149,6 +215,37 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
     suspend fun setPhotoCamera(v: PhotoCamera) = context.dataStore.edit { it[Keys.photoCamera] = v.name }
     suspend fun setAutoAlign(v: Boolean) = context.dataStore.edit { it[Keys.autoAlign] = v }
     suspend fun setVideoFps(v: Int) = context.dataStore.edit { it[Keys.videoFps] = v }
+    suspend fun setCustomRange(min: Float, max: Float) = context.dataStore.edit { it[Keys.customMin] = min; it[Keys.customMax] = max }
+    suspend fun setRangeLocked(locked: Boolean, min: Float = 0f, max: Float = 0f) = context.dataStore.edit {
+        it[Keys.rangeLocked] = locked
+        if (locked) { it[Keys.lockedMin] = min; it[Keys.lockedMax] = max }
+    }
+    suspend fun setReflected(v: Float) = context.dataStore.edit { it[Keys.reflected] = v.coerceIn(-40f, 100f) }
+    suspend fun setCalibration(offset: Float, gain: Float) = context.dataStore.edit { it[Keys.calOffset] = offset; it[Keys.calGain] = gain }
+    suspend fun setBridge(inside: Float, outside: Float, limit: Float) = context.dataStore.edit {
+        it[Keys.insideTemp] = inside; it[Keys.outsideTemp] = outside; it[Keys.fRsiLimit] = limit.coerceIn(0.3f, 0.95f)
+    }
+    suspend fun setIsotherm(v: Boolean) = context.dataStore.edit { it[Keys.isotherm] = v }
+    suspend fun setSaveToGallery(v: Boolean) = context.dataStore.edit { it[Keys.saveToGallery] = v }
+    suspend fun setFahrenheit(v: Boolean) = context.dataStore.edit { it[Keys.fahrenheit] = v }
+    suspend fun setSmoothing(v: Boolean) = context.dataStore.edit { it[Keys.smoothing] = v }
+    suspend fun setPixelated(v: Boolean) = context.dataStore.edit { it[Keys.pixelated] = v }
+
+    /** Applies a calibration profile in one transaction and remembers its name. */
+    suspend fun applyProfile(p: io.github.mpridal.thermocamera.data.db.CalibrationProfileEntity) = context.dataStore.edit {
+        it[Keys.range] = p.rangePreset
+        it[Keys.customMin] = p.customMin
+        it[Keys.customMax] = p.customMax
+        it[Keys.emissivity] = p.emissivity
+        it[Keys.reflected] = p.reflected
+        it[Keys.calOffset] = p.offset
+        it[Keys.calGain] = p.gain
+        it[Keys.rangeLocked] = false
+        it[Keys.activeProfile] = p.name
+    }
+
+    suspend fun setActiveProfile(name: String) = context.dataStore.edit { it[Keys.activeProfile] = name }
+
     suspend fun setVideoResolution(v: VideoResolution) = context.dataStore.edit { it[Keys.videoResolution] = v.name }
     suspend fun setBetterCameraAnsweredFor(device: String) = context.dataStore.edit { it[Keys.betterCameraAnswered] = device }
 }

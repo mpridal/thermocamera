@@ -50,6 +50,20 @@ adb shell run-as io.github.mpridal.thermocamera ls files/diagnostics
 | 9 | Svítilna ve tmě (s kamerou modulu i telefonu) | rozsvítí/zhasne; po odchodu z aplikace zhasne, po návratu se obnoví |
 | 10 | Tablet (JENBIZZ) na šířku i na výšku | lišta vlevo, panel vpravo / pod obrazem; bez blesku tlačítko svítilny chybí; plynulost skla (případně „Omezit průhlednost“) |
 
+## Fáze 3 – měření a kalibrace
+
+| # | Krok | Očekávání |
+|---|---|---|
+| 1 | Čip „Rozsah“ → Vlastní, Min/Max | barvy odpovídají zadanému rozsahu, štítek ukazuje zámek a hodnoty |
+| 2 | Automaticky + Zamknout rozsah, pohnout kamerou | barvy se nemění |
+| 3 | Emisivita Cihla 0,93 | štítek ε 0,93, teplé předměty mírně teplejší |
+| 4 | 1-bodová kalibrace: teploměr v teplé vodě, kříž na vodu, zadat teplotu, Změřit, Použít | střed pak ukazuje referenci s odchylkou ≤ 0,5 °C |
+| 5 | 2-bodová: led ve vodě (0 °C) + teplá voda | obě reference sedí ≤ 0,5 °C |
+| 6 | Uložit jako profil, změnit nastavení, profil vybrat z čipu „Profil“ | nastavení se vrátí |
+| 7 | θi 21 °C, θe 0 °C, kříž na studený roh | pruh „Možný tepelný most“ s fRsi; ruční výpočet (θsi − θe)/(θi − θe) sedí |
+| 8 | Zvýraznit místa pod limitem | studená místa azurově |
+| 9 | θi − θe < 10 °C | upozornění v panelu |
+
 ## Výsledky
 
 | Datum | Zařízení (model, Android) | Kroky OK | Poznámky |

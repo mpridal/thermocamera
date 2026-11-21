@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] – Fáze 3
+
+- Panel „Rozsah a kalibrace“ (z čipu Rozsah, na tabletu z lišty): předvolby rozsahu, vlastní min/max po 0,1 °C,
+  zámek automatického rozsahu, emisivita (posuvník + Malba/Cihla/Sklo/Dřevo), odražená teplota.
+- Kalibrace podle reference: 1-bodová (offset) a 2-bodová (offset + gain), měření středu přes 2 s.
+- Pojmenované kalibrační profily (Room) a rychlé přepínání profilu z hlavní obrazovky.
+- Tepelné mosty: θi, θe, limit fRsi, pruh „Možný tepelný most · fRsi … < …“, fRsi u bodů (tablet),
+  izoterma (azurové zvýraznění míst pod limitem), upozornění na malý rozdíl θi − θe.
+- Databáze Room (profily, projekty, snímky) připravená i pro Fázi 4.
+
 ## [Unreleased] – Fáze 2
 
 - Orientace modulu (0/90/180/270°, zrcadlení) v Nastavení a v Testu kamery; kompenzace otočení displeje.

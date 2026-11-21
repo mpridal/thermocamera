@@ -37,6 +37,7 @@ import io.github.mpridal.thermocamera.core.Palette
 import io.github.mpridal.thermocamera.core.RangePreset
 import io.github.mpridal.thermocamera.core.TempRange
 import io.github.mpridal.thermocamera.core.ThermalFrame
+import io.github.mpridal.thermocamera.core.ThermalBridge
 import io.github.mpridal.thermocamera.data.PhotoCamera
 import io.github.mpridal.thermocamera.data.Settings
 import io.github.mpridal.thermocamera.data.SettingsRepository
@@ -80,6 +81,10 @@ data class LiveFrameUi(
     val visibleCrop: CropSquare? = null,
     /** True when [visible] comes from the phone camera. */
     val visibleFromPhone: Boolean = false,
+    /** Temperature factor of the MIN spot (zadání F3), null when θi ≤ θe. */
+    val fRsi: Float? = null,
+    /** fRsi of each user point, same order as the points. */
+    val pointsFRsi: List<Float?> = emptyList(),
 )
 
 @HiltViewModel
@@ -288,14 +293,26 @@ class LiveViewModel @Inject constructor(
         user.apply(f.celsius, f.width, f.height, orientedA)
         comp.apply(orientedA, w1, h1, orientedB)
         if (corrected.size != orientedB.size) corrected = FloatArray(orientedB.size)
-        Correction(emissivity = s.emissivity).applyTo(orientedB, corrected)
+        // Reference for calibration: emissivity-corrected centre, before offset/gain (zadání F2).
+        val emOnly = Correction(s.emissivity, s.reflected)
+        val c0 = (f[15, 15] + f[16, 15] + f[15, 16] + f[16, 16]) / 4f
+        recordCenterSample(f.timestampNanos, emOnly.apply(c0))
+        s.correction().applyTo(orientedB, corrected)
         lastCorrected = corrected.copyOf()
         val m = Measure.of(corrected, w, h, _points.value.map { it.x to it.y })
-        val display = smoother.smooth(corrected)
-        val range = s.rangePreset.range ?: autoRange.update(display)
-        val px = renderer.render(display, w, h, range, s.palette, Interpolation.Mode.BICUBIC)
+        val display = if (s.smoothing) smoother.smooth(corrected) else corrected
+        val autoR = autoRange.update(display)
+        lastAutoRange = autoR
+        val range = s.fixedRange() ?: autoR
+        val isoBelow = if (s.isotherm && s.insideTemp > s.outsideTemp) {
+            ThermalBridge.isothermThreshold(s.insideTemp, s.outsideTemp, s.fRsiLimit)
+        } else null
+        val mode = if (s.pixelated) Interpolation.Mode.NEAREST else Interpolation.Mode.BICUBIC
+        val px = renderer.render(display, w, h, range, s.palette, mode, isoBelow)
         val bmp = thermalBitmaps.next().apply { setPixels(px, 0, DISPLAY_SIZE, 0, 0, DISPLAY_SIZE, DISPLAY_SIZE) }
         val bgPx = bgRenderer.render(display, w, h, range, s.palette, Interpolation.Mode.BICUBIC)
+        val fRsi = ThermalBridge.fRsi(m.min.celsius, s.insideTemp, s.outsideTemp)
+        val pointsFRsi = m.points.map { ThermalBridge.fRsi(it.celsius, s.insideTemp, s.outsideTemp) }
         val bg = bgBitmaps.next().apply { setPixels(bgPx, 0, BG_SIZE, 0, 0, BG_SIZE, BG_SIZE) }
         if (lastTs != 0L) {
             val inst = 1e9f / (f.timestampNanos - lastTs).coerceAtLeast(1L)
@@ -313,8 +330,40 @@ class LiveViewModel @Inject constructor(
                 fps = fpsEma,
                 gridW = w,
                 gridH = h,
+                fRsi = fRsi,
+                pointsFRsi = pointsFRsi,
             )
         }
+    }
+
+    // ---- Calibration (zadání F2) ----
+    private val centerSamples = ArrayDeque<Pair<Long, Float>>()
+    @Volatile private var lastAutoRange: TempRange? = null
+
+    @Synchronized
+    private fun recordCenterSample(ts: Long, v: Float) {
+        centerSamples.addLast(ts to v)
+        while (centerSamples.size > 200) centerSamples.removeFirst()
+    }
+
+    @Synchronized
+    private fun samplesSince(ts: Long): List<Float> = centerSamples.filter { it.first >= ts }.map { it.second }
+
+    /**
+     * Averages the emissivity-corrected centre (2 × 2) over [durationMs] (≈ 18 frames at 9 Hz) –
+     * the "measured" value of a reference for 1- and 2-point calibration. Null without data.
+     */
+    suspend fun measureReference(durationMs: Long = 2_000): Float? {
+        val start = System.nanoTime()
+        delay(durationMs)
+        val v = samplesSince(start)
+        return if (v.size >= 3) v.average().toFloat() else null
+    }
+
+    /** Freezes the current automatic range (lock) or releases it. */
+    fun setRangeLocked(locked: Boolean) = viewModelScope.launch {
+        val r = lastAutoRange ?: _frame.value.range
+        if (locked && r != null) settingsRepo.setRangeLocked(true, r.min, r.max) else settingsRepo.setRangeLocked(false)
     }
 
     /** Module camera frame: same orientation as the thermal sensor (it is fixed to it). */
@@ -418,6 +467,8 @@ class LiveViewModel @Inject constructor(
     fun setRangePreset(r: RangePreset) = viewModelScope.launch {
         autoRange.reset()
         settingsRepo.setRangePreset(r)
+        settingsRepo.setRangeLocked(false)
+        settingsRepo.setActiveProfile("")
     }
     fun useSimulator() = viewModelScope.launch { settingsRepo.setUseSimulator(true) }
     fun setPhotoCamera(p: PhotoCamera) = viewModelScope.launch { settingsRepo.setPhotoCamera(p) }
