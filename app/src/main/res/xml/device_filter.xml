@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Hti HT-102 (Nuvoton W55FA93 USB UVC Device), measured 2026-11-21 -->
+    <usb-device vendor-id="1046" product-id="37779" />
+</resources>

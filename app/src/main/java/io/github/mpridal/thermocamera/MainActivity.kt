@@ -1,0 +1,105 @@
+package io.github.mpridal.thermocamera
+
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.unit.IntSize
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
+import io.github.mpridal.thermocamera.camera.CameraState
+import io.github.mpridal.thermocamera.ui.components.LocalHazeState
+import io.github.mpridal.thermocamera.ui.diagnostics.UsbDiagnosticsScreen
+import io.github.mpridal.thermocamera.ui.live.LiveScreen
+import io.github.mpridal.thermocamera.ui.live.LiveViewModel
+import io.github.mpridal.thermocamera.ui.settings.SettingsScreen
+import io.github.mpridal.thermocamera.ui.theme.ThermoTheme
+
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    private val liveVm: LiveViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        setContent {
+            val settings by liveVm.settings.collectAsStateWithLifecycle()
+            ThermoTheme(settings.themeMode, settings.reduceTransparency) {
+                AppRoot(liveVm)
+            }
+        }
+    }
+}
+
+private object Routes {
+    const val LIVE = "live"
+    const val SETTINGS = "settings"
+    const val USB_DIAG = "usb-diagnostics"
+}
+
+@Composable
+private fun AppRoot(liveVm: LiveViewModel) {
+    val hazeState = remember { HazeState() }
+    val snackbar = remember { SnackbarHostState() }
+    val nav = rememberNavController()
+    Box(Modifier.fillMaxSize()) {
+        ScreenBackground(liveVm, Modifier.fillMaxSize().hazeSource(hazeState))
+        CompositionLocalProvider(LocalHazeState provides hazeState) {
+            NavHost(nav, startDestination = Routes.LIVE) {
+                composable(Routes.LIVE) {
+                    LiveScreen(liveVm, onOpenSettings = { nav.navigate(Routes.SETTINGS) }, snackbar = snackbar)
+                }
+                composable(Routes.SETTINGS) {
+                    SettingsScreen(hiltViewModel(), onBack = { nav.popBackStack() }, onOpenUsbDiagnostics = { nav.navigate(Routes.USB_DIAG) })
+                }
+                composable(Routes.USB_DIAG) {
+                    UsbDiagnosticsScreen(hiltViewModel(), onBack = { nav.popBackStack() })
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Screen background (zadání kap. 7.1): the live thermal image shrunk to 8 × 8 and stretched
+ * with bilinear filtering (naturally blurred) + a veil; without a camera a soft gradient.
+ */
+@Composable
+private fun ScreenBackground(liveVm: LiveViewModel, modifier: Modifier) {
+    val c = ThermoTheme.colors
+    val frame by liveVm.frame.collectAsStateWithLifecycle()
+    val state by liveVm.cameraState.collectAsStateWithLifecycle()
+    val bg = frame.background
+    Box(modifier.background(c.root)) {
+        if (bg != null && state is CameraState.Streaming) {
+            val n = frame.frameNo
+            Canvas(Modifier.fillMaxSize()) {
+                n.hashCode()
+                drawImage(bg, dstSize = IntSize(size.width.toInt(), size.height.toInt()), filterQuality = FilterQuality.Low)
+                drawRect(c.veil)
+            }
+        } else {
+            Box(Modifier.fillMaxSize().background(Brush.linearGradient(listOf(c.gradientStart, c.root, c.gradientEnd))))
+        }
+    }
+}

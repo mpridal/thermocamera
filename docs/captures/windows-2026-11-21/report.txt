@@ -1,0 +1,481 @@
+﻿== HT-102 diagnostika 2026-11-21T15:01:30 ==
+PowerShell 5.1.26100.9818; LanguageMode=FullLanguage; OS=Microsoft Windows NT 10.0.26200.0; 64bit=True
+
+### 1) Zarizeni v systemu (PnP)
+
+--- USB Composite Device | trida=USB | stav=OK
+    USB\VID_0416&PID_9393\000055FA93
+    HardwareIds = USB\VID_0416&PID_9393&REV_0100 | USB\VID_0416&PID_9393
+    CompatibleIds = USB\COMPAT_VID_0416&DevClass_00&SubClass_00&Prot00 | USB\COMPAT_VID_0416&DevClass_00&SubClass_00 | USB\COMPAT_VID_0416&DevClass_00 | USB\DevClass_00&SubClass_00&Prot_00 | USB\DevClass_00&SubClass_00 | USB\DevClass_00 | USB\COMPOSITE
+    Service = usbccgp
+    Class = USB
+    Parent = USB\ROOT_HUB30\4&27873f03&0&0
+    Children = USB\VID_0416&PID_9393&MI_00\6&11ac7f02&0&0000
+    LocationInfo = Port_#0001.Hub_#0002
+    Address = 1
+    BusReportedDeviceDesc = W55FA93 USB UVC Device
+    Manufacturer = (Standard USB Host Controller)
+    DriverInfPath = usb.inf
+    DriverVersion = 10.0.26100.9818
+    DriverProvider = Microsoft
+    Stack = \Driver\usbccgp | \Driver\CSDeviceControl | \Driver\ACPI | \Driver\USBHUB3
+
+--- W55FA93 USB UVC Device | trida=Camera | stav=OK
+    USB\VID_0416&PID_9393&MI_00\6&11AC7F02&0&0000
+    HardwareIds = USB\VID_0416&PID_9393&REV_0100&MI_00 | USB\VID_0416&PID_9393&MI_00
+    CompatibleIds = USB\COMPAT_VID_0416&Class_0e&SubClass_03&Prot_00 | USB\COMPAT_VID_0416&Class_0e&SubClass_03 | USB\COMPAT_VID_0416&Class_0e | USB\Class_0e&SubClass_03&Prot_00 | USB\Class_0e&SubClass_03 | USB\Class_0e
+    Service = usbvideo
+    Class = Camera
+    Parent = USB\VID_0416&PID_9393\000055FA93
+    LocationInfo = 0000.0014.0000.001.000.000.000.000.000
+    Address = 1
+    BusReportedDeviceDesc = W55FA93 USB UVC Device
+    Manufacturer = Microsoft
+    DriverInfPath = usbvideo.inf
+    DriverVersion = 10.0.26100.9974
+    DriverProvider = Microsoft
+    Stack = \Driver\ksthunk | \Driver\usbvideo | \Driver\usbccgp
+    LowerFilters = WdmCompanionFilter
+
+### 2) USB deskriptory
+hub=USB\ROOT_HUB30\4&27873f03&0&0 port=1
+DEVICE: 12 01 00 02 EF 02 01 40 16 04 93 93 00 01 01 02 03 01
+CONFIG (344 B):
+  @   0: 09 02 58 01 02 01 00 C0 00
+  @   9: 08 0B 00 02 0E 03 00 02
+  @  17: 09 04 00 00 01 0E 01 00 02
+  @  26: 0D 24 01 00 01 32 00 80 8D 5B 00 01 01
+  @  39: 09 24 03 03 01 01 00 05 00
+  @  48: 11 24 02 01 01 02 00 00 00 00 00 00 00 00 02 00 00
+  @  65: 0B 24 05 05 01 00 00 02 3F 05 00
+  @  76: 07 05 83 03 10 00 06
+  @  83: 05 25 03 10 00
+  @  88: 09 04 01 00 00 0E 02 00 00
+  @  97: 0E 24 01 01 D7 00 81 00 03 02 01 00 01 00
+  @ 111: 1B 24 04 01 03 59 55 59 32 00 00 10 00 80 00 00 AA 00 38 9B 71 10 01 00 00 00 00
+  @ 138: 32 24 05 01 00 80 02 E0 01 00 60 09 00 00 40 19 01 00 60 09 00 15 16 05 00 06 15 16 05 00 20 A1 07 00 2A 2C 0A 00 40 42 0F 00 80 84 1E 00 80 96 98 00
+  @ 188: 32 24 05 02 00 40 01 F0 00 00 58 02 00 00 50 46 00 00 58 02 00 15 16 05 00 06 15 16 05 00 20 A1 07 00 2A 2C 0A 00 40 42 0F 00 80 84 1E 00 80 96 98 00
+  @ 238: 32 24 05 03 00 A0 00 78 00 00 96 00 00 00 94 11 00 00 96 00 00 15 16 05 00 06 15 16 05 00 20 A1 07 00 2A 2C 0A 00 40 42 0F 00 80 84 1E 00 80 96 98 00
+  @ 288: 12 24 03 00 03 80 02 E0 01 40 01 F0 00 A0 00 78 00 00
+  @ 306: 06 24 0D 01 01 04
+  @ 312: 09 04 01 01 01 0E 02 00 00
+  @ 321: 07 05 81 05 84 0B 01
+  @ 328: 09 04 01 02 01 0E 02 00 00
+  @ 337: 07 05 81 05 84 0B 01
+
+STRING 3: 000055FA93
+
+### 3) Nastroje
+ffmpeg: nenalezen
+python: C:\Users\<user>\AppData\Local\Programs\Python\Python312\python.exe
+
+### 4) Formaty a snimky (Windows MediaCapture)
+Skupina: HP IR Camera
+   zdroj: Infrared / VideoRecord
+Skupina: W55FA93 USB UVC Device
+   zdroj: Color / VideoRecord
+Skupina: Rts-DMFT-Group
+   zdroj: Color / VideoRecord
+   zdroj: Infrared / VideoRecord
+Skupina: HP 5MP Camera
+   zdroj: Color / VideoRecord
+FrameSource: Color / VideoRecord
+   YUY2 640x480 @ 30/1 fps
+   YUY2 640x480 @ 20/1 fps
+   YUY2 640x480 @ 15/1 fps
+   YUY2 640x480 @ 10/1 fps
+   YUY2 640x480 @ 5/1 fps
+   YUY2 640x480 @ 1/1 fps
+   YUY2 320x240 @ 30/1 fps
+   YUY2 320x240 @ 20/1 fps
+   YUY2 320x240 @ 15/1 fps
+   YUY2 320x240 @ 10/1 fps
+   YUY2 320x240 @ 5/1 fps
+   YUY2 320x240 @ 1/1 fps
+   YUY2 160x120 @ 30/1 fps
+   YUY2 160x120 @ 20/1 fps
+   YUY2 160x120 @ 15/1 fps
+   YUY2 160x120 @ 10/1 fps
+   YUY2 160x120 @ 5/1 fps
+   YUY2 160x120 @ 1/1 fps
+
+Zachytavam YUY2_640x480
+   start: Success
+   rovina 0: start=0 stride=1280 640x480
+   snimek 0: 640x480 Yuy2, 614400 B
+   jas prumer 103,9
+   radky prumer/odchylka - prvni: 0:103/27 1:103/27 2:103/27 3:103/26 
+   posledni: 468:79/25 469:79/25 470:79/25 471:79/25 472:79/26 473:79/25 474:79/26 475:79/26 476:79/26 477:80/26 478:80/26 479:80/27 
+   U prumer 125,6 odch 4,9; V prumer 129,1 odch 8,5
+   hex radek 0: 5D 80 58 74 50 80 50 74 4F 80 4E 76 4D 7E 4D 79 4D 7E 50 77 55 7F 54 73 4F 7E 4F 72 4E 7D 4E 76 4E 7A 50 76 51 78 51 76 52 78 52 74 50 79 51 74
+   hex radek 1: 5A 81 57 75 52 80 51 76 51 83 4E 78 4D 80 4E 78 4E 80 50 76 53 7E 51 74 4F 7F 4E 73 4F 7E 50 76 50 7C 51 78 50 7D 51 77 50 7A 4F 76 50 7A 51 74
+   hex radek 478: 2F 7C 2F 80 2F 7C 30 80 2F 7B 2E 80 2D 7B 2B 80 2C 7C 2D 7E 2D 7D 2D 80 2D 7D 2D 80 2C 79 2C 80 2D 78 2D 80 2D 7A 2D 7F 2D 7C 2E 80 2E 7D 2E 80
+   hex radek 479: 2E 7D 2E 80 2E 7C 2F 80 2F 7B 2D 80 2C 7B 2C 7F 2C 7C 2D 7E 2E 7E 2D 80 2D 7C 2D 80 2D 79 2D 80 2D 78 2E 80 2D 7B 2D 80 2E 7E 2F 80 2F 7E 2F 80
+
+   cas snimku: 01:36:28.9094293
+   snimek 1: 640x480 Yuy2, 614400 B
+   jas prumer 103,8
+   radky prumer/odchylka - prvni: 0:102/27 1:102/27 2:103/26 3:103/26 
+   posledni: 468:78/25 469:78/25 470:79/25 471:79/26 472:79/26 473:79/26 474:79/26 475:79/26 476:79/26 477:80/26 478:80/26 479:80/27 
+   U prumer 125,6 odch 4,8; V prumer 129,2 odch 8,5
+   hex radek 0: 57 7E 55 74 50 7E 4D 74 4C 7E 49 74 4B 7E 4D 75 4B 7E 48 73 4F 7D 4E 72 4E 7A 4D 72 4C 7C 4D 74 4D 80 4C 78 4B 80 4B 7C 4B 80 4C 7C 4C 81 4C 7A
+   hex radek 1: 59 7E 56 74 53 7E 50 75 4F 7E 4C 74 4A 80 4E 74 4D 80 4C 74 4C 7C 4D 74 4E 7B 4D 75 4F 7C 4E 74 4E 80 4D 79 4B 80 4C 7B 4D 7E 4E 78 4F 7C 4D 76
+   hex radek 478: 30 7C 30 7E 31 7C 30 7E 2E 7C 2C 7F 2C 7E 2B 7F 2C 80 2C 80 2D 80 2F 80 2F 7F 2F 80 2E 7F 2E 80 2D 7F 2E 80 2E 7F 2D 7E 2D 7E 2E 7D 2E 7C 2F 7F
+   hex radek 479: 31 7C 31 7F 30 7B 2F 7F 2E 7C 2D 80 2D 7C 2C 7F 2C 7E 2D 7E 2F 7D 32 7E 32 7E 2F 7F 2D 7F 2E 80 2E 7D 2F 80 30 7D 2F 7F 2D 7E 2D 7E 2E 7C 2F 7F
+
+   cas snimku: 01:36:29.6774547
+   rozdil proti predchozimu: prumer 2,18, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 206 (2,9)
+   snimek 2: 640x480 Yuy2, 614400 B
+   jas prumer 103,7
+   radky prumer/odchylka - prvni: 0:102/28 1:102/27 2:103/27 3:103/26 
+   posledni: 468:78/25 469:79/25 470:79/25 471:78/25 472:78/25 473:78/25 474:78/25 475:79/26 476:79/26 477:79/26 478:79/26 479:80/26 
+   U prumer 125,5 odch 4,8; V prumer 129,2 odch 8,5
+   hex radek 0: 63 80 5E 72 51 80 54 72 55 80 52 72 50 80 50 75 51 7E 50 77 50 7D 50 76 4F 7D 4F 74 4E 7E 4E 76 49 7E 47 76 4B 80 4C 78 4C 7E 4D 78 4D 7B 4E 76
+   hex radek 1: 6C 7D 66 6F 5E 7D 5A 71 59 7D 56 70 54 7C 54 72 4F 7C 50 76 4F 7C 4F 7A 4F 7D 4E 7A 4F 7D 4F 79 50 7D 4E 7B 49 7F 4B 7B 4D 80 4B 78 4D 7E 4F 74
+   hex radek 478: 2E 7D 2F 80 30 7B 30 80 2F 7B 2F 81 2E 7D 2D 80 2C 7E 2D 80 2E 7C 2F 80 2E 79 2E 80 2F 7A 2E 80 2F 7B 2E 7F 2E 7C 2D 7F 2F 7B 31 80 2E 7B 2E 80
+   hex radek 479: 31 7B 2F 7E 2F 7B 2E 7E 2F 7B 2F 80 2D 7D 2C 80 2C 7F 2C 80 2E 7D 2E 80 2D 7A 2E 80 2F 7A 2F 80 30 7A 2F 7F 2F 7B 30 7F 2E 7B 2F 80 2E 7B 2D 80
+
+   cas snimku: 01:36:29.8694572
+   rozdil proti predchozimu: prumer 2,45, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 206 (3,1)
+   snimek 3: 640x480 Yuy2, 614400 B
+   jas prumer 103,6
+   radky prumer/odchylka - prvni: 0:102/28 1:103/27 2:103/27 3:103/27 
+   posledni: 468:77/25 469:78/25 470:78/25 471:78/25 472:78/25 473:78/25 474:78/25 475:78/25 476:78/26 477:79/26 478:79/26 479:79/26 
+   U prumer 125,5 odch 4,9; V prumer 129,2 odch 8,6
+   hex radek 0: 73 80 6E 70 6C 80 67 70 60 82 5C 70 5B 82 59 73 55 80 50 77 4E 81 4F 78 4F 81 4E 78 4E 7F 4E 78 4E 80 4F 78 50 80 50 76 4F 7E 4F 76 4F 7F 51 77
+   hex radek 1: 77 81 70 72 69 81 68 75 64 85 60 74 59 80 58 74 58 80 54 76 52 7E 51 78 4F 7F 4E 7B 4E 80 4E 7A 4F 80 4F 78 4F 80 4F 79 4E 80 4E 78 4E 7E 4F 78
+   hex radek 478: 2D 7D 2D 80 2E 7C 2F 80 2F 7C 2F 80 2F 7D 2E 80 2F 7D 2F 7F 2F 7E 2F 80 2F 7E 2F 80 2F 7D 2E 80 2C 7C 2D 80 2D 7B 2E 80 2E 7A 2E 80 2F 79 2F 80
+   hex radek 479: 2D 7D 2E 81 2E 7C 30 81 30 7C 2F 80 2E 7D 2D 80 2D 7F 2E 7F 2D 7F 2F 80 2F 7F 2F 80 2E 7E 2D 80 2C 7C 2C 7F 2E 7A 2E 7E 2D 79 2E 7E 2E 7A 2E 80
+
+   cas snimku: 01:36:30.0776719
+   rozdil proti predchozimu: prumer 2,56, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 214 (3,2)
+   snimek 4: 640x480 Yuy2, 614400 B
+   jas prumer 103,4
+   radky prumer/odchylka - prvni: 0:103/28 1:103/28 2:103/28 3:103/27 
+   posledni: 468:77/24 469:78/25 470:77/25 471:77/24 472:77/25 473:77/25 474:77/25 475:78/25 476:78/25 477:78/25 478:78/25 479:78/25 
+   U prumer 125,5 odch 4,8; V prumer 129,2 odch 8,7
+   hex radek 0: 86 86 7B 68 79 84 77 68 71 82 71 6C 6E 80 60 71 61 82 5E 75 53 83 4E 77 54 80 52 77 4F 7B 4F 74 4F 7A 4E 74 4C 7C 4D 72 4E 7C 4F 74 4D 7B 4E 77
+   hex radek 1: 87 85 79 68 7E 84 7F 6A 70 81 72 6C 6E 7E 61 72 63 7E 61 74 60 80 5C 72 56 7D 52 73 52 78 56 72 54 78 4F 72 4E 7C 4E 73 4D 7C 4E 74 4E 7A 4E 74
+   hex radek 478: 2E 7F 2D 80 2D 7E 2E 80 2E 7D 2F 80 2F 7F 2E 80 2E 80 2E 80 2E 80 2E 80 2F 7F 2E 80 2D 7C 2D 81 2D 7E 2F 80 2E 80 2E 80 2E 7D 2E 80 2F 79 2F 80
+   hex radek 479: 2C 80 2D 82 2D 7D 2E 82 2E 7D 2E 81 2F 7E 2F 80 2F 80 2E 80 2E 80 2F 81 2E 7F 2D 81 2D 7D 2D 81 2E 7D 2F 80 30 7F 2F 80 2F 7C 2E 7F 2E 7A 2E 80
+
+   cas snimku: 01:36:30.2694583
+   rozdil proti predchozimu: prumer 2,59, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 210 (3,6)
+   snimek 5: 640x480 Yuy2, 614400 B
+   jas prumer 103,3
+   radky prumer/odchylka - prvni: 0:102/29 1:102/29 2:103/28 3:103/28 
+   posledni: 468:76/24 469:77/24 470:77/24 471:77/24 472:76/24 473:76/24 474:77/24 475:77/24 476:77/24 477:77/24 478:77/25 479:78/25 
+   U prumer 125,5 odch 4,8; V prumer 129,2 odch 8,7
+   hex radek 0: 94 84 92 6E 92 80 8E 6A 88 80 83 66 80 80 7C 67 7A 84 74 6D 71 85 6F 72 6B 80 67 73 69 81 61 72 5B 80 57 72 54 80 52 74 4E 7E 4D 76 4D 7D 4D 76
+   hex radek 1: 98 83 97 6A 92 81 8E 6D 8A 81 85 6A 82 80 7E 6A 7A 82 76 6C 72 82 6F 70 6A 81 68 73 67 80 60 72 5A 80 57 74 56 81 54 77 4F 7E 4D 78 4E 7C 4D 78
+   hex radek 478: 2E 79 2E 7D 2E 79 2D 7E 2D 7A 2E 80 2A 7B 2C 81 2D 7D 2D 82 2E 7F 2F 81 2F 7E 30 81 30 7D 30 81 30 7B 32 80 31 79 2F 80 2F 79 31 80 30 7B 30 80
+   hex radek 479: 2F 7B 2E 7E 2E 79 2E 7F 2D 78 2C 80 2B 7A 2B 80 2C 7E 2D 80 2D 80 2E 80 2E 7F 2F 80 2F 7E 30 80 30 7C 31 80 31 79 30 7F 2F 7A 2E 7F 2F 7B 2F 7F
+
+   cas snimku: 01:36:30.4614908
+   rozdil proti predchozimu: prumer 2,89, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 211 (4,0)
+   snimek 6: 640x480 Yuy2, 614400 B
+   jas prumer 103,3
+   radky prumer/odchylka - prvni: 0:103/30 1:103/30 2:103/30 3:103/29 
+   posledni: 468:76/24 469:76/24 470:76/24 471:76/24 472:76/24 473:76/24 474:76/24 475:76/24 476:76/24 477:77/24 478:77/24 479:77/24 
+   U prumer 125,4 odch 4,8; V prumer 129,2 odch 8,7
+   hex radek 0: 9E 84 9E 6A 9D 84 9C 6A 9C 82 99 6A 94 82 93 6D 92 84 8C 6F 87 84 85 6D 84 84 80 6D 7A 82 77 6C 7A 80 6E 6C 68 80 65 6E 61 7E 5E 70 5C 7B 5A 70
+   hex radek 1: 9F 85 9F 6D 9F 83 9D 6D 9C 82 9A 68 96 80 94 6A 94 80 90 6A 8C 82 89 6C 86 85 82 6B 7C 82 78 6A 78 80 70 6D 6B 81 66 71 62 7E 60 74 5E 7C 5B 72
+   hex radek 478: 2F 80 2F 80 2F 80 2F 80 30 7F 30 80 2F 7F 2D 80 2F 7E 2F 81 2C 7B 2C 82 2D 79 2D 81 2D 79 2E 80 2E 7A 2F 80 2E 7C 2F 80 30 7E 30 7F 31 7C 30 7F
+   hex radek 479: 2F 80 2D 80 2D 80 2F 80 30 80 2F 80 2D 7F 2C 80 2F 7E 30 80 2D 7A 2D 80 2D 79 2D 81 2E 7A 2E 80 2D 7B 2D 7F 2E 7D 2F 7E 2F 7D 30 7E 31 7B 2F 7F
+
+   cas snimku: 01:36:30.6534440
+   rozdil proti predchozimu: prumer 2,80, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 11 (3,9)
+   snimek 7: 640x480 Yuy2, 614400 B
+   jas prumer 103,3
+   radky prumer/odchylka - prvni: 0:103/31 1:103/30 2:103/30 3:104/30 
+   posledni: 468:76/24 469:76/24 470:76/24 471:76/24 472:76/24 473:76/24 474:76/24 475:76/24 476:76/24 477:76/24 478:76/24 479:77/24 
+   U prumer 125,4 odch 4,8; V prumer 129,2 odch 8,8
+   hex radek 0: A0 82 9F 6A 9C 82 9E 6A 9C 82 9B 6A 98 84 98 6D 98 84 97 6D 93 82 8E 6C 8E 84 82 6F 81 87 80 70 7B 88 77 70 73 86 6D 72 68 82 65 70 61 81 5E 70
+   hex radek 1: A2 80 A0 6D 9E 82 9E 6C 9D 82 9C 6C 9A 82 98 6A 98 82 96 6C 94 82 91 6C 8E 81 86 6D 86 82 87 6C 81 85 7A 6E 6D 86 6B 75 67 84 66 74 63 80 5F 72
+   hex radek 478: 2F 79 2E 80 2C 78 2C 80 30 78 2E 80 2E 78 2F 80 30 7B 2F 80 2F 7F 2F 81 2E 7E 2F 83 2F 7D 30 83 2F 7D 2E 81 2E 7D 2F 80 2F 7C 32 80 31 7B 31 80
+   hex radek 479: 2E 78 2F 80 30 78 30 80 2D 7A 2C 81 2B 7B 2F 80 2F 7D 2E 80 2E 7F 2E 80 2D 7E 2D 81 2E 7C 2E 81 2E 7C 2F 80 2F 7C 2E 80 2F 7C 31 80 31 7C 31 80
+
+   cas snimku: 01:36:30.8455599
+   rozdil proti predchozimu: prumer 2,33, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 214 (3,2)
+   snimek 8: 640x480 Yuy2, 614400 B
+   jas prumer 103,3
+   radky prumer/odchylka - prvni: 0:103/30 1:103/30 2:103/29 3:103/29 
+   posledni: 468:76/24 469:76/24 470:77/24 471:77/24 472:77/24 473:76/24 474:76/24 475:76/24 476:77/24 477:77/24 478:77/25 479:77/25 
+   U prumer 125,5 odch 4,8; V prumer 129,2 odch 8,7
+   hex radek 0: 9E 80 9C 6C 9C 84 98 6C 91 88 94 6C 90 88 8E 6D 8C 84 86 6B 84 80 83 6C 7B 81 76 6D 70 80 6C 70 69 80 66 70 65 80 5C 72 58 82 54 74 53 81 51 76
+   hex radek 1: 9F 80 9D 6D 9B 85 96 6B 94 86 94 6C 92 86 8F 6A 8E 82 87 6A 82 80 7F 6A 7E 81 78 6D 73 80 6E 6C 6B 7F 67 6F 63 80 5D 70 57 80 55 74 53 80 4F 76
+   hex radek 478: 2E 7A 2E 80 2F 79 2F 80 2F 78 2F 80 30 78 30 80 2F 79 2F 80 30 7D 30 81 30 7E 30 82 33 7F 2F 82 2F 80 30 82 2E 80 2E 81 2E 7E 2F 81 30 7B 2F 81
+   hex radek 479: 2E 7A 2F 80 2E 7A 2E 80 2E 79 2F 80 2F 77 2F 7F 30 78 30 80 30 7A 30 80 2F 7C 30 80 30 7D 2F 81 2F 7F 2F 81 2F 7F 2F 80 2E 7D 2F 80 2F 7A 2F 80
+
+   cas snimku: 01:36:31.0374481
+   rozdil proti predchozimu: prumer 2,79, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 214 (3,9)
+   snimek 9: 640x480 Yuy2, 614400 B
+   jas prumer 103,4
+   radky prumer/odchylka - prvni: 0:102/29 1:103/28 2:103/28 3:103/27 
+   posledni: 468:77/25 469:77/25 470:77/25 471:77/25 472:77/25 473:77/25 474:77/25 475:77/25 476:78/25 477:78/25 478:78/25 479:78/26 
+   U prumer 125,5 odch 4,9; V prumer 129,2 odch 8,6
+   hex radek 0: 87 82 83 6C 80 86 7A 6C 73 88 71 70 6A 86 66 73 69 82 64 73 60 80 5E 73 57 82 52 73 52 81 51 74 4D 80 4D 74 4D 7E 4D 72 4D 7C 4D 74 4C 7B 4D 76
+   hex radek 1: 87 81 82 6E 83 80 80 6F 7B 82 77 6E 70 80 6C 70 67 80 63 70 60 80 5D 72 57 81 56 75 55 80 52 76 50 7F 50 74 4F 7C 4F 75 4F 7C 4D 76 4D 7A 4C 78
+   hex radek 478: 2E 7C 2F 80 2E 7D 2E 80 2F 7F 2F 80 2F 80 2F 80 2E 7F 2E 81 2E 7E 2E 81 2D 7C 2E 81 2E 7B 2E 80 2E 7A 2D 80 2D 7A 2C 80 2D 7C 2E 80 2E 7E 2E 80
+   hex radek 479: 2E 7C 2E 80 2E 7E 2E 80 2E 80 2E 80 2E 80 2E 80 2D 80 2C 80 2C 7F 2C 80 2C 7D 2D 80 2D 7A 2C 80 2D 7A 2D 7F 2C 7B 2C 7F 2D 7C 2D 80 2F 7E 2E 80
+
+   cas snimku: 01:36:31.2294515
+   rozdil proti predchozimu: prumer 3,18, zmenenych radku 480/480 (od 0 do 479), nejvetsi zmena na radku 214 (4,7)
+
+Zachytavam YUY2_320x240
+   start: Success
+   rovina 0: start=0 stride=640 320x240
+   snimek 0: 320x240 Yuy2, 153600 B
+   jas prumer 103,6
+   radky prumer/odchylka - prvni: 0:102/27 1:103/27 2:103/26 3:103/25 
+   posledni: 228:81/26 229:80/26 230:80/25 231:79/25 232:79/25 233:79/25 234:79/26 235:79/25 236:79/26 237:78/26 238:79/26 239:80/26 
+   U prumer 125,3 odch 4,8; V prumer 128,9 odch 8,6
+   hex radek 0: 56 80 51 76 4D 7C 4E 76 4E 78 4D 76 4D 7C 4B 75 4A 80 4B 79 4F 80 4F 77 4E 7F 4C 77 4E 7F 4F 76 49 7C 4E 76 50 7E 4F 78 51 80 4F 78 4D 81 4F 7C
+   hex radek 1: 5D 7E 53 72 53 7B 50 74 51 7B 4D 77 4E 7E 4D 78 53 80 4F 75 4E 80 4E 74 4F 7E 4E 78 4E 80 4D 78 4B 7C 4F 77 57 7E 4D 7B 4E 81 4F 7B 51 7E 4F 7B
+   hex radek 238: 2E 7E 2E 7F 2E 7D 2E 80 2E 7D 2E 80 2E 7C 30 7F 2E 7C 2D 7F 2E 7D 2E 80 30 7F 2F 80 2F 7D 30 7F 32 79 33 80 33 77 33 80 33 79 34 80 34 7A 33 7E
+   hex radek 239: 30 7E 2E 7D 2E 7E 2E 80 2E 7A 2F 80 2F 7D 2F 7F 2D 7D 2D 7E 2D 7A 32 80 31 7C 2F 7E 31 79 32 7D 2F 78 32 7F 34 7A 35 7F 32 7B 34 80 33 79 33 80
+
+   cas snimku: 01:36:31.9715144
+   snimek 1: 320x240 Yuy2, 153600 B
+   jas prumer 103,6
+   radky prumer/odchylka - prvni: 0:103/27 1:103/26 2:103/25 3:104/25 
+   posledni: 228:81/26 229:80/26 230:80/25 231:80/26 232:79/26 233:79/25 234:79/25 235:79/25 236:79/26 237:79/26 238:79/26 239:80/27 
+   U prumer 125,4 odch 4,8; V prumer 128,9 odch 8,6
+   hex radek 0: 53 7E 50 74 4D 7E 4D 74 4D 80 4D 74 4E 7E 4E 77 4A 7E 4B 77 51 81 4F 76 4F 80 4D 77 4C 7C 4F 76 50 7E 4E 76 4E 7E 4F 78 4D 7E 50 78 50 7F 4D 78
+   hex radek 1: 54 80 50 74 4F 7F 4C 74 4D 7B 4F 75 4E 7A 4D 74 4F 78 52 76 53 7C 50 76 50 7C 4E 76 50 78 4D 78 51 7C 54 79 4D 7E 4E 7B 4C 7B 50 79 50 7C 4E 7A
+   hex radek 238: 2D 80 2D 80 2D 7D 2E 80 2D 7D 2D 80 2E 7E 2E 80 2C 7C 2E 80 2F 7D 2C 80 2F 7C 2E 80 2F 7D 32 80 31 7D 32 80 33 7C 33 7C 34 7C 32 7F 32 7E 37 80
+   hex radek 239: 2C 7D 2D 7F 2E 7C 2D 80 2D 7B 2E 80 2F 7D 2E 80 2D 7C 2E 80 2F 7A 2E 80 2E 7C 2D 80 30 7B 32 7F 32 7D 32 80 33 7D 34 7D 35 7B 34 7E 34 7A 34 80
+
+   cas snimku: 01:36:32.1314561
+   rozdil proti predchozimu: prumer 2,13, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 160 (2,5)
+   snimek 2: 320x240 Yuy2, 153600 B
+   jas prumer 103,7
+   radky prumer/odchylka - prvni: 0:103/27 1:103/26 2:103/26 3:104/25 
+   posledni: 228:81/26 229:81/26 230:80/26 231:80/26 232:79/25 233:79/26 234:79/25 235:79/25 236:78/26 237:79/26 238:79/26 239:80/27 
+   U prumer 125,4 odch 4,8; V prumer 128,9 odch 8,5
+   hex radek 0: 53 80 51 72 4E 7E 4D 72 4E 80 4D 76 4B 80 4C 77 4C 7E 4B 77 52 79 4E 78 4F 7C 4F 7B 50 7E 50 76 4E 78 4F 76 52 78 4F 78 4F 7C 4E 78 4F 7B 50 78
+   hex radek 1: 57 7E 53 76 4F 7D 4B 74 4C 7D 4D 77 4F 7E 52 74 4D 80 4F 77 4E 7A 4D 76 4F 7C 4F 7A 4E 7A 4E 78 4D 7A 4F 75 50 7C 4F 77 4F 7D 4F 79 4E 7C 4D 7D
+   hex radek 238: 2D 7F 2D 7F 2E 78 2F 80 2D 7C 2E 7F 2D 7C 2D 80 2F 7A 2E 80 2E 7C 2E 80 2F 7E 30 80 30 7D 33 7F 31 7E 30 7E 32 7F 34 7C 34 7D 35 7D 36 78 34 80
+   hex radek 239: 2C 7E 2C 7F 2E 7A 2F 7F 2E 7C 2D 7F 2D 7F 2C 81 2D 7D 30 80 2F 7E 2E 80 2D 7B 31 80 32 7B 33 80 32 7D 31 7F 31 7B 3B 7B 34 7B 32 7F 34 78 31 81
+
+   cas snimku: 01:36:32.2915133
+   rozdil proti predchozimu: prumer 2,06, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 160 (2,5)
+   snimek 3: 320x240 Yuy2, 153600 B
+   jas prumer 103,7
+   radky prumer/odchylka - prvni: 0:103/27 1:103/26 2:103/26 3:104/24 
+   posledni: 228:81/26 229:81/26 230:80/26 231:80/25 232:80/26 233:79/26 234:79/26 235:79/26 236:79/26 237:79/26 238:79/26 239:80/27 
+   U prumer 125,4 odch 4,8; V prumer 128,9 odch 8,5
+   hex radek 0: 53 7E 50 72 4C 7C 4D 72 4F 7C 4B 78 49 7C 4D 79 4F 7A 49 77 4F 79 4C 78 4E 7A 4D 78 4E 7C 50 76 50 7A 57 76 48 7A 4E 78 50 7E 50 78 50 7F 4E 7A
+   hex radek 1: 55 7C 4F 72 4F 7D 4D 72 4F 7D 4C 75 4E 7A 4C 75 50 7B 4D 75 4D 7A 4D 76 4F 7A 4E 78 4F 7E 4E 78 4E 7E 4F 77 4E 7F 4F 78 50 7E 4E 7A 4D 7C 4E 7B
+   hex radek 238: 2F 7D 2F 80 2D 80 2E 80 2C 7E 2E 80 2D 7E 2C 80 31 7C 2D 80 2C 7E 2B 80 30 7C 30 80 30 7B 32 80 34 7F 34 80 32 7E 38 80 34 7D 33 80 33 7A 34 80
+   hex radek 239: 2E 79 2C 80 2C 7E 2D 80 2C 7D 2D 80 2E 7E 2C 81 2C 7E 2F 80 2D 7E 2F 7F 33 7E 2E 80 2E 7C 32 80 35 7F 32 80 32 7F 33 81 35 7C 32 80 34 7C 34 80
+
+   cas snimku: 01:36:32.4515387
+   rozdil proti predchozimu: prumer 2,06, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 161 (2,4)
+   snimek 4: 320x240 Yuy2, 153600 B
+   jas prumer 103,8
+   radky prumer/odchylka - prvni: 0:102/27 1:103/26 2:103/25 3:104/25 
+   posledni: 228:81/26 229:81/26 230:80/26 231:80/26 232:79/26 233:80/26 234:79/26 235:79/26 236:79/26 237:79/26 238:79/26 239:80/27 
+   U prumer 125,4 odch 4,8; V prumer 128,8 odch 8,5
+   hex radek 0: 55 7E 4D 72 4A 80 4C 74 4D 80 4C 72 4E 80 4A 75 4C 7C 4E 77 4D 7C 4E 77 4D 81 4B 78 4F 81 4E 74 50 7C 4D 74 50 7C 4F 7A 50 7E 50 7A 4E 7F 50 7A
+   hex radek 1: 54 80 4E 74 4D 7F 4B 74 4E 7D 4C 75 4E 7B 4D 74 4D 7B 4E 77 4B 7A 4D 78 4C 7C 4C 76 4F 80 50 74 4F 7A 51 71 50 79 4D 76 4F 78 4F 78 4D 7D 4E 7B
+   hex radek 238: 2F 7C 2E 80 2F 7C 2E 80 2A 7A 30 80 2E 7A 2E 80 2E 7C 2D 80 2C 79 2F 7E 31 77 2F 7F 2F 7C 33 7F 35 80 32 7F 32 7D 32 7F 33 7E 34 80 35 7C 32 80
+   hex radek 239: 2E 7B 2F 81 2F 7B 2E 7F 2D 7D 2E 7F 2E 7E 2C 81 2C 7B 2C 80 2E 79 2E 7F 30 77 31 7F 32 7C 33 80 35 7F 35 7F 34 7F 33 80 33 7E 33 80 34 7D 32 80
+
+   cas snimku: 01:36:32.6114403
+   rozdil proti predchozimu: prumer 2,08, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 161 (2,5)
+   snimek 5: 320x240 Yuy2, 153600 B
+   jas prumer 103,8
+   radky prumer/odchylka - prvni: 0:103/27 1:103/26 2:104/25 3:104/24 
+   posledni: 228:81/26 229:81/26 230:80/26 231:80/26 232:80/26 233:79/26 234:79/26 235:79/26 236:79/26 237:79/27 238:80/27 239:80/27 
+   U prumer 125,4 odch 4,8; V prumer 128,9 odch 8,6
+   hex radek 0: 4C 7E 4D 76 4C 80 4C 78 4E 80 4B 76 4B 7E 4C 79 4F 7C 4F 79 4D 7A 4C 79 4D 81 4E 78 4D 80 47 7A 4E 7C 50 7A 51 78 4F 78 4F 7C 50 78 4D 7F 50 78
+   hex radek 1: 53 7A 4E 74 4D 81 4E 76 4E 7F 4E 74 4F 7F 4F 77 4D 81 4E 7B 4E 7C 4D 78 4E 7C 4E 76 4E 7A 4F 76 4F 7C 51 79 4F 7E 4D 79 4F 7F 4E 79 51 7E 4E 7B
+   hex radek 238: 2D 80 2D 80 2D 7D 2D 7F 2C 7E 2C 80 2C 7D 2D 80 2D 7B 2E 7F 2D 7C 2F 80 2F 7D 2F 80 31 7B 33 7F 32 7D 2F 7F 32 80 33 80 32 80 33 81 32 7D 33 81
+   hex radek 239: 2D 7D 2D 80 2C 7B 2D 7F 2C 7C 2C 7F 2C 7A 2C 7F 2E 7D 2F 7F 2F 7E 30 80 2F 79 2F 7F 31 7A 32 80 32 7C 32 7F 34 7F 33 80 32 7E 32 80 32 7D 33 80
+
+   cas snimku: 01:36:32.7715327
+   rozdil proti predchozimu: prumer 2,25, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 106 (3,3)
+   snimek 6: 320x240 Yuy2, 153600 B
+   jas prumer 103,7
+   radky prumer/odchylka - prvni: 0:102/27 1:103/26 2:103/25 3:104/24 
+   posledni: 228:81/26 229:81/26 230:80/26 231:80/26 232:80/26 233:80/26 234:79/26 235:79/26 236:79/26 237:80/27 238:80/27 239:80/27 
+   U prumer 125,4 odch 4,8; V prumer 128,9 odch 8,6
+   hex radek 0: 51 7A 4E 76 4E 7A 4F 78 4E 7E 4E 76 4E 80 4C 75 4D 7C 4F 79 4E 7C 4A 76 4B 7C 4F 78 50 7D 52 78 4E 7A 50 78 50 7A 4F 74 51 80 4F 72 4D 7F 50 76
+   hex radek 1: 51 7C 50 74 4F 7F 4E 78 4C 81 4F 78 50 7D 4D 77 4E 7D 4E 7B 50 7E 4D 7A 4E 80 4C 78 52 7E 4D 78 50 7A 51 77 4E 7A 4E 79 52 7E 4E 79 49 7F 4F 7B
+   hex radek 238: 2E 7F 2C 7F 2C 7D 2D 7D 2D 7C 2C 7F 2E 7B 2E 80 2D 7C 2D 82 2E 7E 2C 80 2F 7C 2F 7D 31 7E 31 7C 31 7D 33 80 35 7B 34 7F 35 7D 36 80 33 7C 34 81
+   hex radek 239: 2D 7E 2E 7E 2E 7A 2C 80 2B 78 2F 80 2D 7B 2D 7F 2D 7C 2D 81 2E 7E 30 80 2F 7F 2E 7F 31 7F 31 80 32 7D 33 80 34 80 32 7F 33 7C 32 7F 34 74 32 80
+
+   cas snimku: 01:36:32.9475166
+   rozdil proti predchozimu: prumer 2,11, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 107 (2,7)
+   snimek 7: 320x240 Yuy2, 153600 B
+   jas prumer 103,6
+   radky prumer/odchylka - prvni: 0:102/27 1:102/26 2:103/25 3:103/24 
+   posledni: 228:80/26 229:80/26 230:80/25 231:79/25 232:79/25 233:79/25 234:79/25 235:78/26 236:79/26 237:79/26 238:80/26 239:80/27 
+   U prumer 125,3 odch 4,8; V prumer 128,9 odch 8,6
+   hex radek 0: 5D 7C 59 72 51 7A 50 76 4E 7A 4C 78 4B 7A 4E 7B 4C 7C 4C 7B 4E 7E 4A 79 4F 7C 4E 75 4E 7C 4D 78 4D 7E 4F 76 4E 7E 4F 78 51 7A 4F 76 50 7B 4B 76
+   hex radek 1: 5F 7E 59 74 52 81 50 78 4F 7F 4D 79 4F 7E 4E 74 4C 7D 4E 77 4E 7E 4F 76 51 7E 4F 74 4F 7C 4E 76 4D 80 50 77 4F 80 50 79 4F 7E 4D 79 4C 7B 4E 7A
+   hex radek 238: 31 7C 2E 80 2E 7D 2B 80 2C 7B 2C 80 2E 7B 2F 80 2B 7C 2D 81 30 7E 2C 81 2E 7B 2F 80 31 79 31 7F 33 7D 2F 7F 31 7D 35 80 34 7D 34 7F 34 7B 33 80
+   hex radek 239: 30 7F 2E 80 2C 7F 2C 80 2C 7B 2D 80 2E 79 2C 80 2C 7D 2E 81 2F 80 2E 80 2F 80 30 80 31 7E 2F 80 32 7A 34 80 34 7D 34 7F 33 7C 33 80 33 78 33 80
+
+   cas snimku: 01:36:33.1074635
+   rozdil proti predchozimu: prumer 2,56, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 105 (3,2)
+   snimek 8: 320x240 Yuy2, 153600 B
+   jas prumer 103,5
+   radky prumer/odchylka - prvni: 0:102/27 1:102/26 2:103/25 3:104/24 
+   posledni: 228:80/26 229:80/25 230:80/25 231:79/25 232:78/25 233:78/25 234:78/25 235:78/25 236:79/25 237:79/26 238:79/26 239:79/26 
+   U prumer 125,3 odch 4,7; V prumer 128,9 odch 8,6
+   hex radek 0: 6A 80 60 70 5A 7C 55 70 52 7C 4C 76 4F 7C 50 77 4E 7A 50 75 4F 7C 4D 75 4F 7F 4D 75 4E 7E 4D 78 4D 78 4E 78 50 76 50 78 51 76 51 78 51 79 52 76
+   hex radek 1: 6C 7E 63 70 5C 7D 55 72 54 7D 50 75 4F 7C 4F 77 50 7B 50 77 4F 7C 4F 76 4D 7C 4E 78 4D 7A 4D 76 4E 7E 4E 77 52 78 52 75 50 78 4F 75 4F 78 4E 77
+   hex radek 238: 2D 7C 2D 7F 2E 79 2E 80 2F 77 30 80 2E 78 2E 80 2E 79 2E 80 2E 7D 30 81 2F 79 2E 80 30 7B 2F 7F 2E 7F 30 7E 31 7A 32 80 34 7A 36 80 30 80 2F 80
+   hex radek 239: 2B 7C 2D 80 30 7C 2F 80 2E 7F 2F 80 2E 80 2C 80 2C 7C 2E 80 2F 77 30 80 2F 77 2E 80 2F 7B 2F 80 30 79 33 7F 32 7A 33 7E 34 7C 33 7C 33 7D 34 7D
+
+   cas snimku: 01:36:33.2676373
+   rozdil proti predchozimu: prumer 2,45, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 107 (3,0)
+   snimek 9: 320x240 Yuy2, 153600 B
+   jas prumer 103,4
+   radky prumer/odchylka - prvni: 0:102/28 1:103/27 2:103/26 3:103/25 
+   posledni: 228:79/25 229:79/25 230:79/25 231:79/25 232:79/25 233:78/25 234:78/25 235:78/25 236:78/25 237:78/25 238:78/25 239:79/26 
+   U prumer 125,2 odch 4,8; V prumer 128,9 odch 8,6
+   hex radek 0: 79 84 6D 72 5E 84 59 72 5C 80 54 72 53 7E 4D 73 4E 7A 51 75 51 7C 4B 77 4E 7E 4E 79 4F 7B 4D 78 4F 7E 4B 78 51 7C 50 74 50 7C 4F 76 50 7F 4E 78
+   hex radek 1: 7E 86 73 6C 70 7F 62 6E 5E 7D 54 73 52 7B 50 74 4D 7D 4C 79 50 80 50 76 4D 80 4D 76 4D 80 51 76 4F 80 4D 79 50 7A 51 77 4F 7F 4F 76 55 7B 51 79
+   hex radek 238: 30 7C 2E 7F 2D 7C 2F 7E 2F 7D 2E 80 2D 7C 2E 80 2F 7E 2F 80 2E 7F 2F 81 2E 7C 31 80 2C 7A 2D 80 30 77 31 7D 32 7C 32 7F 31 7E 31 80 31 7D 32 80
+   hex radek 239: 2E 7A 2D 7F 2E 7A 30 80 2E 7C 2E 7F 2E 7F 2D 80 2F 80 2D 80 2E 7F 2F 80 2D 7E 31 80 2E 7D 2F 81 31 77 31 7E 31 7B 34 7E 34 7C 32 7E 32 7D 34 7F
+
+   cas snimku: 01:36:33.4274678
+   rozdil proti predchozimu: prumer 2,51, zmenenych radku 240/240 (od 0 do 239), nejvetsi zmena na radku 105 (3,4)
+
+Zachytavam YUY2_160x120
+   start: Success
+   rovina 0: start=0 stride=320 160x120
+   snimek 0: 160x120 Yuy2, 38400 B
+   jas prumer 103,2
+   radky prumer/odchylka - prvni: 0:103/30 1:104/29 2:105/28 3:105/26 
+   posledni: 108:84/29 109:82/28 110:81/27 111:80/26 112:80/26 113:79/25 114:78/25 115:77/24 116:76/24 117:76/24 118:76/24 119:76/24 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,7
+   hex radek 0: A1 82 9B 6A 94 82 85 6A 72 80 66 72 5C 7C 4C 75 4B 7C 4C 77 4E 7B 50 78 53 7C 53 79 50 80 52 7C 54 80 52 7A 53 7A 50 78 4E 7C 4C 78 4C 79 4D 78
+   hex radek 1: A2 82 9D 68 98 81 8C 6C 80 81 6B 70 5D 7E 52 74 4D 7E 52 7A 50 80 51 78 4E 81 51 77 55 7C 52 76 50 80 4F 76 4F 7E 50 79 4D 80 4E 78 4F 7C 4F 7A
+   hex radek 118: 30 7D 2F 80 31 7E 2F 80 32 7E 31 80 30 7B 31 80 31 78 32 81 2F 7A 2F 80 31 7B 31 80 34 7C 36 80 36 7E 37 80 33 7F 35 81 36 7E 36 83 35 7C 35 83
+   hex radek 119: 2F 7D 2D 7F 2F 7A 2F 7F 2E 7C 31 80 30 7F 30 80 30 7B 2E 80 31 7B 31 80 31 7C 32 7F 35 7E 34 7F 35 7D 39 80 35 7E 36 81 33 7B 35 80 34 7B 33 82
+
+   cas snimku: 01:36:34.0425694
+   snimek 1: 160x120 Yuy2, 38400 B
+   jas prumer 103,3
+   radky prumer/odchylka - prvni: 0:103/30 1:103/29 2:104/28 3:105/26 
+   posledni: 108:85/29 109:83/28 110:81/27 111:81/26 112:79/26 113:79/26 114:78/25 115:78/25 116:77/24 117:76/24 118:76/24 119:76/24 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,7
+   hex radek 0: 9D 84 99 6E 92 84 85 6E 78 80 67 70 55 80 4D 77 4D 80 4C 79 4D 7E 51 77 51 7E 4F 7A 52 7A 4F 76 53 80 52 78 50 7E 4F 7A 4C 7C 4E 78 4A 7F 4A 7A
+   hex radek 1: A2 82 A0 6B 95 82 87 6C 7A 7E 67 6E 59 80 52 74 4E 7C 4F 78 50 78 4B 78 51 7B 51 77 53 7E 4F 78 51 76 4F 7D 55 7D 52 76 51 7A 4F 78 4C 7E 4C 7A
+   hex radek 118: 2D 7E 2F 81 2F 78 2F 80 2E 80 30 82 30 7C 2F 81 2F 7A 30 80 2E 7E 2F 81 30 7A 34 80 33 7B 35 7F 36 7B 37 81 33 7A 36 82 36 7B 36 82 35 7C 35 85
+   hex radek 119: 2E 7C 2D 80 2E 79 2E 7F 2E 7E 2F 80 30 7C 2F 81 30 7A 2E 80 2F 7D 30 80 33 7D 32 7F 35 7C 35 7F 37 7C 35 81 32 7E 35 81 33 7C 33 81 35 7A 34 81
+
+   cas snimku: 01:36:34.2024561
+   rozdil proti predchozimu: prumer 2,03, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 80 (2,4)
+   snimek 2: 160x120 Yuy2, 38400 B
+   jas prumer 103,4
+   radky prumer/odchylka - prvni: 0:102/29 1:103/28 2:104/26 3:105/25 
+   posledni: 108:85/29 109:83/28 110:82/27 111:81/26 112:80/26 113:80/26 114:79/25 115:79/25 116:78/25 117:77/24 118:77/24 119:77/25 
+   U prumer 125,1 odch 4,6; V prumer 128,6 odch 8,6
+   hex radek 0: 94 84 88 6A 77 80 6B 70 5A 7E 50 76 4D 7E 4D 79 4E 7C 4E 79 51 7E 50 76 51 7E 52 74 50 7D 50 76 4F 7A 4F 76 4C 7A 4C 78 4C 7C 48 7A 49 7F 49 78
+   hex radek 1: 9D 82 8D 6B 7D 81 6C 6E 5D 7E 51 74 4F 7C 51 76 4F 7E 4E 78 52 7A 50 76 52 7B 52 77 51 7C 50 78 52 7D 50 78 4F 7F 4F 7A 4F 7E 4C 78 4E 78 4C 78
+   hex radek 118: 2D 7C 2F 7E 2E 7A 2E 80 30 79 2F 80 31 7B 2F 80 2F 7B 2D 82 30 7A 2E 81 33 7A 34 81 37 7F 35 81 36 7E 36 82 34 79 34 83 35 7C 35 83 34 7C 33 82
+   hex radek 119: 2A 7C 30 80 2E 7C 2F 80 2E 7C 2E 80 2D 7D 2E 82 2F 7C 2E 80 2F 7F 32 7F 32 7A 34 7F 35 78 36 81 36 7C 36 81 34 7E 36 82 32 7D 36 82 33 7C 32 82
+
+   cas snimku: 01:36:34.3624525
+   rozdil proti predchozimu: prumer 2,73, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 53 (3,8)
+   snimek 3: 160x120 Yuy2, 38400 B
+   jas prumer 103,3
+   radky prumer/odchylka - prvni: 0:102/28 1:103/27 2:104/25 3:104/23 
+   posledni: 108:85/29 109:83/28 110:82/27 111:81/26 112:80/26 113:80/26 114:79/26 115:78/25 116:78/25 117:77/25 118:77/25 119:77/25 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,6
+   hex radek 0: 88 80 74 6C 62 80 5A 6C 50 82 4E 78 4E 7E 4C 77 4B 7E 4B 77 4E 7C 4F 78 52 7C 50 7B 50 76 50 76 51 7E 51 76 4F 7C 4D 7A 4A 7A 49 7A 48 79 49 7A
+   hex radek 1: 88 84 7A 6D 6A 80 5B 72 51 80 4F 74 4E 7A 51 78 4F 78 4D 76 50 7C 51 78 50 79 51 7B 51 7E 50 78 50 83 50 7A 4D 7E 4F 7B 4E 78 4B 78 4D 7C 4E 7A
+   hex radek 118: 2F 7C 30 80 2F 7A 2E 80 2F 7D 2F 80 2C 7A 2F 7F 2E 7B 2D 80 30 7D 31 80 34 7B 35 80 35 7A 35 80 35 7F 35 82 34 7F 36 81 34 7D 35 84 32 78 33 84
+   hex radek 119: 2E 7E 30 7F 2F 7D 2F 80 2D 7B 2E 80 2E 7A 2E 80 2F 7A 30 80 31 7A 32 7E 35 7D 35 7F 33 7E 34 7F 33 7E 32 81 33 79 33 81 32 79 32 80 31 79 34 82
+
+   cas snimku: 01:36:34.5064583
+   rozdil proti predchozimu: prumer 2,50, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 53 (3,5)
+   snimek 4: 160x120 Yuy2, 38400 B
+   jas prumer 103,4
+   radky prumer/odchylka - prvni: 0:102/28 1:103/27 2:104/25 3:103/23 
+   posledni: 108:85/29 109:83/28 110:82/27 111:81/27 112:81/26 113:80/26 114:79/26 115:79/25 116:78/25 117:78/25 118:77/25 119:78/25 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,5
+   hex radek 0: 72 82 64 70 53 80 4D 74 4D 7E 51 76 4E 7E 4F 7B 4E 7A 50 7B 51 7C 53 79 50 7E 4F 78 4C 7C 57 7A 4D 7C 4E 78 4C 7C 4B 76 4A 80 49 7A 49 7B 4A 7A
+   hex radek 1: 7B 80 6A 6E 5C 81 52 74 4C 7C 4E 76 4E 78 52 76 4D 7A 50 7A 4E 7E 52 78 4D 79 50 79 50 7C 4E 7A 4F 7D 51 7A 50 7E 4E 7A 4D 7E 4E 78 4C 80 4C 78
+   hex radek 118: 30 79 31 80 2E 79 30 80 30 78 30 80 2E 7F 2E 81 2E 7E 30 80 32 7A 34 7F 36 7C 32 80 34 7C 36 81 35 7C 38 80 35 7F 33 81 33 7B 34 84 32 7C 32 83
+   hex radek 119: 30 7D 30 80 30 7B 2D 80 2F 7D 2D 82 2E 7D 2D 80 2F 78 30 7F 32 7B 33 7D 35 7A 35 81 33 7C 33 80 37 7C 36 81 33 79 2E 81 31 7D 32 85 31 7A 34 83
+
+   cas snimku: 01:36:34.6664710
+   rozdil proti predchozimu: prumer 2,22, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 53 (2,8)
+   snimek 5: 160x120 Yuy2, 38400 B
+   jas prumer 103,4
+   radky prumer/odchylka - prvni: 0:102/28 1:103/26 2:103/24 3:104/22 
+   posledni: 108:85/29 109:84/29 110:82/27 111:82/27 112:81/26 113:80/26 114:80/26 115:80/25 116:78/25 117:78/25 118:78/25 119:78/26 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,5
+   hex radek 0: 6A 80 5A 72 52 7E 4F 78 4C 7E 4E 78 4E 7C 4E 79 4E 7A 50 79 51 7C 4F 78 4F 7D 4E 79 4E 7D 4B 7A 4F 7E 4D 7A 4D 7C 4B 7C 4C 7A 49 7A 48 7F 49 7C
+   hex radek 1: 6F 80 61 73 53 7E 50 78 4E 7B 54 78 50 7C 4E 76 51 78 4E 76 4E 7C 50 78 50 7D 4E 75 4E 80 4C 78 4F 7E 50 7B 50 7F 4C 7B 4A 80 4C 7A 4C 7E 4D 7A
+   hex radek 118: 30 7A 2F 80 2F 7A 31 80 31 7B 2F 82 2C 7D 2D 80 2F 7C 2F 80 32 80 32 7E 36 7C 34 80 38 7A 37 81 32 7D 35 83 32 7C 33 83 36 7B 31 82 32 7C 33 82
+   hex radek 119: 30 77 2E 7F 2C 7A 2E 7F 2D 7A 2D 82 2D 7C 2D 80 2E 7C 32 7F 33 7C 32 80 34 7B 31 80 34 7D 34 81 34 7B 34 80 37 7D 33 82 32 7A 31 84 31 79 31 82
+
+   cas snimku: 01:36:34.8104377
+   rozdil proti predchozimu: prumer 2,14, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 53 (2,6)
+   snimek 6: 160x120 Yuy2, 38400 B
+   jas prumer 103,5
+   radky prumer/odchylka - prvni: 0:102/28 1:103/26 2:103/24 3:103/22 
+   posledni: 108:85/29 109:84/28 110:83/28 111:82/26 112:81/26 113:80/26 114:80/26 115:80/25 116:79/25 117:78/25 118:78/25 119:78/26 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,5
+   hex radek 0: 60 80 54 72 51 7E 4B 76 4E 7C 4E 76 4C 7A 4F 7B 4D 7C 4D 79 50 78 4D 76 51 7C 4C 77 4E 79 4E 7A 4E 80 4B 7A 4C 7E 4B 78 4B 7A 49 78 4A 7F 46 7C
+   hex radek 1: 66 82 55 73 50 7A 50 74 52 7E 4E 78 4D 7E 51 7A 50 7C 4D 78 4F 7E 51 78 4A 7F 51 78 4C 7B 50 77 4F 7B 50 79 50 7F 4D 79 50 7C 4D 78 4E 7E 4E 7C
+   hex radek 118: 2F 7A 30 80 2E 7C 2E 7F 2D 7B 2E 80 2D 7F 2D 80 2E 7C 32 80 31 7F 34 80 34 7E 34 81 34 7E 34 81 34 7B 32 7F 35 7B 34 80 32 7D 30 83 33 7B 33 85
+   hex radek 119: 2F 7E 2C 7F 2E 7C 2F 80 2F 7E 2B 81 2F 7A 2D 80 2F 80 32 7F 35 7E 36 80 32 7C 33 7F 35 78 33 80 33 7E 33 81 35 78 34 81 34 7C 32 81 33 7A 32 85
+
+   cas snimku: 01:36:34.9704944
+   rozdil proti predchozimu: prumer 2,01, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 7 (2,4)
+   snimek 7: 160x120 Yuy2, 38400 B
+   jas prumer 103,5
+   radky prumer/odchylka - prvni: 0:102/28 1:102/26 2:103/24 3:103/22 
+   posledni: 108:86/29 109:84/29 110:83/28 111:82/26 112:81/26 113:81/26 114:80/26 115:80/26 116:79/25 117:78/25 118:78/25 119:79/26 
+   U prumer 125,2 odch 4,6; V prumer 128,7 odch 8,5
+   hex radek 0: 5C 80 4F 72 4E 7E 4D 74 4D 7C 4C 76 4D 7C 50 7B 51 7C 50 7B 50 7A 51 78 50 7F 4D 79 4C 7D 51 74 4D 7C 4B 7A 4E 7C 4B 76 4B 7E 4A 7C 46 7D 46 76
+   hex radek 1: 64 82 52 71 51 7C 4D 79 4E 7A 51 78 4E 76 51 76 50 7A 4D 78 4F 7E 4F 76 4E 7D 51 79 50 7C 4A 76 51 7C 51 7C 50 7A 50 76 4C 7C 4D 7A 50 7C 4B 7A
+   hex radek 118: 30 7D 30 80 2E 7D 30 80 2E 7C 2D 81 2C 7B 2D 80 2F 7E 31 80 33 7D 35 80 35 7C 35 80 37 7D 35 80 35 7A 35 82 35 7D 34 82 32 7C 31 84 31 7D 31 82
+   hex radek 119: 2F 7E 2E 80 2D 7D 2E 7F 2E 7E 2D 81 2C 7D 2D 7F 30 79 31 7F 33 7C 33 7F 34 7D 35 7F 35 78 33 7F 36 7B 35 81 34 7B 32 81 34 7B 33 84 30 7E 32 84
+
+   cas snimku: 01:36:35.1145930
+   rozdil proti predchozimu: prumer 1,98, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 7 (2,4)
+   snimek 8: 160x120 Yuy2, 38400 B
+   jas prumer 103,6
+   radky prumer/odchylka - prvni: 0:102/28 1:102/26 2:103/24 3:103/22 
+   posledni: 108:86/29 109:84/28 110:83/28 111:82/27 112:81/26 113:81/26 114:80/26 115:80/26 116:79/25 117:79/25 118:78/25 119:78/26 
+   U prumer 125,1 odch 4,6; V prumer 128,7 odch 8,5
+   hex radek 0: 5D 7C 54 76 4E 7C 4C 74 4C 7C 4C 78 4E 7A 4E 79 4F 7E 4C 79 50 7A 4E 77 4E 7F 4E 74 4F 7D 50 76 4D 7C 4A 78 4B 7A 51 78 4C 7C 49 7A 49 7B 41 78
+   hex radek 1: 60 7E 54 71 50 7C 51 74 4E 7C 4E 78 4E 80 4E 76 4F 7E 4F 78 4E 7A 4D 78 4D 7B 4E 79 51 7E 4D 78 51 7A 50 7A 4E 7E 4D 7A 4F 80 4D 76 4D 80 4D 78
+   hex radek 118: 2E 7D 30 80 2E 7A 2F 80 2E 7F 2F 81 2C 7D 2C 80 30 7B 31 80 34 7C 36 7F 35 7B 36 80 36 7B 36 81 36 79 35 83 35 7A 33 83 31 7F 31 83 32 77 32 85
+   hex radek 119: 2F 7E 2D 80 2D 7F 2E 80 2E 7A 2E 80 2D 79 2F 80 30 7F 34 7F 34 7E 37 80 35 7B 35 80 35 7C 32 83 35 7A 34 81 34 7C 32 80 31 7B 32 80 32 7B 30 81
+
+   cas snimku: 01:36:35.2745270
+   rozdil proti predchozimu: prumer 1,97, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 3 (2,3)
+   snimek 9: 160x120 Yuy2, 38400 B
+   jas prumer 103,5
+   radky prumer/odchylka - prvni: 0:102/28 1:103/26 2:103/24 3:103/22 
+   posledni: 108:86/29 109:84/29 110:83/27 111:82/27 112:81/26 113:81/26 114:80/26 115:79/26 116:79/25 117:79/25 118:78/25 119:78/26 
+   U prumer 125,2 odch 4,6; V prumer 128,6 odch 8,5
+   hex radek 0: 53 7E 4F 72 4D 7C 48 74 50 7A 4D 78 4F 7C 4E 79 4E 7E 4F 79 50 7D 4C 78 4E 7E 4E 76 52 7E 4C 7A 4F 7C 4E 78 4B 80 4E 78 4A 7E 4A 7A 49 7D 49 7A
+   hex radek 1: 5D 7E 50 72 4E 7C 4D 77 4D 7C 4D 74 4F 7C 50 76 4F 7C 4D 78 50 78 4F 7A 4D 7B 53 79 4F 7C 4F 78 4E 7C 50 78 4D 7C 4E 76 4F 7E 50 7A 4E 7E 4F 7A
+   hex radek 118: 2E 7A 2E 80 30 79 30 7F 2D 7C 2C 80 2C 7C 2E 80 2E 7C 33 80 32 7A 34 7F 35 7D 34 7F 34 79 34 7F 35 78 33 81 32 7B 33 83 31 7B 36 82 32 78 32 83
+   hex radek 119: 2F 7D 2E 80 2E 7D 2E 7F 30 7B 2D 80 2D 7D 2E 7F 31 7D 32 80 32 7F 33 7F 34 7A 33 81 35 7D 32 80 34 79 33 83 32 7B 31 80 32 7D 33 82 31 77 31 82
+
+   cas snimku: 01:36:35.4346087
+   rozdil proti predchozimu: prumer 2,00, zmenenych radku 120/120 (od 0 do 119), nejvetsi zmena na radku 74 (2,4)
+
+### 4b) Ovladaci prvky kamery (2x cteni s odstupem 3 s)
+   [1] Brightness: hodnota=1 (ok=True) min=-10 max=10 krok=1 vychozi=1 auto=False
+   [1] Contrast: hodnota=2 (ok=True) min=0 max=20 krok=1 vychozi=2 auto=False
+   [1] Hue: hodnota=3 (ok=True) min=-30 max=30 krok=1 vychozi=0 auto=False
+   [1] BacklightCompensation: hodnota=7 (ok=True) min=0 max=70 krok=1 vychozi=7 auto=False
+   [2] Brightness: hodnota=1 (ok=True) min=-10 max=10 krok=1 vychozi=1 auto=False
+   [2] Contrast: hodnota=2 (ok=True) min=0 max=20 krok=1 vychozi=2 auto=False
+   [2] Hue: hodnota=3 (ok=True) min=-30 max=30 krok=1 vychozi=0 auto=False
+   [2] BacklightCompensation: hodnota=7 (ok=True) min=0 max=70 krok=1 vychozi=7 auto=False
+
+Hotovo.

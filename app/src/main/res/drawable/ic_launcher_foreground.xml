@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Thermometer-like reticle: ring + cross, accent orange -->
+    <path android:fillColor="#00000000" android:strokeColor="#FF8A3D" android:strokeWidth="5"
+        android:pathData="M54,32a22,22 0,1 1,0 44a22,22 0,1 1,0 -44z" />
+    <path android:fillColor="#00000000" android:strokeColor="#FFC14D" android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M54,40L54,48M54,60L54,68M40,54L48,54M60,54L68,54" />
+    <path android:fillColor="#FF5B4A" android:pathData="M54,51a3,3 0,1 1,0 6a3,3 0,1 1,0 -6z" />
+</vector>
