@@ -9,6 +9,11 @@
     <!-- Only requested when the user chooses the phone camera (zadání F11 bod 7). -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Only the GitHub updater uses the network (zadání F8/F9). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <!-- Copy of snapshots into Pictures/ThermoCamera on Android 8–9 (MediaStore needs no permission on 10+). -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -52,6 +57,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <receiver
+            android:name=".update.InstallResultReceiver"
+            android:exported="false" />
 
         <!-- Stores the per-app language on Android 12 and older (AppCompat). -->
         <service

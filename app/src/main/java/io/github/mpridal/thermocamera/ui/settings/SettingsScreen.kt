@@ -77,6 +77,8 @@ class SettingsViewModel @Inject constructor(private val repo: SettingsRepository
     fun setAutoAlign(v: Boolean) = viewModelScope.launch { repo.setAutoAlign(v) }
     fun setVideoFps(v: Int) = viewModelScope.launch { repo.setVideoFps(v) }
     fun setSaveToGallery(v: Boolean) = viewModelScope.launch { repo.setSaveToGallery(v) }
+    fun setCheckUpdates(v: Boolean) = viewModelScope.launch { repo.setCheckUpdates(v) }
+    fun setUpdatesWifiOnly(v: Boolean) = viewModelScope.launch { repo.setUpdatesWifiOnly(v) }
     fun setVideoResolution(v: io.github.mpridal.thermocamera.data.VideoResolution) = viewModelScope.launch { repo.setVideoResolution(v) }
 }
 
@@ -160,6 +162,10 @@ fun SettingsScreen(
             }
             Section(stringResource(R.string.gallery_title)) {
                 SwitchRow(stringResource(R.string.settings_save_to_gallery), "", s.saveToGallery, vm::setSaveToGallery)
+            }
+            Section(stringResource(R.string.settings_section_updates)) {
+                SwitchRow(stringResource(R.string.settings_check_updates), "", s.checkUpdates, vm::setCheckUpdates)
+                SwitchRow(stringResource(R.string.settings_updates_wifi_only), "", s.updatesWifiOnly, vm::setUpdatesWifiOnly)
             }
             Section(stringResource(R.string.settings_section_language)) { LanguageDropdown() }
             Section(stringResource(R.string.settings_section_advanced)) {

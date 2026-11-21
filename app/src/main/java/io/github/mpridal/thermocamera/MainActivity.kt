@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var cameras: CameraRepository
 
+    @Inject lateinit var updater: io.github.mpridal.thermocamera.update.Updater
+
     override fun onStart() {
         super.onStart()
         liveVm.setDisplayRotation(androidx.core.content.ContextCompat.getDisplayOrDefault(this).rotation)
@@ -74,10 +76,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        updater.checkOnStart() // background, never delays the start (zadání kap. 9)
         setContent {
             val settings by liveVm.settings.collectAsStateWithLifecycle()
             ThermoTheme(settings.themeMode, settings.reduceTransparency) {
-                AppRoot(liveVm)
+                AppRoot(liveVm, updater)
             }
         }
     }
@@ -95,7 +98,7 @@ private object Routes {
 }
 
 @Composable
-private fun AppRoot(liveVm: LiveViewModel) {
+private fun AppRoot(liveVm: LiveViewModel, updater: io.github.mpridal.thermocamera.update.Updater) {
     val hazeState = remember { HazeState() }
     val snackbar = remember { SnackbarHostState() }
     val nav = rememberNavController()
@@ -150,6 +153,7 @@ private fun AppRoot(liveVm: LiveViewModel) {
         CompositionLocalProvider(LocalHazeState provides hazeState) {
             NavHost(nav, startDestination = Routes.LIVE) {
                 composable(Routes.LIVE) {
+                    io.github.mpridal.thermocamera.ui.live.UpdateBanner(updater)
                     LiveScreen(
                         liveVm,
                         onOpenSettings = { nav.navigate(Routes.SETTINGS) },

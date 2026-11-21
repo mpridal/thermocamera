@@ -88,6 +88,9 @@ data class Settings(
     val pixelated: Boolean = false,
     /** Project new snapshots go to; -1 = "No project". */
     val activeProjectId: Long = -1L,
+    /** Check GitHub for a newer version at start (zadání kap. 9 bod 7). */
+    val checkUpdates: Boolean = true,
+    val updatesWifiOnly: Boolean = false,
 ) {
     /** Correction applied to raw camera values (emissivity, reflected temperature, offset, gain). */
     fun correction() = io.github.mpridal.thermocamera.core.Correction(emissivity, reflected, calOffset, calGain)
@@ -155,6 +158,8 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         val smoothing = booleanPreferencesKey("smoothing")
         val pixelated = booleanPreferencesKey("pixelated")
         val activeProjectId = androidx.datastore.preferences.core.longPreferencesKey("active_project_id")
+        val checkUpdates = booleanPreferencesKey("check_updates")
+        val updatesWifiOnly = booleanPreferencesKey("updates_wifi_only")
     }
 
     val settings: Flow<Settings> = context.dataStore.data.map { p ->
@@ -201,6 +206,8 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
             smoothing = p[Keys.smoothing] ?: d.smoothing,
             pixelated = p[Keys.pixelated] ?: d.pixelated,
             activeProjectId = p[Keys.activeProjectId] ?: d.activeProjectId,
+            checkUpdates = p[Keys.checkUpdates] ?: d.checkUpdates,
+            updatesWifiOnly = p[Keys.updatesWifiOnly] ?: d.updatesWifiOnly,
         )
     }
 
@@ -247,6 +254,9 @@ class SettingsRepository @Inject constructor(@ApplicationContext private val con
         it[Keys.rangeLocked] = false
         it[Keys.activeProfile] = p.name
     }
+
+    suspend fun setCheckUpdates(v: Boolean) = context.dataStore.edit { it[Keys.checkUpdates] = v }
+    suspend fun setUpdatesWifiOnly(v: Boolean) = context.dataStore.edit { it[Keys.updatesWifiOnly] = v }
 
     suspend fun setActiveProject(id: Long) = context.dataStore.edit { it[Keys.activeProjectId] = id }
 

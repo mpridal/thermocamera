@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] – Fáze 5
+
+- Aktualizace z GitHub Releases: při startu na pozadí (jen s ověřenou sítí, volitelně jen Wi-Fi), stažení s navazováním,
+  ověření SHA-256 a podpisového certifikátu, banner „Stažena verze …“, instalace přes PackageInstaller
+  (na Androidu 12+ bez dotazu, kde to systém dovolí), log aktualizací.
+- Workflow `release.yml`: tag `vX.Y.Z` → testy, podepsané APK, kontrola podpisu, `.sha256`, GitHub Release s poznámkami
+  z CHANGELOG. Návod v `docs/release.md`.
+
 ## [Unreleased] – Fáze 4
 
 - Spoušť ukládá snímek měření: render.jpg (obraz se značkami, stupnicí a pruhem hodnot), thermal.f32 + thermal.json

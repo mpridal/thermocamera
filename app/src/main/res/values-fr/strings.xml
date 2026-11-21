@@ -215,4 +215,12 @@
     <string name="csv_header_note">Températures en °C après corrections, lignes de haut en bas</string>
     <string name="settings_save_to_gallery">Enregistrer une copie dans la galerie du téléphone</string>
     <string name="detail_keep_display">Garder cet affichage</string>
+    <string name="update_downloaded">Version %1$s téléchargée · s\'installe après confirmation du système</string>
+    <string name="update_install">Installer</string>
+    <string name="update_installing">Installation…</string>
+    <string name="update_unknown_sources">Pour installer les mises à jour, autorise ThermoCamera à installer des applications (une fois). Les paramètres s\'ouvrent maintenant.</string>
+    <string name="action_continue">Continuer</string>
+    <string name="settings_section_updates">Mises à jour</string>
+    <string name="settings_check_updates">Rechercher des mises à jour au démarrage</string>
+    <string name="settings_updates_wifi_only">Télécharger uniquement en Wi-Fi</string>
 </resources>

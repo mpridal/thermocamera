@@ -1,0 +1,67 @@
+name: Release
+
+# Tag vX.Y.Z → signed release APK + SHA-256 on GitHub Releases (zadání kap. 9).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "Tag $GITHUB_REF_NAME is not vMAJOR.MINOR.PATCH"; exit 1; fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Keystore from secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.THERMOCAMERA_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then echo "Secret THERMOCAMERA_KEYSTORE_BASE64 is missing – refusing to publish an unsigned APK"; exit 1; fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "THERMOCAMERA_KEYSTORE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+
+      - name: Test and build signed release
+        env:
+          THERMOCAMERA_KEYSTORE_PASSWORD: ${{ secrets.THERMOCAMERA_KEYSTORE_PASSWORD }}
+          THERMOCAMERA_KEY_ALIAS: ${{ secrets.THERMOCAMERA_KEY_ALIAS }}
+          THERMOCAMERA_KEY_PASSWORD: ${{ secrets.THERMOCAMERA_KEY_PASSWORD }}
+        run: ./gradlew --console=plain :thermal-core:test :app:testDebugUnitTest :app:assembleRelease -PversionName="$VERSION"
+
+      - name: Verify signature, checksum
+        run: |
+          APK=app/build/outputs/apk/release/app-release.apk
+          "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner" verify --print-certs "$APK"
+          cp "$APK" "thermocamera-$VERSION.apk"
+          sha256sum "thermocamera-$VERSION.apk" > "thermocamera-$VERSION.apk.sha256"
+          cat "thermocamera-$VERSION.apk.sha256"
+
+      - name: Release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '
+            $0 ~ "^## \[" v "\]" {p=1; next}
+            p && /^## / {exit}
+            p {print}
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then echo "ThermoCamera $VERSION" > notes.md; fi
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "thermocamera-$VERSION.apk" "thermocamera-$VERSION.apk.sha256" \
+            --title "ThermoCamera $VERSION" --notes-file notes.md

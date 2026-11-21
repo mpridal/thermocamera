@@ -215,4 +215,12 @@
     <string name="csv_header_note">Temperaturen in °C nach Korrekturen, Zeilen von oben nach unten</string>
     <string name="settings_save_to_gallery">Kopie in der Handy-Galerie speichern</string>
     <string name="detail_keep_display">Diese Darstellung behalten</string>
+    <string name="update_downloaded">Version %1$s heruntergeladen · wird nach Bestätigung durch das System installiert</string>
+    <string name="update_install">Installieren</string>
+    <string name="update_installing">Installiere…</string>
+    <string name="update_unknown_sources">Um Updates zu installieren, erlaube ThermoCamera einmalig, Apps zu installieren. Die Einstellungen öffnen sich jetzt.</string>
+    <string name="action_continue">Weiter</string>
+    <string name="settings_section_updates">Updates</string>
+    <string name="settings_check_updates">Beim Start nach Updates suchen</string>
+    <string name="settings_updates_wifi_only">Nur über WLAN herunterladen</string>
 </resources>

@@ -13,12 +13,16 @@ android {
         applicationId = "io.github.mpridal.thermocamera"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        // Release builds get the version from the tag: -PversionName=1.3.0 (zadání kap. 9).
+        val vName = (project.findProperty("versionName") as String?) ?: "0.1.0"
+        val parts = vName.split('.').map { it.toIntOrNull() ?: 0 } + listOf(0, 0, 0)
+        versionName = vName
+        versionCode = parts[0] * 10000 + parts[1] * 100 + parts[2]
+        buildConfigField("String", "UPDATE_REPO", "\"mpridal/thermocamera\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            // Phones and tablets; x86_64 only for the emulator (the simulator does not need native code).
-            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+            // Phones and tablets (arm64; 32-bit ARM kept for low-end tablets – a 5 kB library).
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
     }
 
@@ -30,8 +34,26 @@ android {
         }
     }
 
+    signingConfigs {
+        // Keystore from environment (CI: GitHub Secrets) – never in the repository (zadání kap. 9).
+        val ks = System.getenv("THERMOCAMERA_KEYSTORE")
+        if (ks != null && file(ks).exists()) {
+            create("release") {
+                storeFile = file(ks)
+                storePassword = System.getenv("THERMOCAMERA_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("THERMOCAMERA_KEY_ALIAS")
+                keyPassword = System.getenv("THERMOCAMERA_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            // Debug builds also run on the x86_64 emulator.
+            ndk { abiFilters += "x86_64" }
+        }
         release {
+            signingConfigs.findByName("release")?.let { signingConfig = it }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

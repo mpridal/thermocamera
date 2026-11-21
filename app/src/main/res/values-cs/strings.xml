@@ -215,4 +215,12 @@
     <string name="csv_header_note">Teploty v °C po korekcích, řádky shora dolů</string>
     <string name="settings_save_to_gallery">Ukládat kopii do galerie telefonu</string>
     <string name="detail_keep_display">Ponechat toto zobrazení</string>
+    <string name="update_downloaded">Stažena verze %1$s · nainstaluje se po potvrzení systémem</string>
+    <string name="update_install">Nainstalovat</string>
+    <string name="update_installing">Instaluji…</string>
+    <string name="update_unknown_sources">Pro instalaci aktualizací povol ThermoCameře instalovat aplikace (jen jednou). Teď se otevře nastavení.</string>
+    <string name="action_continue">Pokračovat</string>
+    <string name="settings_section_updates">Aktualizace</string>
+    <string name="settings_check_updates">Kontrolovat aktualizace při startu</string>
+    <string name="settings_updates_wifi_only">Stahovat jen přes Wi-Fi</string>
 </resources>
