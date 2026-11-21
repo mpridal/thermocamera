@@ -31,4 +31,4 @@ Drobná rozhodnutí přijatá během vývoje (zadání kap. 0, bod 4). Nejnověj
 | D23 | Orientace modulu má výchozí zrcadlení zapnuté | čočka HT-102 míří od uživatele (jako zadní kamera) a obraz je pak zrcadlený – ověřeno na Pixelu 10 Pro 2026-11-21 |
 | D24 | Updater bez HTTP knihovny (`HttpURLConnection`), logika rozhodování v `:thermal-core` (`UpdatePolicy`, testy); kontrola podpisu = certifikát staženého APK musí být mezi certifikáty nainstalované aplikace | zadání kap. 9 (jen HTTP klient pro updater, bez dalších síťových knihoven) |
 | D25 | Release APK obsahuje arm64-v8a i armeabi-v7a (zadání: jen arm64-v8a); x86_64 jen debug pro emulátor | nativní knihovna má 5 kB; 32bitové ARM pro jistotu kvůli levnému tabletu |
-| D26 | Podpisový klíč vygenerován 2026-11-22 do `C:\dev	hermocamera-signing\` (mimo repo i OneDrive); nahrání do GitHub Secrets a první vydání čekají na uživatele | vydání je publikování – potřebuje výslovný souhlas |
+| D26 | Podpisový klíč vygenerován 2026-11-22 do `C:\dev\thermocamera-signing\` (mimo repo i OneDrive); nahrání do GitHub Secrets a první vydání čekají na uživatele | vydání je publikování – potřebuje výslovný souhlas |
