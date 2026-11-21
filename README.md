@@ -9,12 +9,12 @@ protokol kamery: [docs/ht102-protocol.md](docs/ht102-protocol.md)
 ## Stav
 
 **Fáze 0 – základ a průzkum.** Aplikace ukazuje živý obraz ze **simulátoru** ve skleněném UI (světlý i tmavý motiv,
-6 jazyků) a má USB diagnostiku s exportem. Čtení termo dat z HT-102 zatím nefunguje – kamera se jen rozpozná
-(viz `docs/ht102-protocol.md`).
+6 jazyků) a má USB diagnostiku s exportem. Formát termo dat HT-102 je rozluštěný a dekodér ověřený na snímcích z kamery
+(`docs/ht102-protocol.md`); živé čtení z kamery v aplikaci přijde ve Fázi 1.
 
 ## Sestavení
 
-Potřeba: JDK 21, Android SDK (API 36).
+Potřeba: JDK 21, Android SDK (API 37).
 
 ```
 ./gradlew :thermal-core:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug

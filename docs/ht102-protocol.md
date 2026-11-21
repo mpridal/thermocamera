@@ -1,46 +1,71 @@
 # Hti HT-102 – komunikační protokol
 
-> Stav k 21. 11. 2026: **termo kanál není znám.** Tento dokument shrnuje, co je ověřené, a eviduje průzkum.
+> Stav k 21. 11. 2026: **termo kanál je znám a ověřen na snímcích z kamery.**
+> Termo data jsou ukrytá v běžném video snímku YUY2 – nejsou potřeba žádné vlastní USB požadavky ani inicializace.
 
-## Ověřeno (Windows 11, 21. 11. 2026)
+## Shrnutí
 
-Měřeno skriptem `tools/windows-diag/` – surová data v `docs/captures/windows-2026-11-21/`.
-
-- USB 2.0 High-Speed, VID `0x0416`, PID `0x9393`, bcdDevice 1.00, sériové číslo `000055FA93`,
-  produkt „W55FA93 USB UVC Device“ (SoC Nuvoton W55FA93). Kompozitní zařízení (IAD).
-- Jediná funkce: **UVC 1.0**. IF0 = VideoControl (interrupt EP `0x83`, 16 B), IF1 = VideoStreaming
-  (izochronní EP `0x81`, alt 1 a 2: 2 × 900 B / mikrorámec).
-- Topologie: Camera Terminal (ID 1) → Processing Unit (ID 5) → Output Terminal (ID 3).
-  Žádná Extension Unit, HID, vendor rozhraní ani bulk endpoint.
-- Jediný formát YUY2: 640 × 480, 320 × 240, 160 × 120 (30/20/15/10/5/1 fps).
-- **Stream nese jen běžný (viditelný) obraz**, žádná termo data v obrazových datech.
-
-Úplné deskriptory: zadání, příloha A (kopie zadání v `docs/zadani.md`).
-
-## Průzkum termo kanálu
-
-### Oficiální aplikace Thermal Viewer (kap. 3.2)
-
-| Datum | Zjištění |
+| | |
 |---|---|
-| 2026-11-21 | Návod i QR kód vedou na `http://www.xintest.com.cn/download.php`. Server teď nepřijímá spojení (porty 80/443 odmítnuty), `hyfechcn.com.cn` neexistuje v DNS. APK se tedy ze stránek výrobce stáhnout nedá. |
-| 2026-11-21 | Na Google Play není „Thermal Viewer“ od Hti/Xintai. Výrobce tam má novější aplikace s prefixem `com.hti.xtherm.*` (např. `com.hti.xtherm.hti103` „HT-103 Smart Thermal“). Podpora HT-102 v nich není potvrzená. |
-| 2026-11-21 | Veřejně není nic o rozluštění HT-102 / `0416:9393`. Projekty pro HT-301 (`stawel/ht301_hacklib` aj.) se týkají jiného modulu (InfiRay, raw režim přes UVC Zoom, řádky metadat navíc) a na HT-102 se pravděpodobně nevztahují. |
+| Kanál | standardní UVC stream, formát YUY2 **640 × 480** |
+| Umístění dat | nejnižší bit (LSB) chroma bajtů (U/V = liché offsety) na začátku snímku |
+| Rozměr | 32 × 32 bodů, po řádcích (row-major), bod (0, 0) vlevo nahoře |
+| Velikost | 30 B snímku na 1 bod → 32 · 32 · 30 = **30 720 B** (prvních 24 řádků obrazu) |
+| Jednotka | desetiny °C, se znaménkem |
+| Frekvence | s každým video snímkem (termo senzor ~9 Hz, video až 30 fps → hodnoty se opakují) |
+| Inicializace | žádná – data tečou i přes systémový ovladač Windows (`usbvideo`) |
+| Emisivita | aplikace výrobce žádnou nenastavuje → kamera počítá s pevnou emisivitou (hodnota neznámá, ověřit referenčním měřením) |
 
-**Další krok:** získat APK z telefonu uživatele (pokud tam aplikaci má), nebo z archivu stránek výrobce
-(Wayback Machine – `download.php`), případně vyzkoušet `com.hti.xtherm.hti103`. Pak analýza (jadx) podle kap. 3.2.
+## Kódování jednoho bodu
 
-### Kandidáti (kap. 2.1), seřazeno podle pravděpodobnosti
+Bod `i` (0…1023) začíná na bajtu `p = i · 30` snímku.
 
-1. Vendor control requesty na EP0 (`bmRequestType` `0xC0`/`0xC1`).
-2. UVC class requesty na nedeklarovanou entitu („skrytá“ Extension Unit).
-3. Data v prodloužené hlavičce UVC paketů (`bHeaderLength` > 12).
-4. Interrupt EP `0x83` – kapacita nestačí, málo pravděpodobné.
+- **znaménko** = `b[p + 1] & 1` (1 = záporná hodnota),
+- **velikost** = 14 bitů z `b[p + 3] & 1`, `b[p + 5] & 1`, …, `b[p + 29] & 1`, nejvyšší bit první,
+- **teplota °C** = `±velikost / 10`.
 
-## Převod na °C
+Rozsah 14 bitů (0–1638,3 °C) bohatě pokrývá měřicí rozsah kamery (−20 až 300 °C).
+Změna nejnižšího bitu chroma je v obraze neviditelná, proto rozbor ve Windows (kap. 2.1 zadání) data nenašel.
 
-Neznámý.
+Implementace: `thermal-core/.../Ht102Decoder.kt` (`decode` + `encode` pro testy a simulátor).
 
-## Ověřovací měření
+## Jak bylo zjištěno
 
-Zatím neprovedeno (led ve vodě ≈ 0 °C, teplá voda s teploměrem, dlaň ≈ 34 °C).
+1. **Aplikace výrobce** – stránka `xintest.com.cn/download.php` nefunguje; soubory výrobce jsou ale v Internet Archive
+   (`web.archive.org`, originální adresy `xintest.com.cn/inc/lib/download/download.php?DId=…`). Staženo 21. 11. 2026:
+
+   | Soubor | Balíček | Podpis | Pro kameru |
+   |---|---|---|---|
+   | `ThermalViewer_Hti_V1_1_1.apk` (2018, DId=28) | `com.meridianinno.senxorviewer` | Android Debug | **HT-102** – kód Nuvoton (výrobce čipu W55FA93), senzor Meridian Innovation SenXor, 32 × 32 |
+   | `Thermal View-V-4.1.0.29-RELEASE.apk` (2023, DId=35) | `com.temp.action.thermal` | CN=Xiaozd, Shenzhen | Seek Thermal (USB vendor 0x289D) – jiná kamera |
+   | `HT-ThermCameraViewer-V-6.3.20201238-RELEASE.apk` (2023, DId=37) | `com.hti.Xtherm` | CN=Xiaozd, Shenzhen | InfiRay/Xtherm (HT-301 apod.) – jiná kamera |
+
+   Soubory jsou v `docs/vendor/` (v `.gitignore`, necommitují se).
+
+2. **Rozbor `ThermalViewer_Hti_V1_1_1`** (jadx + disassembler z NDK):
+   - Java: `AbstractUVCCameraHandler` má `THERMAL_WIDTH = THERMAL_HEIGHT = 32`; teplotu bodu čte jako
+     `thermal_data[32 · y + x] / 10.0`. Data přicházejí z nativní knihovny v callbacku `onFrame(frame, int[] thermal_data)`.
+   - Nativní `libuvc.so` (upravená knihovna libuvc): `decode_thermal_data(frame)` volá
+     `image_generate(640, 480, 32, 32, 1, frame->data, thermal_buf)`, která dekóduje formát popsaný výše
+     a vrací průměr středních 2 × 2 bodů („teplota ve středu“).
+   - Žádné vendor/class USB požadavky na čtení teploty; video se nastavuje jako běžná UVC kamera 640 × 480 YUY2.
+   - Zarovnání termo obrazu na běžný je v aplikaci jen ruční posun X/Y tažením prstu (`x_thermal_shift`, `y_thermal_shift`).
+
+3. **Ověření** – dekódováním deseti snímků 640 × 480 zachycených 21. 11. 2026 ve Windows
+   (`docs/captures/windows-2026-11-21/`, jeden snímek je testovací data v `thermal-core/src/test/resources/ht102/`):
+   min 13,7–15,7 °C, max 30,7–31,7 °C, střed 25,7–26,8 °C; horní polovina scény 18–20 °C (místnost),
+   dolní 28–31 °C (teplý předmět). Snímky se liší jen šumem. Test `Ht102DecoderTest`.
+
+## Co zbývá ověřit (Fáze 1)
+
+- Na Androidu: stream 640 × 480 YUY2 přes UVC knihovnu, dekódování živě, skutečná frekvence termo dat.
+- Zda se termo data objevují i v rozlišení 320 × 240 / 160 × 120 (aplikace výrobce používá jen 640 × 480 → použijeme také jen to).
+- Orientace termo matice vůči obrazu modulu (otočení/zrcadlení) – ruka v pravé části záběru.
+- Absolutní přesnost a emisivita: led ve vodě ≈ 0 °C, teplá voda s teploměrem, dlaň ≈ 34 °C.
+
+## USB deskriptory
+
+Ověřeno ve Windows 21. 11. 2026 (`tools/windows-diag/`, výsledky v `docs/captures/windows-2026-11-21/`):
+VID `0x0416`, PID `0x9393`, „W55FA93 USB UVC Device“, UVC 1.0, jediný formát YUY2
+(640 × 480, 320 × 240, 160 × 120), žádná Extension Unit, HID ani vendor rozhraní.
+Úplný výpis: příloha A zadání (`docs/zadani.md`).

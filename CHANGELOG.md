@@ -13,3 +13,5 @@
 - USB diagnostika: zařízení, rozhraní, endpointy, surové deskriptory (po povolení), kopírování a export.
 - Rozpoznání připojení HT-102 (VID 0x0416 / PID 0x9393) a obrazovka „Kamera odpojena“.
 - CI (GitHub Actions): build, unit testy, lint.
+- **Protokol HT-102 rozluštěn:** termo matice 32 × 32 je v LSB chroma bajtů běžného snímku YUY2 640 × 480
+  (desetiny °C). `Ht102Decoder` v `:thermal-core`, ověřeno testem na skutečném snímku z kamery.
