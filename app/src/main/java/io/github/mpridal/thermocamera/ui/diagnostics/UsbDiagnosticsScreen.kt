@@ -51,6 +51,7 @@ import io.github.mpridal.thermocamera.ui.components.GlassChip
 import io.github.mpridal.thermocamera.ui.components.GlassIconButton
 import io.github.mpridal.thermocamera.ui.components.glass
 import io.github.mpridal.thermocamera.ui.theme.ThermoTheme
+import io.github.mpridal.thermocamera.ui.theme.NumberFont
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -207,7 +208,7 @@ fun UsbDiagnosticsScreen(vm: UsbDiagnosticsViewModel, onBack: () -> Unit) {
             Modifier.padding(12.dp).fillMaxWidth().glass(RoundedCornerShape(16.dp)).padding(12.dp)
                 .verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState()),
         ) {
-            Text(ui.text, color = c.text, fontFamily = FontFamily.Monospace, fontSize = 11.sp, lineHeight = 14.sp)
+            Text(ui.text, color = c.text, fontFamily = NumberFont, fontSize = 11.sp, lineHeight = 14.sp)
         }
     }
 }

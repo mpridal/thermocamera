@@ -11,7 +11,7 @@ Drobná rozhodnutí přijatá během vývoje (zadání kap. 0, bod 4). Nejnověj
 | D3 | Release keystore se vygeneruje nový, mimo repozitář, do GitHub Secrets | odpověď uživatele; řeší se ve Fázi 5 |
 | D4 | AGP 9.5.2 + Gradle 9.9.2 + Kotlin 2.4.21 (vestavěná podpora Kotlinu v AGP 9), `compileSdk`/`targetSdk` 37; Compose BOM 2026.09.00 | AndroidX knihovny vyžadují API 37. Novější Compose BOM (2026.11) vyžaduje platformu 37.1, která na tomto počítači není – přejít, až se doinstaluje. |
 | D5 | Haze 2.1.0 | řada 2.x je od podzimu 2026 stabilní (zadání: použij poslední stabilní) |
-| D6 | Písma Inter a JetBrains Mono zatím nejsou přibalená – používá se systémové bezpatkové a neproporcionální písmo | stažení souborů písem čeká na souhlas uživatele; doplní se do `res/font` (licence OFL) |
+| D6 | Písma Inter a JetBrains Mono přibalena jako variabilní TTF z Google Fonts (`res/font/inter.ttf`, `jetbrains_mono.ttf`), licence OFL v `licenses/` | stažení odsouhlaseno uživatelem 22. 11. 2026; řezy 400–700 jako instance osy `wght` |
 | D7 | Updater z Deskovek se nepřebírá jako kód – Deskovky jsou ve Flutteru (Dart). Logika (GitHub releases API, SHA-256, kontrola podpisu) se převezme jako vzor do Kotlinu ve Fázi 5 | jiný jazyk |
 | D8 | Simulátor je výchozí zapnutý jen na emulátoru (`Settings.isEmulator`), jinak vypnutý | od Fáze 1 čte `Ht102Source` skutečná data; zadání kap. 3.1 |
 | D9 | Texty všech 6 jazyků se generují skriptem `tools/i18n/gen_strings.py` (jediný zdroj pravdy pro překlady) | žádný jazyk nemůže zapomenout klíč; lint `MissingTranslation` je navíc chyba buildu |
