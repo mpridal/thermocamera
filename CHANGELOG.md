@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased] – Fáze 6
+## [1.0.0] – 2026-11-22
+
+První vydání ThermoCamera pro termokameru Hti HT-102: živý obraz 32 × 32 přes USB-C, měření a kalibrace,
+tepelné mosty (fRsi), snímky s galerií a exportem (JPG/PDF/CSV), automatické aktualizace z GitHub Releases.
+Čeština, angličtina a strojové překlady do španělštiny, italštiny, francouzštiny a němčiny.
+
+### Fáze 6
 
 - Jednotky °C / °F (zobrazení, snímky a PDF; měření, kalibrace a CSV zůstávají v °C), časové vyhlazení a „body senzoru“
   v Nastavení › Zobrazení.
@@ -9,7 +15,7 @@
 - Screenshot testy (Roborazzi): 6 jazyků + pseudo-jazyk en-XA × světlý/tmavý × telefon/tablet, obrázky jako artefakt CI.
 - Opraven popis zrcadlení (výchozí zapnuto, čočka míří od uživatele).
 
-## [Unreleased] – Fáze 5
+### Fáze 5
 
 - Aktualizace z GitHub Releases: při startu na pozadí (jen s ověřenou sítí, volitelně jen Wi-Fi), stažení s navazováním,
   ověření SHA-256 a podpisového certifikátu, banner „Stažena verze …“, instalace přes PackageInstaller
@@ -17,7 +23,7 @@
 - Workflow `release.yml`: tag `vX.Y.Z` → testy, podepsané APK, kontrola podpisu, `.sha256`, GitHub Release s poznámkami
   z CHANGELOG. Návod v `docs/release.md`.
 
-## [Unreleased] – Fáze 4
+### Fáze 4
 
 - Spoušť ukládá snímek měření: render.jpg (obraz se značkami, stupnicí a pruhem hodnot), thermal.f32 + thermal.json
   (surová matice, °C před korekcemi), visible.jpg, u kamery telefonu photo.jpg v plném rozlišení + alignment.json
@@ -27,7 +33,7 @@
 - Detail: přerenderování (režim, paleta, automatický/uložený rozsah, prolnutí, emisivita), „Ponechat toto zobrazení“,
   název, poznámka, projekt, sdílení jako JPG / vedle sebe / PDF / CSV (oddělovač `;`, desetinná čárka podle jazyka).
 
-## [Unreleased] – Fáze 3
+### Fáze 3
 
 - Panel „Rozsah a kalibrace“ (z čipu Rozsah, na tabletu z lišty): předvolby rozsahu, vlastní min/max po 0,1 °C,
   zámek automatického rozsahu, emisivita (posuvník + Malba/Cihla/Sklo/Dřevo), odražená teplota.
@@ -37,7 +43,7 @@
   izoterma (azurové zvýraznění míst pod limitem), upozornění na malý rozdíl θi − θe.
 - Databáze Room (profily, projekty, snímky) připravená i pro Fázi 4.
 
-## [Unreleased] – Fáze 2
+### Fáze 2
 
 - Orientace modulu (0/90/180/270°, zrcadlení) v Nastavení a v Testu kamery; kompenzace otočení displeje.
 - Body P1–P5 (klepnutí, tažení, dlouhý stisk), tlačítko „+ Bod“, Zmrazit / Živě.
@@ -50,7 +56,7 @@
   panel 336 dp) i na výšku (panel pod obrazem).
 - `:thermal-core`: Orientation, OverlayAlignment/CropSquare, ImageRegistration, FovMath – s testy.
 
-## [Unreleased] – Fáze 1
+### Fáze 1
 
 - `Ht102Source`: živý stream z HT-102 – UVC 640 × 480 YUY2 při 10 fps, termo matice dekódovaná z každého snímku,
   obraz kamery modulu jako běžný obraz. Oprávnění k USB, připojení/odpojení, watchdog (žádná data > 2 s → chyba),
@@ -62,7 +68,7 @@
 - Kamera streamuje jen když je aplikace vidět. Simulátor je výchozí jen na emulátoru.
 - `docs/manual-test.md`: checklist pro test na telefonu.
 
-## [Unreleased] – Fáze 0
+### Fáze 0
 
 - Projekt: `:app` (Kotlin, Jetpack Compose, Hilt) + `:thermal-core` (čistý Kotlin).
 - `:thermal-core`: palety Iron/Duha/Šedá/Arktida, bikubická interpolace, korekce emisivity a offset/gain,

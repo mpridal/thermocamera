@@ -52,7 +52,7 @@ jobs:
       - name: Release notes from CHANGELOG.md
         run: |
           awk -v v="$VERSION" '
-            $0 ~ "^## \[" v "\]" {p=1; next}
+            index($0, "## [" v "]") == 1 {p=1; next}
             p && /^## / {exit}
             p {print}
           ' CHANGELOG.md > notes.md
