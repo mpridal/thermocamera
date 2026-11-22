@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+- Nová ikona aplikace: dům v termo barvách se studeným místem (tepelný most); monochromatická varianta pro motivované ikony.
+- Písma Inter (UI) a JetBrains Mono (čísla) přibalena v aplikaci (licence OFL v `licenses/`).
+
 ## [1.0.0] – 2026-11-22
 
 První vydání ThermoCamera pro termokameru Hti HT-102: živý obraz 32 × 32 přes USB-C, měření a kalibrace,

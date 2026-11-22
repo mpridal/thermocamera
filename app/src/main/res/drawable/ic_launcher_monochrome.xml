@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed (monochrome) icon: house silhouette with the cold spot and window cut out. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M54,27L83,50L75,50L75,78L33,78L33,50L25,50Z M40,55m-6,0a6,6 0,1 0,12 0a6,6 0,1 0,-12 0 M58,58h10v10h-10z" />
+</vector>
